@@ -5,7 +5,7 @@ from django.db import models
 class Project(models.Model):
 	ProjectName = models.CharField(max-length=70, unique=True)
 	ParentProjectID = models.ForeignKey(Project)
-	DivisionID = models.ForeignKey(Division)
+	MozillaDivisionID = models.ForeignKey(MozillaDivision)
 	MentorID = models.ForeignKey(Mentor)
 	MenteeID = models.ForeignKey(Mentee)
 	Approved = models.BooleanField()
@@ -30,12 +30,12 @@ class Mentor(models.Model):
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	
-class RELCoordinatorDivision(models.Model):
+class RELCoordinatorMozillaDivision(models.Model):
 	CoordinatorID = models.ForeignKey(Coordinator)
-	DivisionID = models.ForeignKey(Division)
+	MozillaDivisionID = models.ForeignKey(MozillaDivision)
 	
-class Division(models.Model)
-	DivisionName = models.Charfield(max-length=50, unique=True)
+class MozillaDivision(models.Model)
+	MozillaDivisionName = models.Charfield(max-length=50, unique=True)
 	
 class ProjectStatus(models.Model)
 	ProjectStatus = models.Charfield(max=length=30, unique=True)
