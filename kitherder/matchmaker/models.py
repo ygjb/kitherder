@@ -38,7 +38,7 @@ class Division(models.Model):
 	DivisionName = models.Charfield(max-length=50, unique=True)
 	
 class ProjectStatus(models.Model):
-	ProjectStatus = models.Charfield(max=length=30, unique=True)
+	ProjectStatus = models.Charfield(max-length=30, unique=True)
 	Deprecated = models.BooleanField()
 	
 class Milestone(models.Model):
