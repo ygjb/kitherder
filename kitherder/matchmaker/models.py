@@ -4,7 +4,7 @@ from django.db import models
 
 class Project(models.Model):
 	ProjectName = models.CharField(max_length=70, unique=True)
-	ParentProjectID = models.ForeignKey(Project)
+	ParentProjectID = models.ForeignKey('self')
 	DivisionID = models.ForeignKey(Division)
 	MentorID = models.ForeignKey(Mentor)
 	MenteeID = models.ForeignKey(Mentee)
