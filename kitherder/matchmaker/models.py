@@ -10,7 +10,7 @@ class Project(models.Model):
 	MenteeID = models.ForeignKey(Mentee)
 	Approved = models.BooleanField()
 	ApprovedBy = models.ForeignKey(Coordinator)
-	ProjectDescription = models.CharField(max-lenght=300)
+	ProjectDescription = models.CharField(max_length=300)
 	TermsAgree = models.BooleanField()
 	ProjectStatusID = models.ForeignKey(ProjectStatus)
 	SkillsRequired = models.charField(max_length=300)
