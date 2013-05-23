@@ -25,7 +25,7 @@ class RELCoordinatorDivision(models.Model):
 	DivisionID = models.ForeignKey(Division)
 	
 class ProjectStatus(models.Model):
-	ProjectStatus = models.Charfield(max_length=30, unique=True)
+	ProjectStatus = models.CharField(max_length=30, unique=True)
 	Deprecated = models.BooleanField()
 	
 class Project(models.Model):
@@ -39,7 +39,7 @@ class Project(models.Model):
 	ProjectDescription = models.CharField(max_length=300)
 	TermsAgree = models.BooleanField()
 	ProjectStatusID = models.ForeignKey(ProjectStatus)
-	SkillsRequired = models.charField(max_length=300)
+	SkillsRequired = models.CharField(max_length=300)
 
 class Milestone(models.Model):
 	ProjectID = models.ForeignKey(Project)
