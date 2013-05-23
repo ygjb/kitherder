@@ -30,12 +30,12 @@ class Mentor(models.Model):
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	
+class Division(models.Model):
+	DivisionName = models.Charfield(max_length=50, unique=True)
+	
 class RELCoordinatorDivision(models.Model):
 	CoordinatorID = models.ForeignKey(Coordinator)
 	DivisionID = models.ForeignKey(Division)
-	
-class Division(models.Model):
-	DivisionName = models.Charfield(max_length=50, unique=True)
 	
 class ProjectStatus(models.Model):
 	ProjectStatus = models.Charfield(max_length=30, unique=True)
