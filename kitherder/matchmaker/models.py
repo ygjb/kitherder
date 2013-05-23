@@ -2,18 +2,8 @@ from django.db import models
 
 # Here is the complete model for kitherder including matchmaker and other apps.
 
-class Project(models.Model):
-	ProjectName = models.CharField(max_length=70, unique=True)
-	ParentProjectID = models.ForeignKey('self')
-	DivisionID = models.ForeignKey(Division)
-	MentorID = models.ForeignKey(Mentor)
-	MenteeID = models.ForeignKey(Mentee)
-	Approved = models.BooleanField()
-	ApprovedBy = models.ForeignKey(Coordinator)
-	ProjectDescription = models.CharField(max_length=300)
-	TermsAgree = models.BooleanField()
-	ProjectStatusID = models.ForeignKey(ProjectStatus)
-	SkillsRequired = models.charField(max_length=300)
+class Division(models.Model):
+	DivisionName = models.Charfield(max_length=50, unique=True)
 	
 class User(models.Model):
 	UserID = models.IntegerField(unique=True)
@@ -30,9 +20,6 @@ class Mentor(models.Model):
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	
-class Division(models.Model):
-	DivisionName = models.Charfield(max_length=50, unique=True)
-	
 class RELCoordinatorDivision(models.Model):
 	CoordinatorID = models.ForeignKey(Coordinator)
 	DivisionID = models.ForeignKey(Division)
@@ -41,6 +28,19 @@ class ProjectStatus(models.Model):
 	ProjectStatus = models.Charfield(max_length=30, unique=True)
 	Deprecated = models.BooleanField()
 	
+class Project(models.Model):
+	ProjectName = models.CharField(max_length=70, unique=True)
+	ParentProjectID = models.ForeignKey('self')
+	DivisionID = models.ForeignKey(Division)
+	MentorID = models.ForeignKey(Mentor)
+	MenteeID = models.ForeignKey(Mentee)
+	Approved = models.BooleanField()
+	ApprovedBy = models.ForeignKey(Coordinator)
+	ProjectDescription = models.CharField(max_length=300)
+	TermsAgree = models.BooleanField()
+	ProjectStatusID = models.ForeignKey(ProjectStatus)
+	SkillsRequired = models.charField(max_length=300)
+
 class Milestone(models.Model):
 	ProjectID = models.ForeignKey(Project)
 	MilestoneName = models.CharField(max_length=100)
@@ -49,5 +49,4 @@ class Milestone(models.Model):
 	StartDate = models.DateTimeField()
 	ProjectedEndDate = models.DateTimeField()
 	CompletionDate = models.DateTimeField()
-	
 	
