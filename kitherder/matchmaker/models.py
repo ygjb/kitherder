@@ -3,7 +3,7 @@ from django.db import models
 # Here is the complete model for kitherder including matchmaker and other apps.
 
 class Division(models.Model):
-	DivisionName = models.Charfield(max_length=50, unique=True)
+	DivisionName = models.CharField(max_length=50, unique=True)
 	
 class User(models.Model):
 	UserID = models.IntegerField(unique=True)
