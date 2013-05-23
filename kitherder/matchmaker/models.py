@@ -1,6 +1,6 @@
 from django.db import models
 
-# Create your models here.
+# Here is the complete model for kitherder including matchmaker and other apps.
 
 class Project(models.Model):
 	ProjectName = models.CharField(max_length=70, unique=True)
