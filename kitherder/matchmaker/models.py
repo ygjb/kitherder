@@ -30,12 +30,12 @@ class ProjectStatus(models.Model):
 	
 class Project(models.Model):
 	ProjectName = models.CharField(max_length=70, unique=True)
-	ParentProjectID = models.ForeignKey('self')
+	ParentProjectID = models.ForeignKey('self', null=True, blank=True)
 	DivisionID = models.ForeignKey(Division)
-	MentorID = models.ForeignKey(Mentor)
-	MenteeID = models.ForeignKey(Mentee)
+	MentorID = models.ForeignKey(Mentor, null=True, blank=True)
+	MenteeID = models.ForeignKey(Mentee, null=True, blank=True)
 	Approved = models.BooleanField()
-	ApprovedBy = models.ForeignKey(Coordinator)
+	ApprovedBy = models.ForeignKey(Coordinator, null=True, blank=True)
 	ProjectDescription = models.CharField(max_length=300)
 	TermsAgree = models.BooleanField()
 	ProjectStatusID = models.ForeignKey(ProjectStatus)
