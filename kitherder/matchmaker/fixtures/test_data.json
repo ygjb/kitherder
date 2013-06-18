@@ -103,17 +103,8 @@
   	"pk": 1,
   	"fields":
   	{
-  		"UserID": 1
-  	}
-  },
-  
-  {
-  	"model": "matchmaker.relcoordinatordivision",
-  	"pk": 1,
-  	"fields":
-  	{
-  		"CoordinatorID": 1,
-  		"DivisionID": 1
+  		"UserID": 1,
+		"DivisionID": [1]
   	}
   },
   

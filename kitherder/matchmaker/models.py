@@ -5,6 +5,12 @@ from django.db import models
 class Division(models.Model):
 	DivisionName = models.CharField(max_length=50, unique=True)
 	
+	def __unicode__(self):
+		return self.DivisionName
+		
+	class Meta:
+		ordering = ('DivisionName',)
+	
 class User(models.Model):
 	UserID = models.IntegerField(unique=True)
 	Email = models.CharField(max_length=50, unique=True)
@@ -19,10 +25,13 @@ class Mentor(models.Model):
 
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
+	DivisionID = models.ManyToManyField(Division)
 	
-class RELCoordinatorDivision(models.Model):
-	CoordinatorID = models.ForeignKey(Coordinator)
-	DivisionID = models.ForeignKey(Division)
+	def __unicode__(self):
+		return self.UserID
+		
+	class Meta:
+		ordering = ('UserID',)
 	
 class ProjectStatus(models.Model):
 	ProjectStatus = models.CharField(max_length=30, unique=True)

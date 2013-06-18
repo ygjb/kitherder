@@ -1,1 +1,12 @@
-<p>test one two three</p>
+
+<h1>Projects List</h1>
+
+{% if myprojectlist %}
+    <ul>
+    {% for project in myprojectlist %}
+        <li><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>You are currently not involved in a project.</p>
+{% endif %}
