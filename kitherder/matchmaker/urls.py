@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
-
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -27,3 +27,5 @@ urlpatterns = patterns('',
 	# url(r'^matchmaker/project/(?P<projectID>\d+)/approve/$', 'matchmaker.views.approve'),
 	# url(r'^matchmaker/searchpeople/$', 'matchmaker.views.searchpeople'),
 )
+
+urlpatterns += staticfiles_urlpatterns()

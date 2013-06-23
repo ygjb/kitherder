@@ -1,0 +1,47 @@
+@charset "UTF-8";
+/* CSS Document */
+
+
+.body {
+	font-size: 14px;
+	line-height: 20px;
+	color: #333;
+}
+
+.large {
+  font-size: 72px;
+  letter-spacing: -3px;
+  line-height: 100%;
+}
+h1 {
+  font-size: 48px;
+  letter-spacing: -2px;
+  line-height: 100%;
+}
+h2 {
+  font-size: 32px;
+  letter-spacing: -1px;
+  line-height: 100%;
+}
+h3 {
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  line-height: 100%;
+}
+h4 {
+  font-size: 24px;
+  letter-spacing: -0.25px;
+  line-height: 100%;
+}
+.small, small {
+  font-size: 12px;
+  line-height: 100%;
+}
+
+.Left {float: right;}
+.navRight {float:right;}
+
+body {
+	background-image: url("/Images/grain.png");
+    background-color:#F6F4EC;
+	font-family: 'Open Sans', sans-serif;}

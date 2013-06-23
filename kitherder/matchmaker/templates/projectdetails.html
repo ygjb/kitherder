@@ -1,33 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>KitHerder: My Projects</title>
 
-<h1>Project Details</h1>
 
-{% if theproject %}
-	<table border="0" width="500">
-		<tr>
-			<td>Project Name:</td>
-			<td><a href="/matchmaker/project/{{ theproject.id }}/">{{ theproject.ProjectName }}</a></td>
-		</tr>
-		<tr>
-			<td>Division:</td>
-			<td>{{ theproject.DivisionID.DivisionName }}</td>
-		</tr>
-		<tr>
-			<td>Division Coordinator(s):</td>
-			<td>{{ theproject.email }}</td>
-		</tr>
-		<tr>
-			<td>Mentor:</td>
-			<td>{{ theproject.MentorID }}</td>
-		</tr>
-		<tr>
-			<td>Mentee:</td>
-			<td>{{ theproject.MenteeID }}</td>
-		</tr>
-		<tr>
-			<td>Project Description:</td>
-			<td>{{ theproject.ProjectDescription }}</td>
-		</tr>
-	</table>
-{% else %}
-    <p>Project does not exist</p>
-{% endif %}
+
+<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"> <!-- FONTS for opensans -->
+<link href="{{ STATIC_URL }}KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
+<link href="{{ STATIC_URL }}Kitherder.css" rel="stylesheet" type="text/css" />   <!-- the look of kitherder colours fonts etc -->
+<link href="{{ STATIC_URL }}tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
+
+</head>
+
+<body>
+<div id="MainWrapper">
+<div class="large" id="Title">KitHerder
+</div> <!-- end title -->
+
+
+<div id="Nav">
+<div class="table"> <!-- start of table --> 
+    	<p>  <!-- start of row -->
+        	<span class="col1"> <a href="myproject.html">My Projects </a> 	</span> 	<!-- end col 1-->
+		 	<span class="col2"> <a href="searchproject.html">Search Projects</a></span> 		<!-- end col 2-->
+        	<span class="col3"> <a href="submitproject.html">Submit Project</a>	</span> 	<!-- end col 3-->
+        </p> <!-- end of row -->
+</div> <!-- end table -->           
+</div> <!-- end Nav -->
+
+
+<div id="Content">
+	<h2>Project Details</h2>
+
+	{% if theproject %}
+		<table border="0" width="500">
+			<tr>
+				<td>Project Name:</td>
+				<td><a href="/matchmaker/project/{{ theproject.id }}/">{{ theproject.ProjectName }}</a></td>
+			</tr>
+			<tr>
+				<td>Division:</td>
+				<td>{{ theproject.DivisionID.DivisionName }}</td>
+			</tr>
+			<tr>
+				<td>Division Coordinator(s):</td>
+				<td>
+					{% for coordinator in mycoordinatorlist %}
+						<a href="{{ coordinator.UserID.Email }}/">{{ coordinator.UserID.Email }}</a>
+					{% endfor %}
+				</td>
+			</tr>
+			<tr>
+				<td>Mentor:</td>
+				<td>{{ theproject.MentorID }}</td>
+			</tr>
+			<tr>
+				<td>Mentee:</td>
+				<td>{{ theproject.MenteeID }}</td>
+			</tr>
+			<tr>
+				<td>Project Description:</td>
+				<td>{{ theproject.ProjectDescription }}</td>
+			</tr>
+		</table	>
+	{% else %}
+    	<p>Project does not exist</p>
+	{% endif %} 
+</div> <!-- end Content -->
+
+
+<div class="body" id="Footer">
+footer
+</div> <!-- end Footer -->
+
+</div> <!--end main wrapper -->
+</body>
+</html>

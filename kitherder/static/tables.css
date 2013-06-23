@@ -1,0 +1,76 @@
+@charset "UTF-8";
+/* CSS Document */
+
+#table
+{
+	width: 100%;
+}
+
+#table p 
+{
+	clear: both;
+	width: 100%;
+	margin: 0;
+}
+
+#table span 
+{
+	float: left;
+	padding: 0 10px;
+}
+
+#table span.header1 
+{
+	width: 40%;
+	background-color:#999;
+}
+
+#table span.header2 
+{
+	width: 30%;
+	background-color:#999;
+}
+
+#table span.header3 
+{
+	width: 30&;
+	background-color:#999;
+	/*border-right: */
+}
+
+#table span.col1 
+{
+	width: 40%;
+}
+
+#table span.col2 
+{
+	width: 30%;
+}
+
+#table span.col3 
+{
+	width: 30&;
+}
+
+#table span.SubCol1 
+{
+	width: 20%;
+}
+
+#table span.SubCol2 
+{
+	width: 60%;
+}
+
+#table span.SubCol3 
+{
+	width: 20&;
+}
+
+
+.cleaner 
+{
+	height: 0;
+	clear: both;
+}
