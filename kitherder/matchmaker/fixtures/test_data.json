@@ -152,7 +152,7 @@
   	{
   		"ProjectName": "kitherder",
   		"DivisionID": 1,
-  		"Approved": false,
+  		"Approved": true,
   		"ProjectDescription": "Mentor-mentee program management tool",
   		"TermsAgree": true,
   		"ProjectStatusID": 1,
