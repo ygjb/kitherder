@@ -1,0 +1,63 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>KitHerder: Search Projects</title>
+
+<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"> <!-- FONTS for opensans -->
+<link href="KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
+<link href="Kitherder.css" rel="stylesheet" type="text/css" /><!-- the look of kitherder colours fonts etc -->
+<link href="tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
+
+
+
+</head>
+
+<body>
+<div id="MainWrapper">
+
+<div class="large" id="Title">KitHerder
+</div> <!-- end title -->
+
+
+<div id="Nav">
+<div class="table"> <!-- start of table --> 
+    	<p>  <!-- start of row -->
+        	<span class="col1"> <a href="myproject.html">My Projects </a> 	</span> 	<!-- end col 1-->
+		 	<span class="col2"> <a href="searchproject.html">Search Projects</a></span> 		<!-- end col 2-->
+        	<span class="col3"> <a href="submitproject.html">Submit Project</a>	</span> 	<!-- end col 3-->
+        </p> <!-- end of row -->
+</div> <!-- end table -->           
+</div> <!-- end Nav -->
+
+<div id="Content">
+ 
+  <div id="Search" align="center"> 
+    <form name="searchform" action="searchproject.html" method="post">
+    	<input name="ProjectName" type="search" size="50em">
+    	<input type="submit" value="Search">
+	</form>
+    </div> <!-- end of search bar-->
+  <div id="Results"> <!-- div to hold the search results -->
+  
+  	<h4> Projects </h4> <!-- title -->
+  
+  	<div id="table"> <!-- table to hold search results -->
+		<p><span class="header1">Column 1 Title</span><span class="header2">Column 2 Title</span><span class="header3">Column 3 Title</span></p>
+		<p><span class="col1"><a href="#">Row1 Col1</a></span><span class="col2">Row1 Col2</span><span class="col3">Row1 Col3</span></p>
+		<p><span class="col1"><a href="#">Row2 Col1</a></span><span class="col2">Row2 Col2</span><span class="col3">Row2 Col3</span></p>
+		<p><span class="col1"><a href="#">Row3 Col1</a></span><span class="col2">Row3 Col2</span><span class="col3">Row3 Col3</span></p>
+	</div> <!-- end of #table -->
+	<div class="cleaner"></div>  <!-- clean up after tables -->  
+    
+  </div> <!-- end results -->  
+</div> <!-- end Content -->
+
+
+<div class="body" id="Footer">
+footer
+</div> <!-- end Footer -->
+
+</div> <!--end main wrapper -->
+</body>
+</html>

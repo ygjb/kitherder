@@ -15,3 +15,6 @@ def projectdetail(request, projectID):
 	theproject = Project.objects.get(pk=projectID)
 	mycoordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
 	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist}, context_instance=RequestContext(request))
+	
+def submitproject(request):
+	return render_to_response('matchmaker/templates/submitproject.html', context_instance=RequestContext(request))

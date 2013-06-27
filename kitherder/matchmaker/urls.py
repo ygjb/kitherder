@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     
     url(r'^$', 'kitherder.matchmaker.views.myprojects'),
 	url(r'^myprojects', 'kitherder.matchmaker.views.myprojects'),
-	# url(r'^matchmaker/submitproject', 'matchmaker.views.submitproject'),
+	url(r'^submitproject', 'matchmaker.views.submitproject'),
 	# url(r'^matchmaker/searchproject', 'matchmaker.views.searchproject'),
 	url(r'^project/(?P<projectID>\d+)/$', 'matchmaker.views.projectdetail'),
     # url(r'^matchmaker/project/(?P<projectID>\d+)/interest/$', 'matchmaker.views.expressinterest'),
