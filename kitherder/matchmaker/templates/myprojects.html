@@ -22,7 +22,7 @@
 <div id="Nav">
 <div class="table"> <!-- start of table --> 
     	<p>  <!-- start of row -->
-        	<span class="col1"> <a href="/matchmaker/myproject/">My Projects </a> 	</span> 	<!-- end col 1-->
+        	<span class="col1"> <a href="/matchmaker/myprojects/">My Projects </a> 	</span> 	<!-- end col 1-->
 		 	<span class="col2"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 		<!-- end col 2-->
         	<span class="col3"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 	<!-- end col 3-->
         </p> <!-- end of row -->
@@ -36,10 +36,10 @@
   		<h4> My Projects </h4> 
   		<!-- title -->
   
-  		{% if myprojectlist %}  	
+  		{% if myprojectslist %}  	
   			<div id="table"> <!-- table to hold search results -->	
   				<p><span class="header1">Project</span><span class="header2">Description</span><span class="header3">Status</span></p>
-  				{% for project in myprojectlist %}
+  				{% for project in myprojectslist %}
 					<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectName }}</span><span class="col3">{{ project.ProjectStatusID.ProjectStatus }}</span></p>
 				{% endfor %}
 			</div> <!-- end of #table -->
