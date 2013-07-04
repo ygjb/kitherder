@@ -1,0 +1,64 @@
+{% load browserid %}
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>{% block title %}{% endblock %}</title>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+<link href="//mozorg.cdn.mozilla.net/media/css/tabzilla-min.css" rel="stylesheet" />
+<script src="https://browserid.org/include.js" type="text/javascript"></script>
+<script src="http://code.jquery.com/jquery.1.7.1.js"> type="text/javascript"></script>
+
+<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"> <!-- FONTS for opensans -->
+<link href="{{ STATIC_URL }}KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
+<link href="{{ STATIC_URL }}Kitherder.css" rel="stylesheet" type="text/css" />   <!-- the look of kitherder colours fonts etc -->
+<link href="{{ STATIC_URL }}tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
+
+</head>
+
+<body>
+{% browserid_info %}
+<div id="MainWrapper">
+<a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
+<div class="cleaner">&nbsp;</div>
+
+    <header>
+      <div class="authentication">
+        {% if user.is_authenticated %}
+          {% browserid_logout text='Logout' %}
+        {% else %}
+          {% browserid_login text='Login' %}
+        {% endif %}
+      </div>
+    </header>
+
+<div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
+
+
+<div id="Nav">
+<div class="table"> <!-- start of table --> 
+    	<p>  <!-- start of row -->
+        	<span class="col1"> <a href="/matchmaker/myprojects/">My Projects </a> 	</span> 	<!-- end col 1-->
+		 	<span class="col2"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 		<!-- end col 2-->
+        	<span class="col3"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 	<!-- end col 3-->
+        </p> <!-- end of row -->
+</div> <!-- end table -->           
+</div> <!-- end Nav -->
+
+
+<div id="Content">
+{% block content %}{% endblock %}
+</div> <!-- end Content -->
+
+
+<div class="body" id="Footer">
+footer
+</div> <!-- end Footer -->
+<script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
+</div> <!--end main wrapper -->
+<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+{% browserid_js %}
+</body>
+</html>

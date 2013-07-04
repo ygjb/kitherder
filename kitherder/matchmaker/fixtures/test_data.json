@@ -113,7 +113,7 @@
   	"pk": 1,
   	"fields":
   	{
-  		"ProjectStatus": "submitted",
+  		"Status": "submitted",
   		"Deprecated": false
   	}
   },
@@ -122,7 +122,7 @@
   	"pk": 2,
   	"fields":
   	{
-  		"ProjectStatus": "in progress",
+  		"Status": "in progress",
   		"Deprecated": false
   	}
   },  
@@ -131,7 +131,7 @@
   	"pk": 3,
   	"fields":
   	{
-  		"ProjectStatus": "on hold",
+  		"Status": "on hold",
   		"Deprecated": false
   	}
   },
@@ -140,7 +140,7 @@
   	"pk": 4,
   	"fields":
   	{
-  		"ProjectStatus": "completed",
+  		"Status": "completed",
   		"Deprecated": false
   	}
   },

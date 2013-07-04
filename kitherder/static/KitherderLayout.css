@@ -18,15 +18,15 @@
 #Title
 {
 		margin-bottom:0.3em; 	/*keep the menu's off the bottom*/
-		margin-left:  1.5em;    /*keep the title away from the left */
+		text-align: center;
 }
 
 #Nav
 { 
+		width: 100%;
 	  	margin-bottom:1em; 
-	  	float:right; 
-	  	border-bottom:solid thin #666;
-	  	border-top:solid thin #666 
+	  	border-bottom:solid 1px #aaa;
+	  	border-top:solid 1px #aaa 
 }
 	
 #Search /* a search div to separate and add a border to the search bar */

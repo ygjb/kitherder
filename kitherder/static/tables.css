@@ -4,6 +4,8 @@
 #table
 {
 	width: 100%;
+	table-layout: fixed;
+	white-space: nowrap;
 }
 
 #table p 
@@ -16,41 +18,55 @@
 #table span 
 {
 	float: left;
-	padding: 0 10px;
+	padding: 0;
 }
 
 #table span.header1 
 {
-	width: 40%;
-	background-color:#999;
+	width: 30%;
+	background-color:#ccc;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 #table span.header2 
 {
-	width: 30%;
-	background-color:#999;
+	width: 60%;
+	background-color:#ccc;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 #table span.header3 
 {
-	width: 30&;
-	background-color:#999;
-	/*border-right: */
+	width: 10%;
+	background-color:#ccc;
+	padding-top: 3px;
+	padding-bottom: 3px;
 }
 
 #table span.col1 
 {
-	width: 40%;
+	width: 30%;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-bottom: dotted 1px #ccc;
 }
 
 #table span.col2 
 {
-	width: 30%;
+	width: 60%;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-bottom: dotted 1px #ccc;
 }
 
 #table span.col3 
 {
-	width: 30&;
+	width: 10%;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	border-bottom: dotted 1px #ccc;
 }
 
 #table span.SubCol1 

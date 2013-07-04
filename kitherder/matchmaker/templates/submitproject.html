@@ -1,84 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>KitHerder: Submit Project</title>
+{% extends "base.html" %}
 
-<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"> <!-- FONTS for opensans -->
-<link href="{{ STATIC_URL }}KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
-<link href="{{ STATIC_URL }}Kitherder.css" rel="stylesheet" type="text/css" /><!-- the look of kitherder colours fonts etc -->
-<link href="{{ STATIC_URL }}tables.css" rel="stylesheet" type="text/css" />   
+{% block title%}KitHerder: Project Details{% endblock %}
 
-</head>
-
-<body>
-<div id="MainWrapper">
-	<div class="large" id="Title">KitHerder</div> <!-- end title -->
-
-
-	<div id="Nav">
-		<div class="table"> <!-- start of table --> 
-    		<p>  <!-- start of row -->
-        		<span class="col1"> <a href="/matchmaker/myprojects/">My Projects </a> 	</span> 	<!-- end col 1-->
-		 		<span class="col2"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 		<!-- end col 2-->
-        		<span class="col3"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 	<!-- end col 3-->
-        	</p> 
-    		<!-- end of row -->
-		</div> <!-- end table -->           
-	</div> <!-- end Nav -->
-
-	<div id="Content">
+{% block content %}
     <br />
     <br />
-     <form name="submitprojectform" action="submitproject.html" method="post">
-     	<div id="table"> 
-			<p> <!-- start of row -->
-            	<span class="SubCol1"> Project Name </span>
-            	<span class="SubCol2"><input name="projectname" type="text" size="60em" /> </span> 
-        	</p><!-- end of row -->
-        
-			<p> <!-- start of row -->
-          		<span class="SubCol1"> Project Description</span>
-            	<span class="SubCol2"> <textarea name="projectdescription" id="textarea" cols="95" rows="12"></textarea></span>
-        	</p><!-- end of row -->
-		
-        	<p> <!-- start of row -->
-            	<span class="SubCol1"> Project Parent</span>
-           	 	<span class="SubCol2"> 
-                	<select name="projectparent">
-    					<option value="value1">A</option>
-					    <option value="value2">B</option>
-  						<option value="value3">C</option>
-    					<option value="value4">D</option>
-					</select>
-                </span>
-        	</p><!-- end of row -->
-   		
-         	<p> <!-- start of row -->
-            	<span class="SubCol1"> Project Skills</span>
-            	<span class="SubCol2"> SKills List   Tag Cloud ????????</span>
-        	</p><!-- end of row -->
-        
-        	<p> <!-- start of row -->
-            	<span class="SubCol1"> &nbsp;</span>
-            	<span class="SubCol2"> &nbsp;</span>
-            	<span class="SubCol3"><input type="submit" name="submit" id="submit" value="Submit" /></span>
-        	</p><!-- end of row -->
-   
-   		</div> <!-- end of #table -->
-    
-    </form> <!--end submit project form -->
-	
-    <div class="cleaner"></div>  <!-- clean up after tables -->  
-    
-    
-   
-           
-    </div> <!-- end Content --> 
-
-	<div class="body" id="Footer">
-		footer
-	</div> <!-- end Footer -->
-</div> <!--end main wrapper -->
-</body>
-</html>
+     
+   	<form method="post" action="">{% csrf_token %}
+		<table>
+		{{ submitform.as_table }}
+		<tr><td>&nbsp;</td><td><input type="submit" name="submit" id="submit" value="Submit" /></td></tr>
+		</table>
+	</form>
+	   
+{% endblock %}

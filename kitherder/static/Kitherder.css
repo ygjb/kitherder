@@ -45,3 +45,7 @@ body {
 	background-image: url("/Images/grain.png");
     background-color:#F6F4EC;
 	font-family: 'Open Sans', sans-serif;}
+	
+a:link {color:#0095DD;}      /* unvisited link */
+a:visited {color:#0095DD;}  /* visited link */
+a:hover {color:#00539F;}  /* 

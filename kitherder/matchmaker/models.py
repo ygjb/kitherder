@@ -1,5 +1,4 @@
 from django.db import models
-
 # Here is the complete model for kitherder including matchmaker and other apps.
 
 class Division(models.Model):
@@ -17,25 +16,33 @@ class User(models.Model):
 	IsVouched = models.BooleanField()
 	IsAdmin = models.BooleanField()
 	
+	def __unicode__(self):
+		return self.Email
+	
 class Mentee(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	
+	def __unicode__(self):
+		return self.UserID.Email
+	
 class Mentor(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
+	
+	def __unicode__(self):
+		return self.UserID.Email
 
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	DivisionID = models.ManyToManyField(Division)
 	
 	def __unicode__(self):
-		return self.UserID
-		
-	class Meta:
-		ordering = ('UserID',)
+		return self.UserID.Email
 	
 class ProjectStatus(models.Model):
-	ProjectStatus = models.CharField(max_length=30, unique=True)
+	Status = models.CharField(max_length=30, unique=True)
 	Deprecated = models.BooleanField()
+	def __unicode__(self):
+		return self.Status
 	
 class Project(models.Model):
 	ProjectName = models.CharField(max_length=70, unique=True)
@@ -49,6 +56,9 @@ class Project(models.Model):
 	TermsAgree = models.BooleanField()
 	ProjectStatusID = models.ForeignKey(ProjectStatus)
 	SkillsRequired = models.CharField(max_length=300)
+	
+	def __unicode__(self):
+		return self.ProjectName
 
 class Milestone(models.Model):
 	ProjectID = models.ForeignKey(Project)
@@ -58,4 +68,7 @@ class Milestone(models.Model):
 	StartDate = models.DateTimeField()
 	ProjectedEndDate = models.DateTimeField()
 	CompletionDate = models.DateTimeField()
+	
+	def __unicode__(self):
+		return self.MilestoneName
 	

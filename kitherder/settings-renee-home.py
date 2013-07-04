@@ -116,6 +116,7 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'django.contrib.auth',
+	'django_browserid',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
@@ -127,6 +128,25 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = {
+	'django_browserid.context_processors.browserid',
+	'django.contrib.auth.context_processors.auth',
+	'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.contrib.auth.context_processors.auth',
+    'django.contrib.messages.context_processors.messages',
+}
+
+AUTHENTICATION_BACKENDS = (
+   'django_browserid.auth.BrowserIDBackend',
+)
+
+SITE_URL = 'http://127.0.0.1:8000'
+BROWSERID_CREATE_USER = True
+LOGIN_REDIRECT_URL = '/matchmaker/'
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

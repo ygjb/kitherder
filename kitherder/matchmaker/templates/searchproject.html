@@ -1,36 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>KitHerder: Search Projects</title>
+{% extends "base.html" %}
 
-<link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"> <!-- FONTS for opensans -->
-<link href="{{ STATIC_URL }}KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
-<link href="{{ STATIC_URL }}Kitherder.css" rel="stylesheet" type="text/css" />   <!-- the look of kitherder colours fonts etc -->
-<link href="{{ STATIC_URL }}tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
+{% block title%}KitHerder: Search Project{% endblock %}
 
-
-
-</head>
-
-<body>
-<div id="MainWrapper">
-
-<div class="large" id="Title">KitHerder
-</div> <!-- end title -->
-
-
-<div id="Nav">
-<div class="table"> <!-- start of table --> 
-    	<p>  <!-- start of row -->
-        	<span class="col1"> <a href="/matchmaker/myprojects.html">My Projects </a> 	</span> 	<!-- end col 1-->
-		 	<span class="col2"> <a href="/matchmaker/searchproject.html">Search Projects</a></span> 		<!-- end col 2-->
-        	<span class="col3"> <a href="/matchmaker/submitproject.html">Submit Project</a>	</span> 	<!-- end col 3-->
-        </p> <!-- end of row -->
-</div> <!-- end table -->           
-</div> <!-- end Nav -->
-
-<div id="Content">
+{% block content %}
    <div id="Search" align="center" style="padding: 5px;">
     <form name="searchform" action="/matchmaker/searchproject/" method="post">{% csrf_token %}
 		{{ form.non_field_errors }}
@@ -51,7 +23,7 @@
 				<div id="table"> <!-- table to hold search results -->
 					<p><span class="header1">Project</span><span class="header2">Description</span><span class="header3">Status</span></p>
 					{% for project in resultprojectslist %}
-						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectName }}</span><span class="col3">{{ project.ProjectStatusID.ProjectStatus }}</span></p>
+						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectName }}</span><span class="col3">{{ project.ProjectStatusID.Status }}</span></p>
 					{% endfor %}
 				</div> <!-- end of #table -->
 				<div class="cleaner"></div>  <!-- clean up after tables -->  
@@ -60,13 +32,4 @@
 			<p>No projects matching your search term. Please try again.</p>
 		{% endif %}
 	{% endif %}
-</div> <!-- end Content -->
-
-
-<div class="body" id="Footer">
-footer
-</div> <!-- end Footer -->
-
-</div> <!--end main wrapper -->
-</body>
-</html>
+{% endblock %}
