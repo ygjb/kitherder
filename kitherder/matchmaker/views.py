@@ -7,6 +7,7 @@ from django.template import RequestContext
 from django import forms
 from django.db.models import Q
 from django.core.context_processors import csrf
+from django.contrib.auth.decorators import login_required
 
 from matchmaker.models import Project, Division, Coordinator, User
 from matchmaker.forms import ProjectForm
@@ -15,13 +16,13 @@ from matchmaker.forms import ProjectForm
 class SearchForm(forms.Form):
     searchterm = forms.CharField(max_length=500)
 	
-
+@login_required
 def myprojects(request):
 	myprojectslist = Project.objects.filter(DivisionID__DivisionName="Security")
 	#myprojectlist = Project.objects.filter(DivisionID='1')
 	return render_to_response('matchmaker/templates/myprojects.html', {'myprojectslist': myprojectslist}, context_instance=RequestContext(request))
 
-	
+@login_required	
 def searchproject(request):
 	if request.method == 'POST':
 		searched = 1;
@@ -38,14 +39,16 @@ def searchproject(request):
 	myprojectlist = Project.objects.filter(DivisionID__DivisionName="Security")	
 	return render_to_response('matchmaker/templates/searchproject.html', {'myprojectlist': myprojectlist, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
 
-	
+@login_required	
 def projectdetail(request, projectID):
 	theproject = Project.objects.get(pk=projectID)
 	mycoordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
 	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist}, context_instance=RequestContext(request))
 	
-	
+@login_required	
 def submitproject(request):
+	if not request.user.is_authenticated():
+		return redirect('/');
 	if request.method == 'POST':
 		submitform = ProjectForm(request.POST)
 		if form.is_valid():
