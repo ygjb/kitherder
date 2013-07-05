@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 # Here is the complete model for kitherder including matchmaker and other apps.
 
 class Division(models.Model):
@@ -10,14 +11,12 @@ class Division(models.Model):
 	class Meta:
 		ordering = ('DivisionName',)
 	
-class User(models.Model):
-	UserID = models.IntegerField(unique=True)
-	Email = models.CharField(max_length=50, unique=True)
+class UserProfile(models.Model):
+	User = models.ForeignKey(User, unique=True)
 	IsVouched = models.BooleanField()
-	IsAdmin = models.BooleanField()
 	
 	def __unicode__(self):
-		return self.Email
+		return self.User.username
 	
 class Mentee(models.Model):
 	UserID = models.ForeignKey(User, unique=True)

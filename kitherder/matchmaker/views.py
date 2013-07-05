@@ -47,8 +47,6 @@ def projectdetail(request, projectID):
 	
 @login_required	
 def submitproject(request):
-	if not request.user.is_authenticated():
-		return redirect('/');
 	if request.method == 'POST':
 		submitform = ProjectForm(request.POST)
 		if form.is_valid():

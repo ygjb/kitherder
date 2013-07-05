@@ -16,13 +16,12 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
     
-    url(r'^browserid/', include('django_browserid.urls')),
-	url(r'^$', 'matchmaker.views.myprojects'),
+    url(r'^$', 'matchmaker.views.myprojects'),
 	url(r'^myprojects', 'matchmaker.views.myprojects'),
 	url(r'^submitproject', 'matchmaker.views.submitproject'),
 	url(r'^searchproject', 'matchmaker.views.searchproject'),
 	url(r'^project/(?P<projectID>\d+)/$', 'matchmaker.views.projectdetail'),
-	
+	url(r'^browserid/', include('django_browserid.urls')),
     # url(r'^matchmaker/project/(?P<projectID>\d+)/interest/$', 'matchmaker.views.expressinterest'),
     # url(r'^matchmaker/project/(?P<projectID>\d+)/invite/$', 'matchmaker.views.invite'),
 	# url(r'^matchmaker/project/(?P<projectID>\d+)/asssign/$', 'matchmaker.views.assign'),

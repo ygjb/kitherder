@@ -19,7 +19,7 @@
 				<td>Division Coordinator(s):</td>
 				<td>
 					{% for coordinator in mycoordinatorlist %}
-						<a href="{{ coordinator.UserID.Email }}/">{{ coordinator.UserID.Email }}</a>
+						<a href="{{ coordinator.UserID.User.username }}/">{{ coordinator.UserID.User.username }}</a>
 					{% endfor %}
 				</td>
 			</tr>
