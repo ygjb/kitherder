@@ -1,7 +1,7 @@
 [
   {
   	"model": "matchmaker.division",
-  	"pk": 1,
+  	"pk": 0,
   	"fields":
   	{
   		"DivisionName": "Security"
@@ -9,108 +9,19 @@
   },
 
   {
-  	"model": "matchmaker.user",
-  	"pk": 1,
-  	"fields": 
-  	{
-  		"UserID" : 1001,
-  		"Email": "master.admin@ofsystem.com",
-  		"IsVouched": true,
-  		"IsAdmin": true
-  	}
-  },
-  {
-  	"model": "matchmaker.user",
-  	"pk": 2,
-  	"fields": 
-  	{
-  		"UserID" : 1002,
-  		"Email": "ren.sy.c@gmail.com",
-  		"IsVouched": true,
-  		"IsAdmin": false
-  	}
-  },
-  {
-  	"model": "matchmaker.user",
-  	"pk": 3,
-  	"fields": 
-  	{
-  		"UserID" : 1003,
-  		"Email": "mentor.two@ofsystem.com",
-  		"IsVouched": true,
-  		"IsAdmin": false
-  	}
-  },
-  {
-  	"model": "matchmaker.user",
-  	"pk": 4,
-  	"fields": 
-  	{
-  		"UserID" : 1004,
-  		"Email": "mentee.one@ofsystem.com",
-  		"IsVouched": true,
-  		"IsAdmin": false
-  	}
-  },
-  {
-  	"model": "matchmaker.user",
-  	"pk": 5,
-  	"fields": 
-  	{
-  		"UserID" : 1005,
-  		"Email": "mentee.two@ofsystem.com",
-  		"IsVouched": true,
-  		"IsAdmin": false
-  	}
-  },
-  
-  {
-  	"model": "matchmaker.mentor",
-  	"pk": 1,
-  	"fields":
-  	{
-  		"UserID": 2
-  	}
-  },
-  {
-  	"model": "matchmaker.mentor",
-  	"pk": 2,
-  	"fields":
-  	{
-  		"UserID": 3
-  	}
-  },
-  
-  {
-  	"model": "matchmaker.mentee",
-  	"pk": 1,
-  	"fields":
-  	{
-  		"UserID": 4
-  	}
-  },
-  {
-  	"model": "matchmaker.mentee",
-  	"pk": 2,
-  	"fields":
-  	{
-  		"UserID": 5
-  	}
-  },
-  
-  {
   	"model": "matchmaker.coordinator",
-  	"pk": 1,
-  	"fields":
+  	"pk": 0,
+  	"fields": 
   	{
-  		"UserID": 1,
-		"DivisionID": [1]
+  		"UserID" : 0,
+  		"IsVouched": true,
   	}
   },
+ 
   
   {
   	"model": "matchmaker.projectstatus",
-  	"pk": 1,
+  	"pk": 0,
   	"fields":
   	{
   		"Status": "submitted",
@@ -119,7 +30,7 @@
   },
   {
   	"model": "matchmaker.projectstatus",
-  	"pk": 2,
+  	"pk": 1,
   	"fields":
   	{
   		"Status": "in progress",
@@ -128,7 +39,7 @@
   },  
   {
   	"model": "matchmaker.projectstatus",
-  	"pk": 3,
+  	"pk": 2,
   	"fields":
   	{
   		"Status": "on hold",
@@ -137,7 +48,7 @@
   },
   {
   	"model": "matchmaker.projectstatus",
-  	"pk": 4,
+  	"pk": 3,
   	"fields":
   	{
   		"Status": "completed",
@@ -147,26 +58,26 @@
   
   {
   	"model": "matchmaker.project",
-  	"pk": 1,
+  	"pk": 0,
   	"fields":
   	{
   		"ProjectName": "kitherder",
-  		"DivisionID": 1,
+  		"DivisionID": 0,
   		"Approved": true,
   		"ProjectDescription": "Mentor-mentee program management tool",
   		"TermsAgree": true,
-  		"ProjectStatusID": 1,
+  		"ProjectStatusID": 0,
   		"SkillsRequired": "graphics,python,web design,django"	
   	}
   },
   {
   	"model": "matchmaker.project",
-  	"pk": 2,
+  	"pk": 1,
   	"fields":
   	{
   		"ProjectName": "matchmaker",
-  		"DivisionID": 1,
-  		"ParentProjectID": 1,
+  		"DivisionID": 0,
+  		"ParentProjectID": 0,
   		"Approved": false,
   		"ProjectDescription": "Mentor-mentee program management tool",
   		"TermsAgree": true,

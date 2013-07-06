@@ -11,31 +11,27 @@ class Division(models.Model):
 	class Meta:
 		ordering = ('DivisionName',)
 	
-class UserProfile(models.Model):
-	User = models.ForeignKey(User, unique=True)
-	IsVouched = models.BooleanField()
-	
-	def __unicode__(self):
-		return self.User.username
 	
 class Mentee(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	
 	def __unicode__(self):
-		return self.UserID.Email
+		return self.UserID.username	
 	
 class Mentor(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
+	IsVouched = models.BooleanField()
 	
 	def __unicode__(self):
-		return self.UserID.Email
+		return self.UserID.username
 
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	DivisionID = models.ManyToManyField(Division)
+	IsVouched = models.BooleanField()
 	
 	def __unicode__(self):
-		return self.UserID.Email
+		return self.UserID.username	
 	
 class ProjectStatus(models.Model):
 	Status = models.CharField(max_length=30, unique=True)

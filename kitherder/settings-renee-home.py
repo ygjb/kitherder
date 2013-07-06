@@ -145,9 +145,11 @@ AUTHENTICATION_BACKENDS = (
    'django_browserid.auth.BrowserIDBackend',
 )
 
-AUTH_PROFILE_MODULE = 'accounts.UserProfile'
 SITE_URL = 'http://127.0.0.1:8000'
-BROWSERID_CREATE_USER = 'module.util.create_user'
+BROWSERID_CREATE_USER = True
+def username(email):
+    return email
+BROWSERID_USERNAME_ALGO = username
 LOGIN_REDIRECT_URL = '/matchmaker/'
 LOGIN_URL = '/'
 

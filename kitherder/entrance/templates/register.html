@@ -25,8 +25,6 @@
 <div id="MainWrapper">
 <a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
 <div class="cleaner">&nbsp;</div>
-<div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
-
  <header>
   <div class="authentication">
 	{% if user.is_authenticated %}
@@ -36,9 +34,11 @@
 	{% endif %}
   </div>
 </header>
-</div> <!--end main wrapper -->
+<div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
 
-<b>Just one more step</b>
+
+
+</div> <!--end main wrapper -->
 
 <script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
 <script src="https://login.persona.org/include.js"></script>

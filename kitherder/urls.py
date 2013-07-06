@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     # url(r'^admin/', include(admin.site.urls)),
     
 	(r'^$', include('kitherder.entrance.urls')),
+	(r'^entrance/', include('kitherder.entrance.urls')),
 	(r'^matchmaker/', include('kitherder.matchmaker.urls')),
 	
 )
