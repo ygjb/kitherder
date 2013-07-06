@@ -23,7 +23,7 @@ def myprojects(request):
 	mentorList = Mentor.objects.filter(UserID__email=request.user.email)
 	menteeList = Mentee.objects.filter(UserID__email=request.user.email)
 	coordinatorList = Coordinator.objects.filter(UserID__email=request.user.email)
-	if mentorList.count() = 0 or menteeList.count() = 0 or coordinatorList.count() = 0:
+	if mentorList.count() == 0 and menteeList.count() == 0 and coordinatorList.count() == 0:
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	else:
 		myprojectslist = Project.objects.filter(Q(MentorID__UserID__email=request.user.email)|Q(MenteeID__UserID__email=request.user.email))

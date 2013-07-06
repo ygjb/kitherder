@@ -36,7 +36,16 @@
 </header>
 <div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
 
-
+<p>Welcome to Kitherder. One last question.</p>
+<p><b>Are you enrolling as a mentor or a mentee?</b></p>
+<form name="rolequestion" action="/entrance/register/" method="post">{% csrf_token %}
+	{{ form.non_field_errors }}
+	<div class="fieldWrapper">
+		{{ form.subject_errors }}
+		{{ form.role }}
+		<input type="submit">
+	</div>
+</form>
 
 </div> <!--end main wrapper -->
 
