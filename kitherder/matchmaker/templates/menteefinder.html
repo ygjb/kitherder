@@ -1,0 +1,52 @@
+{% extends "basepopup.html" %}
+
+{% block title%}KitHerder: Mentee Finder{% endblock %}
+
+
+{% block content %}
+	<p><b>Searching for Mentee</b></p>
+    <div id="Search" align="center" style="padding: 5px;">
+    <form name="searchform" action="/matchmaker/menteefinder" method="post">{% csrf_token %}
+		{{ form.non_field_errors }}
+		<div class="fieldWrapper">
+			{{ form.subject_errors }}
+			<label for"searchterm">Search: </label>
+			{{ form.searchterm }}
+			<input type="submit" value="Search">
+		</div>
+	</form>
+    </div> <!-- end of search bar-->
+  
+	{% if resultmenteeslist.count > 0 %}  
+		{% if searched %}
+			<div id="Results"> <!-- div to hold the search results -->
+				<h4> Mentees Matching Your Search </h4> <!-- title -->
+	  
+				<div id="table"> <!-- table to hold search results -->
+					<p><span class="header1">Mentee's Email</span></p>
+					{% for mentee in resultmenteeslist %}
+						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ mentee.UserID.email }}</a></span>
+					{% endfor %}
+				</div> <!-- end of #table -->
+				<div class="cleaner"></div>  <!-- clean up after tables -->  
+			</div> <!-- end results --> 
+		{% else %}
+			<div id="Results"> <!-- div to hold the search results -->
+				<h4> Mentees Open to Joining a Project </h4> <!-- title -->
+	  
+				<div id="table"> <!-- table to hold search results -->
+					<p><span class="header1">Mentee's Email</span></p>
+					{% for mentee in resultmenteeslist %}
+						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ mentee.UserID.email }}</a></span>
+					{% endfor %}
+				</div> <!-- end of #table -->
+				<div class="cleaner"></div>  <!-- clean up after tables -->  
+			</div> <!-- end results --> 
+			</div> <!-- end results --> 
+		{% endif %}
+	{% else %}
+		<p>There are currently no mentees looking to join a project.
+	{% endif %}
+
+	   
+{% endblock %}

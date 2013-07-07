@@ -14,6 +14,7 @@ class Division(models.Model):
 	
 class Mentee(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
+	IsLooking = models.BooleanField()
 	
 	def __unicode__(self):
 		return self.UserID.username	

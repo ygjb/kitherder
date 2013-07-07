@@ -1,5 +1,3 @@
-{% load browserid %}
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -19,45 +17,17 @@
 </head>
 
 <body>
-{% browserid_info %}
 <div id="MainWrapper">
-<a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
 <div class="cleaner">&nbsp;</div>
-<header>
-  <div class="authentication">
-	{% if user.is_authenticated %}
-	  {% browserid_logout text='Logout' %}
-	{% else %}
-	  {% browserid_login text='' link_class='browserid-Login' %}
-	{% endif %}
-  </div>
-</header>
-
-<div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
-
-
-<div id="Nav">
-<div class="table"> <!-- start of table --> 
-    	<p>  <!-- start of row -->
-        	<span class="col1"> <a href="/matchmaker/myprojects/">My Projects </a> 	</span> 	<!-- end col 1-->
-		 	<span class="col2"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 		<!-- end col 2-->
-        	<span class="col3"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 	<!-- end col 3-->
-        </p> <!-- end of row -->
-</div> <!-- end table -->           
-</div> <!-- end Nav -->
-
-
 <div id="Content">
 {% block content %}{% endblock %}
 </div> <!-- end Content -->
 
 
 <div class="body" id="Footer">
-footer
+ <!-- footer -->
 </div> <!-- end Footer -->
-<script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
 </div> <!--end main wrapper -->
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-{% browserid_js %}
+
 </body>
 </html>

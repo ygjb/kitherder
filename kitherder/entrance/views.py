@@ -32,7 +32,7 @@ def register(request):
 				newMentor = Mentor(UserID=currentUser)
 				newMentor.save()
 			else:
-				newMentee = Mentee(UserID=currentUser)
+				newMentee = Mentee(UserID=currentUser,IsLooking=True)
 				newMentee.save()
 			return redirect('/matchmaker/', context_instance=RequestContext(request))
 			

@@ -16,14 +16,14 @@
     </div> <!-- end of search bar-->
   
 	{%if searched %}
-		{% if resultprojectslist %}  
+		{% if resultprojectslist.count > 0 %}  
 			<div id="Results"> <!-- div to hold the search results -->
 				<h4> Projects Matching Your Search </h4> <!-- title -->
 	  
 				<div id="table"> <!-- table to hold search results -->
 					<p><span class="header1">Project</span><span class="header2">Description</span><span class="header3">Status</span></p>
 					{% for project in resultprojectslist %}
-						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectName }}</span><span class="col3">{{ project.ProjectStatusID.Status }}</span></p>
+						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectDescription }}</span><span class="col3">{{ project.ProjectStatusID.Status }}</span></p>
 					{% endfor %}
 				</div> <!-- end of #table -->
 				<div class="cleaner"></div>  <!-- clean up after tables -->  

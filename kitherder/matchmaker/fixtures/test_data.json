@@ -7,16 +7,6 @@
   		"DivisionName": "Security"
   	}
   },
-
-  {
-  	"model": "matchmaker.coordinator",
-  	"pk": 0,
-  	"fields": 
-  	{
-  		"UserID" : 0,
-  		"IsVouched": true,
-  	}
-  },
  
   
   {
@@ -54,35 +44,6 @@
   		"Status": "completed",
   		"Deprecated": false
   	}
-  },
-  
-  {
-  	"model": "matchmaker.project",
-  	"pk": 0,
-  	"fields":
-  	{
-  		"ProjectName": "kitherder",
-  		"DivisionID": 0,
-  		"Approved": true,
-  		"ProjectDescription": "Mentor-mentee program management tool",
-  		"TermsAgree": true,
-  		"ProjectStatusID": 0,
-  		"SkillsRequired": "graphics,python,web design,django"	
-  	}
-  },
-  {
-  	"model": "matchmaker.project",
-  	"pk": 1,
-  	"fields":
-  	{
-  		"ProjectName": "matchmaker",
-  		"DivisionID": 0,
-  		"ParentProjectID": 0,
-  		"Approved": false,
-  		"ProjectDescription": "Mentor-mentee program management tool",
-  		"TermsAgree": true,
-  		"ProjectStatusID": 1,
-  		"SkillsRequired": "graphics,python,web design,django"	
-  	}
   }
+
 ]

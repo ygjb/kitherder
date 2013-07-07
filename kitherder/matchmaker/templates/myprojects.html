@@ -8,7 +8,7 @@
   		<h4> My Projects </h4> 
   		<!-- title -->
   
-  		{% if myprojectslist %}  	
+  		{% if myprojectslist.count > 0 %}  	
   			<div id="table"> <!-- table to hold search results -->	
   				<p><span class="header1">Project</span><span class="header2">Description</span><span class="header3">Status</span></p>
   				{% for project in myprojectslist %}
