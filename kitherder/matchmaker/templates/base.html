@@ -16,6 +16,13 @@
 <link href="{{ STATIC_URL }}Kitherder.css" rel="stylesheet" type="text/css" />   <!-- the look of kitherder colours fonts etc -->
 <link href="{{ STATIC_URL }}tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
 
+<script language="JavaScript">
+	function target_popup(form, popupcontent)
+	{
+		window.open(popupcontent, 'formpopup', 'scrollbars=no,locationbar=no,nmenubar=no,toolbar=no,status=no,width=550,height=450');
+		form.target = 'formpopup';
+	}
+</script>
 
 </head>
 

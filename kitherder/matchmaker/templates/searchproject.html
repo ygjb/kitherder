@@ -21,9 +21,13 @@
 				<h4> Projects Matching Your Search </h4> <!-- title -->
 	  
 				<div id="table"> <!-- table to hold search results -->
-					<p><span class="header1">Project</span><span class="header2">Description</span><span class="header3">Status</span></p>
+					<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Status</div></div>
 					{% for project in resultprojectslist %}
-						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectDescription }}</span><span class="col3">{{ project.ProjectStatusID.Status }}</span></p>
+						<div class="table-row">
+							<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></div>
+							<div class="table-cell">{{ project.DivisionID.DivisionName }}</div>
+							<div class="table-cell">{{ project.ProjectStatusID.Status }}</div>
+						</div>
 					{% endfor %}
 				</div> <!-- end of #table -->
 				<div class="cleaner"></div>  <!-- clean up after tables -->  

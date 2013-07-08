@@ -42,7 +42,34 @@ def findUserRole(email):
 			if mentee.count() > 0:
 				role = "mentee"
 	return role
+	
+def belongToProject(email, projectid):
+	role = findUserRole(email)
+	theproject = Project.objects.get(pk=projectid)
+	if role == "vouched mentor" or role == "non-vouched mentor":
+		try: 
+			if theproject.MentorID.UserID.email == email:
+				return True;
+		except:
+			return False;
+	elif role == "coordinator":
+		# get a list of all the coordinators involved with the project
+		# THIS STILL HAS TO BE CHECKED TO SEE IF IT WORKS
+		coordinatorlist == Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
+		if email in coordinatorlist.UserID.email:
+			return True;
+	else:
+		# assume role is mentee
+		try:
+			if theproject.MenteeID.UserID.email == email:
+				return True;
+		except:
+			return False;
+	return False;
+			
+
 # end helper functions
+
 	
 @login_required
 def myprojects(request):
@@ -72,9 +99,11 @@ def searchproject(request):
 
 @login_required	
 def projectdetail(request, projectID):
+	role = findUserRole(request.user.email)
+	isbelong = belongToProject(request.user.email,projectID)
 	theproject = Project.objects.get(pk=projectID)
 	mycoordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
-	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist}, context_instance=RequestContext(request))
+	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong}, context_instance=RequestContext(request))
 	
 @login_required	
 def submitproject(request):

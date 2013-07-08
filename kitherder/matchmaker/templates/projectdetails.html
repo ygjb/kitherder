@@ -6,35 +6,60 @@
 	<h2>Project Details</h2>
 
 	{% if theproject %}
-		<table border="0" width="500">
-			<tr>
-				<td>Project Name:</td>
-				<td><a href="/matchmaker/project/{{ theproject.id }}/">{{ theproject.ProjectName }}</a></td>
-			</tr>
-			<tr>
-				<td>Division:</td>
-				<td>{{ theproject.DivisionID.DivisionName }}</td>
-			</tr>
-			<tr>
-				<td>Division Coordinator(s):</td>
-				<td>
+		<div class="table">
+			<div class="table-row">
+				<div class="table-cell" style="width: 300px">Project Name:</div>
+				<div class="table-cell">{{ theproject.ProjectName }}</div>
+			</div>
+			<div class="table-row">
+				<div class="table-cell">Division:</div>
+				<div class="table-cell">{{ theproject.DivisionID.DivisionName }}</div>
+			</div>
+			<div class="table-row">
+				<div class="table-cell">Division Coordinator(s):</div>
+				<div class="table-cell">
 					{% for coordinator in mycoordinatorlist %}
-						<a href="{{ coordinator.UserID.User.username }}/">{{ coordinator.UserID.User.username }}</a>
+						<a href="{{ coordinator.UserID.email }}/">{{ coordinator.UserID.email }}</a><br>
 					{% endfor %}
-				</td>
-			</tr>
-			<tr>
-				<td>Mentor:</td>
-				<td>{{ theproject.MentorID }}</td>
-			</tr>
-			<tr>
-				<td>Mentee:</td>
-				<td>{{ theproject.MenteeID }}</td>
-			</tr>
-			<tr>
-				<td>Project Description:</td>
-				<td>{{ theproject.ProjectDescription }}</td>
-			</tr>
+				</div>
+			</div>
+			
+			<!-- Showing Mentor and Mentee only if user belongs to the project -->
+			{% if isbelong %}
+				<div class="table-row">
+					<div class="table-cell">Mentor:</div>
+					<div class="table-cell">
+						<a href="mailto:{{ theproject.MentorID.UserID.email }}">{{ theproject.MentorID.UserID.email }}</a>
+					</div>
+				</div>
+				<div class="table-row">
+					<div class="table-cell">Mentee:</div>
+					<div class="table-cell">
+						{% if theproject.MenteeID == NULL %}
+							{% if role == "vouched mentor" %}
+								<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
+									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
+									<input type="submit" value="add mentee" />
+								</form>
+							{% else %}
+								None
+							{% endif %}
+						{% else %}	
+							<a href="mailto:{{ theproject.MenteeID.UserID.email }}">{{ theproject.MenteeID.UserID.email }}</a>
+						{% endif %}
+					</div>
+				</div>
+			{% endif %}
+			<!-- end mentor and mentee logic -->
+			
+			<div class="table-row">
+				<div class="table-cell">Project Description:</div>
+				<div class="table-cell">{{ theproject.ProjectDescription }}</div>
+			</div>
+			<div class="table-row">
+				<div class="table-cell">Skills Required</div>
+				<div class="table-cell">{{ theproject.SkillsRequired }}</div>
+			</div>
 		</table	>
 	{% else %}
     	<p>Project does not exist</p>
