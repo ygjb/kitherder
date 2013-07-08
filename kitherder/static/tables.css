@@ -4,84 +4,31 @@
 #table
 {
 	width: 100%;
+	display: table;
 	table-layout: fixed;
 	white-space: nowrap;
+	}
+
+.table-row
+{
+	display:table-row;
+	padding: 3px;
 }
 
-#table p 
+.table-header-cell
 {
-	clear: both;
-	width: 100%;
-	margin: 0;
-}
-
-#table span 
-{
-	float: left;
-	padding: 0;
-}
-
-#table span.header1 
-{
-	width: 30%;
+	display:table-cell;
 	background-color:#ccc;
 	padding-top: 3px;
 	padding-bottom: 3px;
 }
 
-#table span.header2 
+.table-cell
 {
-	width: 60%;
-	background-color:#ccc;
-	padding-top: 3px;
-	padding-bottom: 3px;
-}
-
-#table span.header3 
-{
-	width: 10%;
-	background-color:#ccc;
-	padding-top: 3px;
-	padding-bottom: 3px;
-}
-
-#table span.col1 
-{
-	width: 30%;
+	display:table-cell;
 	padding-top: 3px;
 	padding-bottom: 3px;
 	border-bottom: dotted 1px #ccc;
-}
-
-#table span.col2 
-{
-	width: 60%;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	border-bottom: dotted 1px #ccc;
-}
-
-#table span.col3 
-{
-	width: 10%;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	border-bottom: dotted 1px #ccc;
-}
-
-#table span.SubCol1 
-{
-	width: 20%;
-}
-
-#table span.SubCol2 
-{
-	width: 60%;
-}
-
-#table span.SubCol3 
-{
-	width: 20&;
 }
 
 

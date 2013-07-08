@@ -3,18 +3,53 @@
 {% block title%}KitHerder: My Projects{% endblock %}
 
 {% block content %}
+	<script language="JavaScript">
+		function target_popup(form)
+		{
+			window.open('/matchmaker/menteefinder/', 'formpopup', 'scrollbars=no,locationbar=no,nmenubar=no,toolbar=no,status=no,width=550,height=450');
+			form.target = 'formpopup';
+		}
+	</script>
 	<div id="Results"> <!-- div to hold the search results -->
   
   		<h4> My Projects </h4> 
   		<!-- title -->
   
   		{% if myprojectslist.count > 0 %}  	
-  			<div id="table"> <!-- table to hold search results -->	
-  				<p><span class="header1">Project</span><span class="header2">Description</span><span class="header3">Status</span></p>
-  				{% for project in myprojectslist %}
-					<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></span><span class="col2">{{ project.ProjectName }}</span><span class="col3">{{ project.ProjectStatusID.Status }}</span></p>
-				{% endfor %}
-			</div> <!-- end of #table -->
+			{% if role == "vouched mentor" or role == "non-vouched mentor" %}			
+				<div id="table"> <!-- table to hold search results -->	
+					<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentee</div><div class="table-header-cell">Status</div></div>
+					{% for project in myprojectslist %}
+						<div class="table-row">
+							<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></div>
+							<div class="table-cell">{{ project.DivisionID.DivisionName }}</div>
+							<div class="table-cell">
+								{% if project.MenteeID == NULL %}
+									<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this)">{% csrf_token %}
+										<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
+										<input type="submit" value="add mentee" />
+									</form>
+								{% else %}	
+									<a href="mailto:{{ project.MenteeID.UserID.email }}">{{ project.MenteeID.UserID.email }}</a>
+								{% endif %}
+							</div>
+							<div class="table-cell">{{ project.ProjectStatusID.Status }}</div>
+						</div>
+					{% endfor %}
+				</div> <!-- end of #table -->
+			{% else %}
+				<div id="table"> <!-- table to hold search results -->	
+					<div class="table-row"><span class="header1">Project</span><span class="header2">Division</span><span class="header3">blank column</span><span class="header4">Status</span></div>
+					{% for project in myprojectslist %}
+						<div class="table-row">
+							<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></div>
+							<div class="table-cell">{{ project.DivisionID.DivisionName }}</div>
+							<div class="table-cell">blank column</div>
+							<div class="table-cell">{{ project.ProjectStatusID.Status }}</div>
+						</div>
+					{% endfor %}
+				</div> <!-- end of #table -->
+			{% endif %}
 			<div class="cleaner"></div>  <!-- clean up after tables -->  
     	{% else %}
     		<p>You are currently not involved in a project.</p>

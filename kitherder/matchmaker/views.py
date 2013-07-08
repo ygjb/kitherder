@@ -12,25 +12,49 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, ProjectStatus
-from matchmaker.forms import ProjectForm, NonVouchedMentorProjectForm, VouchedMentorProjectForm, MenteeProjectForm
+from matchmaker.forms import ProjectForm, MentorMenteeProjectForm
 
 
 class SearchForm(forms.Form):
     searchterm = forms.CharField(max_length=500)
 	
 class SearchMenteeForm(forms.Form):
-    searchterm = forms.CharField(max_length=500)
+	project = forms.IntegerField(widget=forms.HiddenInput)
+	searchterm = forms.CharField(max_length=500)
+
+# helper functions here
+def findUserRole(email):
+	# checking to see if the user is a mentor or mentee so we can present the appropriate form
+	# always assume most privileged in this case so if user is both mentor and mentee, show for mentor
+	role = ""
+	coordinator = Coordinator.objects.filter(UserID__email=email)
+	if coordinator.count() > 0:
+		role = "coordinator"
+	else:
+		mentor = Mentor.objects.filter(UserID__email=email)
+		if mentor.count() > 0:
+			if mentor[0].IsVouched == True:
+				role = "vouched mentor"
+			else:
+				role = "non-vouched mentor"
+		else:
+			mentee = Mentee.objects.filter(UserID__email=email)
+			if mentee.count() > 0:
+				role = "mentee"
+	return role
+# end helper functions
 	
 @login_required
 def myprojects(request):
-	mentorList = Mentor.objects.filter(UserID__email=request.user.email)
-	menteeList = Mentee.objects.filter(UserID__email=request.user.email)
-	coordinatorList = Coordinator.objects.filter(UserID__email=request.user.email)
-	if mentorList.count() == 0 and menteeList.count() == 0 and coordinatorList.count() == 0:
+	role = findUserRole(request.user.email)
+	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	else:
-		myprojectslist = Project.objects.filter(Q(MentorID__UserID__email=request.user.email)|Q(MenteeID__UserID__email=request.user.email))
-		return render_to_response('matchmaker/templates/myprojects.html', {'myprojectslist': myprojectslist}, context_instance=RequestContext(request))	
+		if role == "vouched mentor" or role == "non-vouched mentor":
+			myprojectslist = Project.objects.filter(MentorID__UserID__email=request.user.email)
+		elif role == "mentee":
+			myprojectslist = Project.objects.filter(MenteeID__UserID__email=request.user.email)
+		return render_to_response('matchmaker/templates/myprojects.html', {'myprojectslist': myprojectslist, 'role': role}, context_instance=RequestContext(request))	
 
 @login_required	
 def searchproject(request):
@@ -54,63 +78,55 @@ def projectdetail(request, projectID):
 	
 @login_required	
 def submitproject(request):
-	# checking to see if the user is a mentor or mentee so we can present the appropriate form
-	# always assume most privileged in this case so if user is both mentor and mentee, show for mentor
-	role = ""
-	coordinator = Coordinator.objects.filter(UserID__email=request.user.email)
-	if coordinator.count() > 0:
-		role = "coordinator"
-	else:
-		mentor = Mentor.objects.filter(UserID__email=request.user.email)
-		if mentor.count() > 0:
-			if mentor[0].IsVouched == True:
-				role = "vouched mentor"
-			else:
-				role = "non-vouched mentor"
-		else:
-			role = "mentee"
-	# end of determining role
-		
+	role = findUserRole(request.user.email)	
 	# presenting and inputing forms
 	if role == "coordinator":
 		submitform = ProjectForm(request.POST)
-	elif role == "vouched mentor":
-		submitform = VouchedMentorProjectForm(request.POST)
-	elif role == "non-vouched mentor":
-		if request.method == 'POST':
-			defaultProjectStatus = ProjectStatus.objects.get(Status="submitted")
-			submitform = NonVouchedMentorProjectForm(request.POST)
-			newproject = submitform.save(commit=False)
-			newproject.MentorID = mentor[0]
-			newproject.ProjectStatusID = defaultProjectStatus
-			newproject.save()
-			return redirect('/matchmaker/', context_instance=RequestContext(request))
-		else:
-			submitform = NonVouchedMentorProjectForm()
 	else:
 		if request.method == 'POST':
-			defaultProjectStatus = ProjectStatus.objects.get(Status="submitted")
-			submitform = MenteeProjectForm(request.POST)
-			newproject = submitform.save(commit=False)
-			newproject.MenteeID = Mentee.objects.get(UserID__email=request.user.email)
-			newproject.ProjectStatusID = defaultProjectStatus
-			newproject.save()
-			return redirect('/matchmaker/', context_instance=RequestContext(request))
+			submitform = MentorMenteeProjectForm(request.POST)
+			if submitform.is_valid():
+				# assigning all values from form to the object new project
+				newproject = submitform.save(commit=False)
+				
+				# setting default status as submitted
+				defaultProjectStatus = ProjectStatus.objects.get(Status="submitted")
+				newproject.ProjectStatusID = defaultProjectStatus
+				
+				# setting default mentor if logged in user is a mentor		
+				if role == "vouched mentor" or role == "non-vouched mentor":
+					mentor = Mentor.objects.get(UserID__email=request.user.email)				
+					newproject.MentorID = mentor
+								
+				newproject.save()
+				return redirect('/matchmaker/', context_instance=RequestContext(request))
 		else:
-			submitform = MenteeProjectForm(request.POST)
-		
+			submitform = MentorMenteeProjectForm()
 	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform}, context_instance=RequestContext(request))
 	
 @login_required	
 def searchmentee(request):
+	project =""
 	if request.method == 'POST':
+		project = request.POST['project']
+		
+	if request.method == 'POST' and 'searchterm' in request.POST:
 		searched = 1;
-		form = SearchForm(request.POST)
+		form = SearchMenteeForm(request.POST)
 		if form.is_valid():
+			project = form.cleaned_data['project']
 			searchterm = form.cleaned_data['searchterm']
 			resultmenteeslist = Mentee.objects.filter(UserID__email__icontains=searchterm, IsLooking=True)
-			return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
+			return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
+			
+	if request.method =='POST' and 'selectedmentee' in request.POST:
+		p = Project.objects.get(pk=request.POST['project'])
+		m = Mentee.objects.get(UserID__email=request.POST['selectedmentee'])
+		p.MenteeID = m
+		p.save()
+		return render_to_response('matchmaker/templates/menteefindersuccess.html', {'mentee': request.POST['selectedmentee'], 'projectname': p.ProjectName}, context_instance=RequestContext(request))		
+	
 	searched = 0;
-	form = SearchForm()
+	form = SearchMenteeForm(initial={'project': project})
 	resultmenteeslist = Mentee.objects.filter(IsLooking=True)
-	return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
+	return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))

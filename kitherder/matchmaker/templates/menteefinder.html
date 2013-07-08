@@ -4,12 +4,21 @@
 
 
 {% block content %}
+	<script language="JavaScript">
+		function target_popup(form)
+		{
+			window.close();
+			form.target = 'formpopup';
+		}
+	</script>
+	
 	<p><b>Searching for Mentee</b></p>
     <div id="Search" align="center" style="padding: 5px;">
-    <form name="searchform" action="/matchmaker/menteefinder" method="post">{% csrf_token %}
+    <form name="searchmenteeform" action="/matchmaker/menteefinder" method="post">{% csrf_token %}
 		{{ form.non_field_errors }}
 		<div class="fieldWrapper">
 			{{ form.subject_errors }}
+			{{ form.project }}
 			<label for"searchterm">Search: </label>
 			{{ form.searchterm }}
 			<input type="submit" value="Search">
@@ -18,34 +27,36 @@
     </div> <!-- end of search bar-->
   
 	{% if resultmenteeslist.count > 0 %}  
-		{% if searched %}
-			<div id="Results"> <!-- div to hold the search results -->
+		<div id="Results"> <!-- div to hold the search results -->
+			{% if searched %}
 				<h4> Mentees Matching Your Search </h4> <!-- title -->
-	  
-				<div id="table"> <!-- table to hold search results -->
-					<p><span class="header1">Mentee's Email</span></p>
-					{% for mentee in resultmenteeslist %}
-						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ mentee.UserID.email }}</a></span>
-					{% endfor %}
-				</div> <!-- end of #table -->
-				<div class="cleaner"></div>  <!-- clean up after tables -->  
-			</div> <!-- end results --> 
-		{% else %}
-			<div id="Results"> <!-- div to hold the search results -->
+			{% else %}
 				<h4> Mentees Open to Joining a Project </h4> <!-- title -->
-	  
-				<div id="table"> <!-- table to hold search results -->
-					<p><span class="header1">Mentee's Email</span></p>
-					{% for mentee in resultmenteeslist %}
-						<p><span class="col1"><a href="/matchmaker/project/{{ project.id }}/">{{ mentee.UserID.email }}</a></span>
-					{% endfor %}
-				</div> <!-- end of #table -->
-				<div class="cleaner"></div>  <!-- clean up after tables -->  
-			</div> <!-- end results --> 
-			</div> <!-- end results --> 
-		{% endif %}
+			{% endif %}
+		  
+			<div id="table"> <!-- table to hold search results -->
+				<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
+				{% for mentee in resultmenteeslist %}
+					<div class="table-row">
+						<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ mentee.UserID.email }}</a></div>
+						<div class="table-cell">
+							<form id="selectmentee" method="post" action="/matchmaker/menteefinder/">{% csrf_token %}
+								<input type="hidden" id="project" name="project" value="{{ project }}">
+								<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ mentee.UserID.email }}">
+								<input type="submit" value="Select Mentee" />
+							</form>
+						</div>
+					</div>
+				{% endfor %}
+			</div> <!-- end of #table -->
+			<div class="cleaner"></div>  <!-- clean up after tables -->  
+		</div> <!-- end results --> 
 	{% else %}
-		<p>There are currently no mentees looking to join a project.
+		{% if searched %}
+			<p>There are currently no mentees looking to join a project that matches your search.</p>
+		{% else %}
+			<p>There are currently no mentees looking to join a project.</p>
+		{% endif %}
 	{% endif %}
 
 	   
