@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title%}KitHerder: Profile{% endblock %}
+
+{% block content %}
+   <h4>Profile</h4>
+   
+   <br>&nbsp;<br>
+   <div id= "table">
+   	<div class="table-row">
+   		<div class="table-cell" style="width: 150px;">Persona Email</div>
+   		<div class="table-cell">{{ user.email }}</div>
+   	</div>
+   	<div class="table-row">
+   		<div class="table-cell">Password</div>
+   		<div class="table-cell">Change your password at <a href="http://persona.org">Persona</a></div>
+   	</div>
+   	<div class="table-row">
+   		<div class="table-cell">Role</div>
+   		<div class="table-cell">{{ role }}</div>
+   	</div>
+   </div>
+   
+   <br>&nbsp;<br>
+   
+   {% if role == "mentee" %}
+   		{% if islooking %}
+   			<b>You are currently looking for a project</b>
+   		{% else %}
+   			<b>You are currently not looking for a project</b>
+   		{% endif %}
+   		
+   		<br>&nbsp;<br>
+   		
+   		
+   		<b>Change your status: </b><br>
+		<form name="islookingform" action="/userprofile/" method="post">{% csrf_token %}
+			{{ form.non_field_errors }}
+			<div class="fieldWrapper">
+				{{ form.subject_errors }}
+				<label for"searchterm">Looking for a project? </label>
+				{{ form.islooking }}
+				<input type="submit" value="Save">
+			</div>
+		</form>
+	{% endif %}
+{% endblock %}

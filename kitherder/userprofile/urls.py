@@ -1,4 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -15,9 +16,7 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
     
-	(r'^$', include('kitherder.entrance.urls')),
-	(r'^entrance/', include('kitherder.entrance.urls')),
-	(r'^userprofile/', include('kitherder.userprofile.urls')),
-	(r'^matchmaker/', include('kitherder.matchmaker.urls')),
-	
+    url(r'^$', 'userprofile.views.userprofile'),
 )
+
+urlpatterns += staticfiles_urlpatterns()

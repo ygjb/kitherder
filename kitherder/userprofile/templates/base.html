@@ -45,7 +45,7 @@
 <a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
 <div class="authentication" style="padding-top: 10px">
 	{% if user.is_authenticated %}
-	  Logged in as <a href="/userprofile/">{{ user.email }}</a> | {% browserid_logout text='Logout' %}
+	  Logged in as {{ user.email }} | {% browserid_logout text='Logout' %}
 	{% else %}
 	  {% browserid_login text='' link_class='browserid-Login' %}
 	{% endif %}
