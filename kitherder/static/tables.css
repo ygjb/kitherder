@@ -6,8 +6,7 @@
 	width: 100%;
 	display: table;
 	table-layout: fixed;
-	white-space: nowrap;
-	}
+}
 
 .table-row
 {

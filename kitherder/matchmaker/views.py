@@ -93,7 +93,13 @@ def myprojects(request):
 	elif role == "coordinator":
 		divisionList = findDivisionsCorrespondingCoordinator(request.user.email)
 		myprojectslist = Project.objects.filter(DivisionID__in = divisionList)
-
+		
+		if request.method == 'POST' and "approveproject" in request.POST:
+			p = Project.objects.get(pk=request.POST['project'])
+			c = Coordinator.objects.get(UserID__email=request.user.email)
+			p.Approved = True
+			p.ApprovedBy = c
+			p.save()
 
 	return render_to_response('matchmaker/templates/myprojects.html', {'myprojectslist': myprojectslist, 'role': role}, context_instance=RequestContext(request))	
 
