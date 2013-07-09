@@ -41,25 +41,64 @@
 				</div> <!-- end of #table -->
 				<!-- end of mentor view -->
 			{% else %}
-				<!-- assume mentee view -->
-				<div id="table"> <!-- table to hold search results -->	
-					<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentor</div><div class="table-header-cell">Status</div></div>
-					{% for project in myprojectslist %}
-						<div class="table-row">
-							<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></div>
-							<div class="table-cell">{{ project.DivisionID.DivisionName }}</div>
-							<div class="table-cell">
-								{% if project.MentorID == NULL %}
-									None yet
-								{% else %}
-									<a href="mailto:{{ project.MentorID.UserID.email }}">{{ project.MentorID.UserID.email }}</a>
-								{% endif %}
+				{% if role == "coordinator" %}
+					<!-- coordinator view -->
+					<div id="table"> <!-- table to hold search results -->	
+						<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentor</div><div class="table-header-cell">Mentee</div><div class="table-header-cell">Status</div></div>
+						{% for project in myprojectslist %}
+							<div class="table-row">
+								<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></div>
+								<div class="table-cell">{{ project.DivisionID.DivisionName }}</div>
+								<div class="table-cell">
+									{% if project.MentorID == NULL %}
+										<form id="invitementor{{ project.pk }}" action="/matchmaker/mentorfinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/mentorfinder/')">{% csrf_token %}
+											<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
+											<input type="submit" value="add mentor" />
+										</form>
+									{% else %}	
+										<!-- there is already a mentee, can't add another -->
+										<!-- THIS IS AN ASSUMPTION OF THE SYSTEM FOR NOW -->
+										<a href="mailto:{{ project.MentorID.UserID.email }}">{{ project.MentorID.UserID.email }}</a>
+									{% endif %}
+								</div>
+								<div class="table-cell">
+									{% if project.MenteeID == NULL %}
+										<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
+											<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
+											<input type="submit" value="add mentee" />
+										</form>
+									{% else %}	
+										<!-- there is already a mentee, can't add another -->
+										<!-- THIS IS AN ASSUMPTION OF THE SYSTEM FOR NOW -->
+										<a href="mailto:{{ project.MenteeID.UserID.email }}">{{ project.MenteeID.UserID.email }}</a>
+									{% endif %}
+								</div>
+								<div class="table-cell">{{ project.ProjectStatusID.Status }}</div>
 							</div>
-							<div class="table-cell">{{ project.ProjectStatusID.Status }}</div>
-						</div>
-					{% endfor %}
-				</div> <!-- end of #table -->
-				<!-- end of mentee view -->
+						{% endfor %}
+						</div> <!-- end of #table -->
+					<!-- end of coordinator view -->
+				{% else %}	
+					<!-- assume mentee view -->
+					<div id="table"> <!-- table to hold search results -->	
+						<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentor</div><div class="table-header-cell">Status</div></div>
+						{% for project in myprojectslist %}
+							<div class="table-row">
+								<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.ProjectName }}</a></div>
+								<div class="table-cell">{{ project.DivisionID.DivisionName }}</div>
+								<div class="table-cell">
+									{% if project.MentorID == NULL %}
+										None yet
+									{% else %}
+										<a href="mailto:{{ project.MentorID.UserID.email }}">{{ project.MentorID.UserID.email }}</a>
+									{% endif %}
+								</div>
+								<div class="table-cell">{{ project.ProjectStatusID.Status }}</div>
+							</div>
+						{% endfor %}
+					</div> <!-- end of #table -->
+					<!-- end of mentee view -->
+				{% endif %}
 			{% endif %}
 			<div class="cleaner"></div>  <!-- clean up after tables -->  
     	{% else %}

@@ -68,6 +68,16 @@
 						{% endif %}
 					</div>
 				</div>
+				<div class="table-row">
+					<div class="table-cell">Approved?</div>
+					<div class="table-cell">
+						{% if theproject.Approved %}
+							Approved by <a href="mailto:{{ theproject.ApprovedBy.UserID.email }}">{{ theproject.ApprovedBy.UserID.email }}</a>
+						{% else %}
+							Not yet
+						{% endif %}
+					</div>
+				</div>
 			{% endif %}
 			<!-- end mentor and mentee logic -->
 			
@@ -81,9 +91,8 @@
 			</div>
 		</div>
 		
-		
 		{% if isbelong %}
-			{% if role == "non-vouched mentor" or role == "vouched mentor" %}
+			{% if role == "non-vouched mentor" or role == "vouched mentor" or role == "coordinator" %}
 				{% if expressedinterestlist %}
 					<br>&nbsp;<br>
 					<b>Mentees who have expressed interest</b> <a href="#" onClick="ToggleList('expressinterest')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
