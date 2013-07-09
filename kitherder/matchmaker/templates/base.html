@@ -22,6 +22,19 @@
 		window.open(popupcontent, 'formpopup', 'scrollbars=no,locationbar=no,nmenubar=no,toolbar=no,status=no,width=550,height=450');
 		form.target = 'formpopup';
 	}
+	
+	function ToggleList(IDS) 
+	{
+  		var CState = document.getElementById(IDS);
+  		if (CState.style.display != "block") 
+  		{ 
+  			CState.style.display = "block"; 
+  		}
+        else 
+        {
+        	CState.style.display = "none";
+        }
+	}
 </script>
 
 </head>

@@ -48,4 +48,7 @@ body {
 	
 a:link {color:#0095DD;}      /* unvisited link */
 a:visited {color:#0095DD;}  /* visited link */
-a:hover {color:#00539F;}  /* 
+a:hover {color:#00539F;}  
+
+
+.divInfo { display:none; }

@@ -40,7 +40,8 @@ class ProjectStatus(models.Model):
 	Deprecated = models.BooleanField()
 	def __unicode__(self):
 		return self.Status
-	
+
+# ASSUMPTION: Project:Mentor:Mentee is a one-to-one-to-one relationship	
 class Project(models.Model):
 	ProjectName = models.CharField(max_length=70, unique=True)
 	ParentProjectID = models.ForeignKey('self', null=True, blank=True)

@@ -86,25 +86,28 @@
 			{% if role == "non-vouched mentor" or role == "vouched mentor" %}
 				{% if expressedinterestlist %}
 					<br>&nbsp;<br>
-					<b>Mentees who have expressed interest</b>
-					<div id="table"> <!-- table to hold search results -->
-						<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
-						{% for menteeRel in expressedinterestlist %}
-							<div class="table-row">
-								<div class="table-cell"><a href="mailto:{{ menteeRel.MenteeID.UserID.email }}">{{ menteeRel.MenteeID.UserID.email }}</a></div>
-								<div class="table-cell">
-									<!-- ASSUMPTION: Vouched or nonvouched mentor can add a mentee who has already expressed interest to the project -->
-									<form id="selectmentee" method="post" action="/matchmaker/menteefinder/">{% csrf_token %}
-										<input type="hidden" id="project" name="project" value="{{ theproject.pk }}">
-										<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.MenteeID.UserID.email }}">
-										<input type="submit" value="Select Mentee" />
-									</form>
+					<b>Mentees who have expressed interest</b> <a href="#" onClick="ToggleList('expressinterest')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
+					<div id="expressinterest" class="divInfo">
+						<div id="table"> <!-- table to hold search results -->
+							<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
+							{% for menteeRel in expressedinterestlist %}
+								<div class="table-row">
+									<div class="table-cell"><a href="mailto:{{ menteeRel.MenteeID.UserID.email }}">{{ menteeRel.MenteeID.UserID.email }}</a></div>
+									<div class="table-cell">
+										<!-- ASSUMPTION: Vouched or nonvouched mentor can add a mentee who has already expressed interest to the project -->
+										<!-- show form only if no mentee is in the project yet -->
+										{% if theproject.MenteeID == NULL %}
+										<form id="selectmentee" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
+											<input type="hidden" id="project" name="project" value="{{ theproject.pk }}">
+											<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.MenteeID.UserID.email }}">
+											<input type="submit" id="selectmentee" name = "selectmentee" value="select mentee" />
+										</form>
+										{% endif %}
+									</div>
 								</div>
-							</div>
-						{% endfor %}
-					</div> <!-- end of #table -->
-				{% else %}
-					You have expressed interest for this project.
+							{% endfor %}
+						</div> <!-- end of #table -->
+					</div>
 				{% endif %}
 			{% endif %}
 		{% endif %}

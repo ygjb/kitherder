@@ -83,6 +83,7 @@ def myprojects(request):
 			myprojectslist = Project.objects.filter(MenteeID__UserID__email=request.user.email)
 		return render_to_response('matchmaker/templates/myprojects.html', {'myprojectslist': myprojectslist, 'role': role}, context_instance=RequestContext(request))	
 
+
 @login_required	
 def searchproject(request):
 	if request.method == 'POST':
@@ -97,6 +98,7 @@ def searchproject(request):
 	
 	return render_to_response('matchmaker/templates/searchproject.html', {'form': form, 'searched': searched}, context_instance=RequestContext(request))
 
+
 @login_required	
 def projectdetail(request, projectID):
 	role = findUserRole(request.user.email)
@@ -108,6 +110,7 @@ def projectdetail(request, projectID):
 	# check to see if user is a mentee and is not a member of the project, whether they have expressed interest already in the project
 	expressedinterest = 0
 	if not isbelong and role == "mentee":
+		# if user has clicked on the express interest button
 		if request.method == 'POST' and "expressinterest" in request.POST:
 			mentee = Mentee.objects.get(UserID__email=request.user.email)
 			interest = MenteeInterestInProject(ProjectID=theproject, MenteeID=mentee)
@@ -117,12 +120,24 @@ def projectdetail(request, projectID):
 	
 	# check to see if user is a mentor and list all mentees who had expressed interest
 	if role == "vouched mentor" or  role == "non-vouched mentor":
+		# if user has clicked on select mentee to add a mentee from the "expressed interest" list
+		# ASSUMPTION: both a vouched and a non vouched mentor can add a mentee who has expressed interest in their project to the project but the triad still has to be approved by coordinator
+		# COROLLARY ASSUMPTION: a vouched mentor can add any mentee who is currently marked to be looking for a project (whether they have expressed interest or not)
+		if request.method == 'POST' and "selectmentee" in request.POST:
+			p = Project.objects.get(pk=request.POST['project'])
+			m = Mentee.objects.get(UserID__email=request.POST['selectedmentee'])
+			p.MenteeID = m
+			p.save()
+			theproject = Project.objects.get(pk=projectID)
+			
+		
 		expressedinterestlist = MenteeInterestInProject.objects.filter(ProjectID=projectID)
 		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterestlist': expressedinterestlist}, context_instance=RequestContext(request))
 	
 	
 	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
-	
+
+
 @login_required	
 def submitproject(request):
 	role = findUserRole(request.user.email)	
@@ -154,7 +169,8 @@ def submitproject(request):
 		else:
 			submitform = MentorMenteeProjectForm()
 	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform}, context_instance=RequestContext(request))
-	
+
+
 @login_required	
 def searchmentee(request):
 	project =""
