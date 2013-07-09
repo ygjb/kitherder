@@ -15,13 +15,14 @@ class Division(models.Model):
 class Mentee(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	IsLooking = models.BooleanField()
-	
+		
 	def __unicode__(self):
 		return self.UserID.username	
 	
 class Mentor(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	IsVouched = models.BooleanField()
+	
 	
 	def __unicode__(self):
 		return self.UserID.username
@@ -56,6 +57,10 @@ class Project(models.Model):
 	def __unicode__(self):
 		return self.ProjectName
 
+class MenteeInterestInProject(models.Model):
+	ProjectID = models.ForeignKey(Project)
+	MenteeID = models.ForeignKey(Mentee)
+			
 class Milestone(models.Model):
 	ProjectID = models.ForeignKey(Project)
 	MilestoneName = models.CharField(max_length=100)
@@ -67,4 +72,5 @@ class Milestone(models.Model):
 	
 	def __unicode__(self):
 		return self.MilestoneName
+	
 	

@@ -4,13 +4,32 @@
 
 {% block content %}
 	<h2>Project Details</h2>
-
+	
 	{% if theproject %}
-		<div class="table">
+		<!-- display the express interest portion -->
+		{% if not isbelong and role == "mentee" %}
+			<div align="right">
+				{% if expressedinterest == 0 %}
+					<form name="expressinterest" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
+						<input type="submit" name="expressinterest" value="express interest">
+					</form>
+				{% else %}
+					You have expressed interest for this project.
+				{% endif %}
+			</div>
+		{% endif %}
+	
+		<div class="table" style="width: 100%">
 			<div class="table-row">
 				<div class="table-cell" style="width: 300px">Project Name:</div>
 				<div class="table-cell">{{ theproject.ProjectName }}</div>
 			</div>
+			{% if theproject.ParentProjectID != NULL %}
+				<div class="table-row">
+					<div class="table-cell">Parent Project:</div>
+					<div class="table-cell">{{ theproject.ParentProjectID.ProjectName }}</div>
+				</div>
+			{% endif %}
 			<div class="table-row">
 				<div class="table-cell">Division:</div>
 				<div class="table-cell">{{ theproject.DivisionID.DivisionName }}</div>
@@ -60,7 +79,35 @@
 				<div class="table-cell">Skills Required</div>
 				<div class="table-cell">{{ theproject.SkillsRequired }}</div>
 			</div>
-		</table	>
+		</div>
+		
+		
+		{% if isbelong %}
+			{% if role == "non-vouched mentor" or role == "vouched mentor" %}
+				{% if expressedinterestlist %}
+					<br>&nbsp;<br>
+					<b>Mentees who have expressed interest</b>
+					<div id="table"> <!-- table to hold search results -->
+						<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
+						{% for menteeRel in expressedinterestlist %}
+							<div class="table-row">
+								<div class="table-cell"><a href="mailto:{{ menteeRel.MenteeID.UserID.email }}">{{ menteeRel.MenteeID.UserID.email }}</a></div>
+								<div class="table-cell">
+									<!-- ASSUMPTION: Vouched or nonvouched mentor can add a mentee who has already expressed interest to the project -->
+									<form id="selectmentee" method="post" action="/matchmaker/menteefinder/">{% csrf_token %}
+										<input type="hidden" id="project" name="project" value="{{ theproject.pk }}">
+										<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.MenteeID.UserID.email }}">
+										<input type="submit" value="Select Mentee" />
+									</form>
+								</div>
+							</div>
+						{% endfor %}
+					</div> <!-- end of #table -->
+				{% else %}
+					You have expressed interest for this project.
+				{% endif %}
+			{% endif %}
+		{% endif %}
 	{% else %}
     	<p>Project does not exist</p>
 	{% endif %} 

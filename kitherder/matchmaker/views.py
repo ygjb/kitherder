@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
-from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, ProjectStatus
+from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, ProjectStatus, MenteeInterestInProject
 from matchmaker.forms import ProjectForm, MentorMenteeProjectForm
 
 
@@ -101,9 +101,27 @@ def searchproject(request):
 def projectdetail(request, projectID):
 	role = findUserRole(request.user.email)
 	isbelong = belongToProject(request.user.email,projectID)
+
 	theproject = Project.objects.get(pk=projectID)
 	mycoordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
-	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong}, context_instance=RequestContext(request))
+	
+	# check to see if user is a mentee and is not a member of the project, whether they have expressed interest already in the project
+	expressedinterest = 0
+	if not isbelong and role == "mentee":
+		if request.method == 'POST' and "expressinterest" in request.POST:
+			mentee = Mentee.objects.get(UserID__email=request.user.email)
+			interest = MenteeInterestInProject(ProjectID=theproject, MenteeID=mentee)
+			interest.save()
+		expressedinterest = MenteeInterestInProject.objects.filter(MenteeID__UserID__email=request.user.email,ProjectID=projectID).count()
+		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
+	
+	# check to see if user is a mentor and list all mentees who had expressed interest
+	if role == "vouched mentor" or  role == "non-vouched mentor":
+		expressedinterestlist = MenteeInterestInProject.objects.filter(ProjectID=projectID)
+		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterestlist': expressedinterestlist}, context_instance=RequestContext(request))
+	
+	
+	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
 	
 @login_required	
 def submitproject(request):
@@ -122,10 +140,14 @@ def submitproject(request):
 				defaultProjectStatus = ProjectStatus.objects.get(Status="submitted")
 				newproject.ProjectStatusID = defaultProjectStatus
 				
+				
 				# setting default mentor if logged in user is a mentor		
 				if role == "vouched mentor" or role == "non-vouched mentor":
 					mentor = Mentor.objects.get(UserID__email=request.user.email)				
 					newproject.MentorID = mentor
+				elif role == "mentee":
+					mentee - Mentee.objects.get(UserID__email=request.user.email)
+					newproject.MenteeID = mentee
 								
 				newproject.save()
 				return redirect('/matchmaker/', context_instance=RequestContext(request))

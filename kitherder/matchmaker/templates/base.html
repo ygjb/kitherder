@@ -30,17 +30,15 @@
 {% browserid_info %}
 <div id="MainWrapper">
 <a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
-<div class="cleaner">&nbsp;</div>
-<header>
-  <div class="authentication">
+<div class="authentication" style="padding-top: 10px">
 	{% if user.is_authenticated %}
-	  {% browserid_logout text='Logout' %}
+	  Logged in as {{ user.email }} | {% browserid_logout text='Logout' %}
 	{% else %}
 	  {% browserid_login text='' link_class='browserid-Login' %}
 	{% endif %}
-  </div>
-</header>
-
+</div>
+<div class="cleaner">&nbsp;</div>
+<br>&nbsp;<br>
 <div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
 
 
