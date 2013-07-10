@@ -29,7 +29,8 @@ class SearchMentorForm(forms.Form):
 # helper functions here
 def findUserRole(email):
 	# checking to see if the user is a mentor or mentee so we can present the appropriate form
-	# always assume most privileged in this case so if user is both mentor and mentee, show for mentor
+	# always assume most privileged in this case so if user is both mentor and mentee, show for mentor 
+	# or if coordinator is also a mentor, assume coordinator
 	role = ""
 	coordinator = Coordinator.objects.filter(UserID__email=email)
 	if coordinator.count() > 0:
