@@ -20,3 +20,24 @@ class CoordinatorProjectForm(ProjectForm):
 		widgets = {
 			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
         }
+		
+class MenteeEditProjectForm(ProjectForm):
+	class Meta(ProjectForm.Meta):
+		exclude = ('MentorID', 'MenteeID', 'DivisionID', 'TermsAgree', 'Approved', 'ApprovedBy', 'ProjectStatusID')
+		widgets = {
+			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+        }
+
+class MentorEditProjectForm(ProjectForm):
+	class Meta(ProjectForm.Meta):
+		exclude = ('MentorID', 'MenteeID', 'DivisionID', 'TermsAgree', 'Approved', 'ApprovedBy')
+		widgets = {
+			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+        }	
+
+class CoordinatorEditProjectForm(ProjectForm):
+	class Meta(ProjectForm.Meta):
+		exclude = ('MentorID', 'MenteeID', 'TermsAgree', 'Approved', 'ApprovedBy')
+		widgets = {
+			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+        }	

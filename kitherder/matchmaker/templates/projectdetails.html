@@ -7,8 +7,8 @@
 	
 	{% if theproject %}
 		<!-- display the express interest portion -->
-		{% if not isbelong and role == "mentee" %}
-			<div align="right">
+		<div align="right">
+			{% if not isbelong and role == "mentee" %}
 				{% if expressedinterest == 0 %}
 					<form name="expressinterest" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
 						<input type="submit" name="expressinterest" value="express interest">
@@ -16,8 +16,11 @@
 				{% else %}
 					You have expressed interest for this project.
 				{% endif %}
-			</div>
-		{% endif %}
+			{% endif %} 
+			{% if isbelong %}
+				<a href="/matchmaker/project/{{ theproject.pk }}/edit/">Edit Project</a>
+			{% endif %}
+		</div>
 	
 		<div id="table" >
 			<div class="table-row">

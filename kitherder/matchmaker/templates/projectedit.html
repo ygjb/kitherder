@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title%}KitHerder: Project Details{% endblock %}
+
+{% block content %}
+	<h2>Project Details</h2>
+	
+	{% if theproject %}
+		<form method="post" action="">{% csrf_token %}
+			<table>
+			{{ submitform.as_table }}
+			<tr><td>&nbsp;</td><td><input type="submit" name="submit" id="submit" value="Submit" /></td></tr>
+			</table>
+		</form>
+	{% else %}
+    	<p>Project does not exist</p>
+	{% endif %} 
+{% endblock %}

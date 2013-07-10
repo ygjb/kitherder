@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, ProjectStatus, MenteeInterestInProject
-from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm
+from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm, MenteeEditProjectForm, MentorEditProjectForm, CoordinatorEditProjectForm
 
 
 class SearchForm(forms.Form):
@@ -160,9 +160,47 @@ def projectdetail(request, projectID):
 		
 		expressedinterestlist = MenteeInterestInProject.objects.filter(ProjectID=projectID)
 		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterestlist': expressedinterestlist}, context_instance=RequestContext(request))
-	
-	
 	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
+
+@login_required	
+def projectedit(request, projectID):
+	role = findUserRole(request.user.email)
+	redirecturl = '/matchmaker/project/' + str(projectID)
+	
+	if role == "":
+		return redirect('/entrance/register/', context_instance=RequestContext(request))
+	
+	isbelong = belongToProject(request.user.email,projectID)
+	if (not isbelong):
+		return redirect(redirecturl, context_instance=RequestContext(request))
+	
+	theproject = Project.objects.get(pk=projectID)
+	
+	if role == "mentee":
+		if request.method == 'POST':
+			submitform = MenteeEditProjectForm(request.POST, instance=theproject)
+			if submitform.is_valid():
+				submitform.save()
+				return redirect(redirecturl, context_instance=RequestContext(request))		
+		submitform = MenteeEditProjectForm(instance=theproject)
+
+	elif role == "coordinator":
+		if request.method == 'POST':
+			submitform = CoordinatorEditProjectForm(request.POST, instance=theproject)
+			if submitform.is_valid():
+				submitform.save()
+				return redirect(redirecturl, context_instance=RequestContext(request))
+		submitform = CoordinatorEditProjectForm(instance=theproject)
+
+	else:
+		if request.method == 'POST':
+			submitform = MentorEditProjectForm(request.POST, instance=theproject)
+			if submitform.is_valid():
+				submitform.save()
+				return redirect(redirecturl, context_instance=RequestContext(request))
+		submitform = MentorEditProjectForm(instance=theproject)
+	
+	return render_to_response('matchmaker/templates/projectedit.html', {'theproject': theproject, 'role': role, 'isbelong': isbelong, 'submitform': submitform}, context_instance=RequestContext(request))
 
 
 @login_required	
