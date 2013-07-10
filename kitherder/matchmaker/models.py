@@ -30,7 +30,7 @@ class Mentor(models.Model):
 class Coordinator(models.Model):
 	UserID = models.ForeignKey(User, unique=True)
 	DivisionID = models.ManyToManyField(Division)
-	IsVouched = models.BooleanField()
+	# ASSUMPTION: coordinator comes into the system already vouched. Probably admin will add him/her in
 	
 	def __unicode__(self):
 		return self.UserID.username	

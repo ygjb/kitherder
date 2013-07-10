@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title%}KitHerder: People Management{% endblock %}
+
+{% block content %}
+   <h4> People Management</h4>
+   
+   <b>Unvouched Mentors Involved in Project In Your Division</b> <a href="#" onClick="ToggleList('unvouchedmentor')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
+	<div id="unvouchedmentor" class="divInfo" style="display: block">
+		{% if mentorslist.count > 0 %}  
+			<div id="table"> <!-- table to hold search results -->
+				<div class="table-row"><div class="table-header-cell">Mentor's Email</div><div class="table-header-cell">&nbsp;</div></div>
+				{% for mentor in mentorslist %}
+					<div class="table-row">
+						<div class="table-cell"><a href="mailto:{{ mentor.UserID.email }}">{{ mentor.UserID.email }}</a></div>
+						<div class="table-cell">
+							<form id="approvementor" method="post" action="/matchmaker/people/">{% csrf_token %}
+								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.UserID.email }}">
+								<input type="submit" value="Vouch" />
+							</form>
+						</div>
+					</div>
+				{% endfor %}
+			</div> <!-- end of #table -->
+			<div class="cleaner"></div>  <!-- clean up after tables -->  
+		{% else %}
+			Currently no un-vouched mentors involved in a project in your area.
+		{% endif %}
+	</div>
+   	<br>&nbsp;<br>
+    <b>All Un-Vouched Mentors</b> <a href="#" onClick="ToggleList('allunvouchedmentor')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
+	<div id="allunvouchedmentor" class="divInfo">
+		{% if allunvouchedmentorslist.count > 0 %}  
+			<div id="table"> <!-- table to hold search results -->
+				<div class="table-row"><div class="table-header-cell">Mentor's Email</div><div class="table-header-cell">&nbsp;</div></div>
+				{% for mentor in allunvouchedmentorslist %}
+					<div class="table-row">
+						<div class="table-cell"><a href="mailto:{{ mentor.UserID.email }}">{{ mentor.UserID.email }}</a></div>
+						<div class="table-cell">
+							<form id="approvementor" method="post" action="/matchmaker/people/">{% csrf_token %}
+								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.UserID.email }}">
+								<input type="submit" value="Vouch" />
+							</form>
+						</div>
+					</div>
+				{% endfor %}
+			</div> <!-- end of #table -->
+			<div class="cleaner"></div>  <!-- clean up after tables -->  
+		{% else %}
+			Currently no un-vouched mentors involved in a project in your area.
+		{% endif %}
+	</div>
+   
+{% endblock %}

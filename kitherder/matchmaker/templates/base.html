@@ -56,11 +56,14 @@
 
 
 <div id="Nav">
-<div class="table"> <!-- start of table --> 
+<div id="table"> <!-- start of table --> 
     	<p>  <!-- start of row -->
-        	<span class="col1"> <a href="/matchmaker/myprojects/">My Projects </a> 	</span> 	<!-- end col 1-->
-		 	<span class="col2"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 		<!-- end col 2-->
-        	<span class="col3"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 	<!-- end col 3-->
+        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/myprojects/">My Projects </a> </span> 
+		 	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 
+        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 
+        	{% if role == "coordinator" %}
+				<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/people/">People Management</a></span> 
+        	{% endif %}
         </p> <!-- end of row -->
 </div> <!-- end table -->           
 </div> <!-- end Nav -->

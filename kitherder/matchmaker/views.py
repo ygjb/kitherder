@@ -218,7 +218,33 @@ def submitproject(request):
 				return redirect('/matchmaker/', context_instance=RequestContext(request))
 		else:
 			submitform = MentorMenteeProjectForm()
-	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform}, context_instance=RequestContext(request))
+	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'role':role,}, context_instance=RequestContext(request))
+
+@login_required
+def people(request):
+	role = findUserRole(request.user.email)	
+	if role == "":
+		return redirect('/entrance/register/', context_instance=RequestContext(request))
+	
+	if role != "coordinator":
+		return redirect('/matchmaker/myprojects', context_instance=RequestContext(request))
+	
+	
+	if request.method == 'POST':
+		mentor = Mentor.objects.get(UserID__email=request.POST["selectedmentor"])
+		mentor.IsVouched = True;
+		mentor.save()
+	
+	# get list of projects that have unvouched mentors involved in the coordinator's area
+	divisionList = findDivisionsCorrespondingCoordinator(request.user.email)
+	projectslist = Project.objects.filter(DivisionID__in = divisionList)
+	mentorslist = Mentor.objects.filter(IsVouched=False,pk__in=projectslist)
+	
+	# get list of all unvouched mentors
+	allunvouchedmentors = Mentor.objects.filter(IsVouched=False)
+	
+		
+	return render_to_response('matchmaker/templates/people.html', {'role':role, 'mentorslist':mentorslist, 'allunvouchedmentors':allunvouchedmentors}, context_instance=RequestContext(request))
 
 
 @login_required	
@@ -283,3 +309,5 @@ def searchmentor(request):
 	form = SearchMentorForm(initial={'project': project})
 	resultmentorslist = Mentor.objects.all()
 	return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))
+	
+	
