@@ -27,6 +27,8 @@
 		display: block;
 		border: 0px;
 	}
+	
+
 </style>
 
 </head>
@@ -36,17 +38,32 @@
 <div id="MainWrapper">
 <a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
 <div class="cleaner">&nbsp;</div>
-<div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
 
- <header>
-  <div class="authentication">
-	{% if user.is_authenticated %}
-	  {% browserid_logout text='Logout' %}
-	{% else %}
-	  {% browserid_login text='' link_class='browserid-Login' %}
-	{% endif %}
-  </div>
-</header>
+<div id="table" style="width: 80%" >
+	<div class="table-row">
+		<div class="table-cell" style="border: none; vertical-align: middle; text-align: right">
+			<img src="{{ STATIC_URL }}Images/logo.png" width="400">
+		</div>
+		<div class="table-cell" style="border: none; vertical-align: middle;">
+			<div align="center" style="border: none">Welcome to</div>
+			<div class="large" id="Title">Kitherder</div>
+			Sign up as a mentee to learn something new through hands-on experience with a Mozilla project or Sign up as a mentor to couch someone through project. Get involved now!
+			<br>&nbsp;<br>
+			<header>
+  				<div class="authentication" style="text-align: center">
+				{% if user.is_authenticated %}
+				  {% browserid_logout text='Logout' %}
+				{% else %}
+				  {% browserid_login text='' link_class='browserid-Login' %}
+				{% endif %}
+  				</div>
+			</header>
+		</div>
+	</div>
+</div>
+
+
+ 
 </div> <!--end main wrapper -->
 
 <script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
