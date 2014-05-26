@@ -127,6 +127,25 @@
 				{% endif %}
 			{% endif %}
 		{% endif %}
+		<br />
+		<h4>Project Milestones</h4>
+			{% if milestoneslist.count > 0 %} 
+				<div id="table" >
+				{% for milestone in milestoneslist %}
+					<div class="table-row">
+						<div class="table-cell">{{ milestone.MilestoneName }</div>
+						<div class="table-cell">{{ milestone.MilestoneStatus }</div>
+						<div class="table-cell">{{ milestone.MilestoneStartDate }</div>
+						<div class="table-cell">{{ milestone.MilestoneProjectedDate }</div>
+						<div class="table-cell">{{ milestone.MilestoneCompletionDate }</div>
+						<div class="table-cell">{{ milestone.MilestoneComments }</div>						
+					</div>
+				{% endfor %}
+				</div>
+			{% else %}
+				<p>No milestones in this project yet.</p>
+			{% endif %}	
+			<a href="">Add milestone</a>
 	{% else %}
     	<p>Project does not exist</p>
 	{% endif %} 
