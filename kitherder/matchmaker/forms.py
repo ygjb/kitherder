@@ -1,10 +1,15 @@
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, HiddenInput
 from django import forms
-from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee
+from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, Milestone
 
 class ProjectForm(ModelForm):
     class Meta:
         model = Project
+		
+class MilestoneForm(ModelForm):
+	class Meta:
+		model = Milestone
+		
 
 class MentorMenteeProjectForm(ProjectForm):
 	TermsAgree = forms.BooleanField(label='I agree to these terms', required=True)
@@ -41,3 +46,10 @@ class CoordinatorEditProjectForm(ProjectForm):
 		widgets = {
 			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
         }	
+		
+class MentorMenteeMilestoneForm(MilestoneForm):
+	class Meta(MilestoneForm.Meta):
+		widgets = {
+			'ProjectID': HiddenInput,
+			'MilestoneComments': Textarea(attrs={'cols': 30, 'rows': 10}),
+        }

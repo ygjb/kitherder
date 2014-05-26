@@ -69,7 +69,7 @@ class Milestone(models.Model):
 	MilestoneComments = models.CharField(max_length=500)
 	StartDate = models.DateTimeField()
 	ProjectedEndDate = models.DateTimeField()
-	CompletionDate = models.DateTimeField()
+	CompletionDate = models.DateTimeField(null=True, blank=True)
 	
 	def __unicode__(self):
 		return self.MilestoneName

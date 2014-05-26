@@ -1,0 +1,19 @@
+{% extends "basepopup.html" %}
+
+{% block title%}KitHerder: Add Milestone{% endblock %}
+
+
+{% block content %}
+	<script language="JavaScript">
+		window.opener.location.reload(false);
+		function close_popup()
+		{
+			window.close();
+		}
+	</script>
+
+	You have successfully added a milestone to the project.
+	
+	<p align="center"><a href="#" onClick="close_popup()">close window</a></p>
+		   
+{% endblock %}

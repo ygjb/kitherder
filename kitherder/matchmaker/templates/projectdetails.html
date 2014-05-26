@@ -129,23 +129,38 @@
 		{% endif %}
 		<br />
 		<h4>Project Milestones</h4>
-			{% if milestoneslist.count > 0 %} 
-				<div id="table" >
+		{% if milestoneslist.count > 0 %} 
+			<div id="table">
+				<div class="table-row">
+					<div class="table-cell">Name</div>
+					<div class="table-cell">Status</div>
+					<div class="table-cell">Start Date</div>
+					<div class="table-cell">Projected End Date</div>
+					<div class="table-cell">Completed Date</div>
+					<div class="table-cell">Comments</div>						
+				</div>
 				{% for milestone in milestoneslist %}
 					<div class="table-row">
-						<div class="table-cell">{{ milestone.MilestoneName }</div>
-						<div class="table-cell">{{ milestone.MilestoneStatus }</div>
-						<div class="table-cell">{{ milestone.MilestoneStartDate }</div>
-						<div class="table-cell">{{ milestone.MilestoneProjectedDate }</div>
-						<div class="table-cell">{{ milestone.MilestoneCompletionDate }</div>
-						<div class="table-cell">{{ milestone.MilestoneComments }</div>						
+						<div class="table-cell">{{ milestone.MilestoneName }}</div>
+						<div class="table-cell">{{ milestone.MilestoneStatus }}</div>
+						<div class="table-cell">{{ milestone.StartDate }}</div>
+						<div class="table-cell">{{ milestone.ProjectedEndDate }}</div>
+						<div class="table-cell">{{ milestone.CompletionDate }}</div>
+						<div class="table-cell">{{ milestone.MilestoneComments }}</div>						
 					</div>
 				{% endfor %}
-				</div>
-			{% else %}
-				<p>No milestones in this project yet.</p>
-			{% endif %}	
-			<a href="">Add milestone</a>
+			</div>
+		{% else %}
+			<p>No milestones in this project yet.</p>
+		{% endif %}	
+		
+		<!-- ASSUMPTION: allow anyone that belongs the project (mentor vouched or not vouched, mentee and coordinator) to add of milestone in the project -->
+		{% if isbelong %}			
+			<form id="milestoneadd{{ project.pk }}" action="/matchmaker/milestoneadd/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneadd/')">{% csrf_token %}
+				<input type="hidden" id="ProjectID" name="ProjectID" value="{{ theproject.pk }}" />
+				<input type="submit" value="add milestone" />
+			</form>
+		{% endif %}
 	{% else %}
     	<p>Project does not exist</p>
 	{% endif %} 

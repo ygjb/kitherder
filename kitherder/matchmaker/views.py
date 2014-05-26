@@ -12,7 +12,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
 from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, ProjectStatus, MenteeInterestInProject, Milestone
-from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm, MenteeEditProjectForm, MentorEditProjectForm, CoordinatorEditProjectForm
+from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm, MenteeEditProjectForm, MentorEditProjectForm, CoordinatorEditProjectForm, MentorMenteeMilestoneForm
 
 
 class SearchForm(forms.Form):
@@ -147,10 +147,12 @@ def projectdetail(request, projectID):
 			interest = MenteeInterestInProject(ProjectID=theproject, MenteeID=mentee)
 			interest.save()
 		expressedinterest = MenteeInterestInProject.objects.filter(MenteeID__UserID__email=request.user.email,ProjectID=projectID).count()
-		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
+		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
+	
+	
 	
 	# check to see if user is a mentor and list all mentees who had expressed interest
-	if role == "vouched mentor" or  role == "non-vouched mentor" or role =="coordinator":
+	if (isbelong and (role == "vouched mentor" or  role == "non-vouched mentor")) or role =="coordinator":
 		# if user has clicked on select mentee to add a mentee from the "expressed interest" list
 		# ASSUMPTION: both a vouched and a non vouched mentor can add a mentee who has expressed interest in their project to the project but the triad still has to be approved by coordinator
 		# COROLLARY ASSUMPTION: a vouched mentor can add any mentee who is currently marked to be looking for a project (whether they have expressed interest or not)
@@ -352,4 +354,26 @@ def searchmentor(request):
 	resultmentorslist = Mentor.objects.all()
 	return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))
 	
+@login_required	
+def milestoneadd(request):
+	role = findUserRole(request.user.email)	
 	
+	if role == "":
+		return redirect('/entrance/register/', context_instance=RequestContext(request))
+
+	project =""
+	if request.method == 'POST':
+		project = request.POST['ProjectID']
+	
+	form = MentorMenteeMilestoneForm(initial={'ProjectID': project, 'MilestoneStatus': 'started'})
+		
+	if request.method =='POST' and 'submit' in request.POST:
+		form = MentorMenteeMilestoneForm(request.POST)
+		if form.is_valid():
+			# assigning all values from form to the object newproject
+			newmilestone = form.save(commit=False)
+			
+			newmilestone.save()
+			return render_to_response('matchmaker/templates/milestoneaddsuccess.html', {}, context_instance=RequestContext(request))		
+		
+	return render_to_response('matchmaker/templates/milestoneadd.html', {'form': form, 'project': project}, context_instance=RequestContext(request))
