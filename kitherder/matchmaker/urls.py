@@ -26,6 +26,7 @@ urlpatterns = patterns('',
 	url(r'^menteefinder', 'matchmaker.views.searchmentee'),
 	url(r'^mentorfinder', 'matchmaker.views.searchmentor'),
 	url(r'^milestoneadd', 'matchmaker.views.milestoneadd'),
+	url(r'^milestoneedit/(?P<milestoneID>\d+)/$', 'matchmaker.views.milestoneedit'),
 	url(r'^browserid/', include('django_browserid.urls')),
 )
 

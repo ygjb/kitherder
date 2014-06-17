@@ -126,6 +126,7 @@ def searchproject(request):
 
 @login_required	
 def projectdetail(request, projectID):
+	status="nothing";
 	role = findUserRole(request.user.email)
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
@@ -135,6 +136,12 @@ def projectdetail(request, projectID):
 	theproject = Project.objects.get(pk=projectID)
 	mycoordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
 	
+
+	if request.method == 'POST' and 'deleteMilestone' in request.POST:
+		m = Milestone.objects.get(pk=request.POST['milestone'])
+		m.delete()
+		status="deletedMilestone"
+		
 	# assume anyone can see the milestones list
 	milestoneslist = Milestone.objects.select_related().filter(ProjectID=projectID)
 	
@@ -147,7 +154,7 @@ def projectdetail(request, projectID):
 			interest = MenteeInterestInProject(ProjectID=theproject, MenteeID=mentee)
 			interest.save()
 		expressedinterest = MenteeInterestInProject.objects.filter(MenteeID__UserID__email=request.user.email,ProjectID=projectID).count()
-		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
+		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest, 'status': status}, context_instance=RequestContext(request))
 	
 	
 	
@@ -165,8 +172,8 @@ def projectdetail(request, projectID):
 		
 		expressedinterestlist = MenteeInterestInProject.objects.filter(ProjectID=projectID)
 
-		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterestlist': expressedinterestlist}, context_instance=RequestContext(request))
-	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest}, context_instance=RequestContext(request))
+		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterestlist': expressedinterestlist, 'status': status}, context_instance=RequestContext(request))
+	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest, 'status': status}, context_instance=RequestContext(request))
 
 @login_required	
 def projectedit(request, projectID):
@@ -370,10 +377,34 @@ def milestoneadd(request):
 	if request.method =='POST' and 'submit' in request.POST:
 		form = MentorMenteeMilestoneForm(request.POST)
 		if form.is_valid():
-			# assigning all values from form to the object newproject
+			# assigning all values from form to the object new milestone
 			newmilestone = form.save(commit=False)
 			
 			newmilestone.save()
 			return render_to_response('matchmaker/templates/milestoneaddsuccess.html', {}, context_instance=RequestContext(request))		
 		
 	return render_to_response('matchmaker/templates/milestoneadd.html', {'form': form, 'project': project}, context_instance=RequestContext(request))
+	
+@login_required	
+def milestoneedit(request, milestoneID):
+	role = findUserRole(request.user.email)	
+	
+	if role == "":
+		return redirect('/entrance/register/', context_instance=RequestContext(request))
+
+	project =""
+	if request.method == 'POST':
+		themilestone = Milestone.objects.get(pk=milestoneID)
+	
+	form = MentorMenteeMilestoneForm(instance=themilestone)
+	
+	
+	if request.method =='POST' and 'submit' in request.POST:
+		form = MentorMenteeMilestoneForm(request.POST, instance=themilestone)
+		if form.is_valid():
+			# assigning all values from form to the object newproject
+			newmilestone = form.save()
+			
+			return render_to_response('matchmaker/templates/milestoneaddsuccess.html', {}, context_instance=RequestContext(request))		
+		
+	return render_to_response('matchmaker/templates/milestoneedit.html', {'form': form}, context_instance=RequestContext(request))

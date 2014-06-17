@@ -129,6 +129,10 @@
 		{% endif %}
 		<br />
 		<h4>Project Milestones</h4>
+		{% if status == "deletedMilestone" %}
+			<span style="color: #ff0000">You have deleted a milestone.</span><br />
+		{% endif %}
+		
 		{% if milestoneslist.count > 0 %} 
 			<div id="table">
 				<div class="table-row">
@@ -137,16 +141,32 @@
 					<div class="table-cell">Start Date</div>
 					<div class="table-cell">Projected End Date</div>
 					<div class="table-cell">Completed Date</div>
-					<div class="table-cell">Comments</div>						
+					<div class="table-cell">Comments</div>
+					{% if isbelong %}
+						<!-- ASSUMPTION: Can only edit milestone if user already belongs to project, but anyone in the project can edit or delete milestones -->
+						<div class="table-cell">&nbsp;</div>						
+					{% endif %}	
 				</div>
 				{% for milestone in milestoneslist %}
 					<div class="table-row">
 						<div class="table-cell">{{ milestone.MilestoneName }}</div>
 						<div class="table-cell">{{ milestone.MilestoneStatus }}</div>
-						<div class="table-cell">{{ milestone.StartDate }}</div>
-						<div class="table-cell">{{ milestone.ProjectedEndDate }}</div>
-						<div class="table-cell">{{ milestone.CompletionDate }}</div>
-						<div class="table-cell">{{ milestone.MilestoneComments }}</div>						
+						<div class="table-cell">{{ milestone.StartDate|date:"M d, Y" }}</div>
+						<div class="table-cell">{{ milestone.ProjectedEndDate|date:"M d, Y" }}</div>
+						<div class="table-cell">{{ milestone.CompletionDate|date:"M d, Y" }}</div>
+						<div class="table-cell" style="width: *">{{ milestone.MilestoneComments }}</div>	
+						{% if isbelong %}
+							<!-- ASSUMPTION: Can only edit/delete milestone if user already belongs to project, but anyone in the project can edit or delete milestones -->
+							<div class="table-cell" style="width: 150px">						
+								<form id="milestoneedit{{ project.pk}}" action="/matchmaker/milestoneedit/{{ milestone.pk }}/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneedit/{{ milestone.pk }}/')" style="display: inline">{% csrf_token %}
+									<input type="submit" name="editMilestone" value="edit">
+								</form> |
+								<form id="milestonedelete{{ project.pk}}" method="POST" style="display: inline">{% csrf_token %}
+									<input type="hidden" name="milestone" value="{{ milestone.pk }}" />
+									<input type="submit" name="deleteMilestone" value="delete">
+								</form>
+							</div>								
+						{% endif %}		
 					</div>
 				{% endfor %}
 			</div>
