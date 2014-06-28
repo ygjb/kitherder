@@ -12,44 +12,44 @@ class MilestoneForm(ModelForm):
 		
 
 class MentorMenteeProjectForm(ProjectForm):
-	TermsAgree = forms.BooleanField(label='I agree to these terms', required=True)
+	terms_agree = forms.BooleanField(label='I agree to these terms', required=True)
 	class Meta(ProjectForm.Meta):
-		exclude = ('MentorID', 'MenteeID', 'Approved', 'ApprovedBy', 'ProjectStatusID')
+		exclude = ('mentor_id', 'mentee_id', 'approved', 'approved_by', 'project_status_id')
 		widgets = {
-			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+			'project_description': Textarea(attrs={'cols': 80, 'rows': 10}),
         }
 
 class CoordinatorProjectForm(ProjectForm):
 	class Meta(ProjectForm.Meta):
-		exclude = ('MentorID', 'MenteeID', 'ApprovedBy', 'TermsAgree')
+		exclude = ('mentor_id', 'mentee_id', 'approved_by', 'terms_agree')
 		widgets = {
-			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+			'project_description': Textarea(attrs={'cols': 80, 'rows': 10}),
         }
 		
 class MenteeEditProjectForm(ProjectForm):
 	class Meta(ProjectForm.Meta):
-		exclude = ('MentorID', 'MenteeID', 'DivisionID', 'TermsAgree', 'Approved', 'ApprovedBy', 'ProjectStatusID')
+		exclude = ('mentor_id', 'mentee_id', 'division_id', 'terms_agree', 'approved', 'approved_by', 'project_status_id')
 		widgets = {
-			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+			'project_description': Textarea(attrs={'cols': 80, 'rows': 10}),
         }
 
 class MentorEditProjectForm(ProjectForm):
 	class Meta(ProjectForm.Meta):
-		exclude = ('MentorID', 'MenteeID', 'DivisionID', 'TermsAgree', 'Approved', 'ApprovedBy')
+		exclude = ('mentor_id', 'mentee_id', 'division_id', 'terms_agree', 'approved', 'approved_by')
 		widgets = {
-			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+			'project_description': Textarea(attrs={'cols': 80, 'rows': 10}),
         }	
 
 class CoordinatorEditProjectForm(ProjectForm):
 	class Meta(ProjectForm.Meta):
-		exclude = ('MentorID', 'MenteeID', 'TermsAgree', 'Approved', 'ApprovedBy')
+		exclude = ('mentor_id', 'mentee_id', 'terms_agree', 'approved', 'approved_by')
 		widgets = {
-			'ProjectDescription': Textarea(attrs={'cols': 80, 'rows': 10}),
+			'project_description': Textarea(attrs={'cols': 80, 'rows': 10}),
         }	
 		
 class MentorMenteeMilestoneForm(MilestoneForm):
 	class Meta(MilestoneForm.Meta):
 		widgets = {
-			'ProjectID': HiddenInput,
-			'MilestoneComments': Textarea(attrs={'cols': 30, 'rows': 10}),
+			'project_id': HiddenInput,
+			'milestone_comments': Textarea(attrs={'cols': 30, 'rows': 10}),
         }

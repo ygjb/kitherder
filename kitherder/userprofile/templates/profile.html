@@ -24,7 +24,7 @@
    <br>&nbsp;<br>
    
    {% if role == "mentee" %}
-   		{% if islooking %}
+   		{% if is_looking %}
    			<b>You are currently looking for a project</b>
    		{% else %}
    			<b>You are currently not looking for a project</b>
@@ -34,12 +34,12 @@
    		
    		
    		<b>Change your status: </b><br>
-		<form name="islookingform" action="/userprofile/" method="post">{% csrf_token %}
+		<form name="is_lookingform" action="/userprofile/" method="post">{% csrf_token %}
 			{{ form.non_field_errors }}
 			<div class="fieldWrapper">
 				{{ form.subject_errors }}
 				<label for"searchterm">Looking for a project? </label>
-				{{ form.islooking }}
+				{{ form.is_looking }}
 				<input type="submit" value="Save">
 			</div>
 		</form>

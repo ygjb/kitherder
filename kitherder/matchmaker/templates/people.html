@@ -12,10 +12,10 @@
 				<div class="table-row"><div class="table-header-cell">Mentor's Email</div><div class="table-header-cell">&nbsp;</div></div>
 				{% for mentor in mentorslist %}
 					<div class="table-row">
-						<div class="table-cell"><a href="mailto:{{ mentor.UserID.email }}">{{ mentor.UserID.email }}</a></div>
+						<div class="table-cell"><a href="mailto:{{ mentor.user_id.email }}">{{ mentor.user_id.email }}</a></div>
 						<div class="table-cell">
 							<form id="approvementor" method="post" action="/matchmaker/people/">{% csrf_token %}
-								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.UserID.email }}">
+								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.user_id.email }}">
 								<input type="submit" value="Vouch" />
 							</form>
 						</div>
@@ -35,10 +35,10 @@
 				<div class="table-row"><div class="table-header-cell">Mentor's Email</div><div class="table-header-cell">&nbsp;</div></div>
 				{% for mentor in allunvouchedmentorslist %}
 					<div class="table-row">
-						<div class="table-cell"><a href="mailto:{{ mentor.UserID.email }}">{{ mentor.UserID.email }}</a></div>
+						<div class="table-cell"><a href="mailto:{{ mentor.user_id.email }}">{{ mentor.user_id.email }}</a></div>
 						<div class="table-cell">
 							<form id="approvementor" method="post" action="/matchmaker/people/">{% csrf_token %}
-								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.UserID.email }}">
+								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.user_id.email }}">
 								<input type="submit" value="Vouch" />
 							</form>
 						</div>

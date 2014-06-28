@@ -29,10 +29,10 @@ def register(request):
 		if form.is_valid():
 			role = form.cleaned_data['role']
 			if role == "mentor":
-				newMentor = Mentor(UserID=currentUser)
+				newMentor = Mentor(user_id=currentUser)
 				newMentor.save()
 			else:
-				newMentee = Mentee(UserID=currentUser,IsLooking=True)
+				newMentee = Mentee(user_id=currentUser,is_looking=True)
 				newMentee.save()
 			return redirect('/matchmaker/', context_instance=RequestContext(request))
 			

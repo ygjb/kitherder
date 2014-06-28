@@ -25,23 +25,23 @@
 		<div id="table" >
 			<div class="table-row">
 				<div class="table-cell" style="width: 250px">Project Name:</div>
-				<div class="table-cell">{{ theproject.ProjectName }}</div>
+				<div class="table-cell">{{ theproject.project_name }}</div>
 			</div>
-			{% if theproject.ParentProjectID != NULL %}
+			{% if theproject.parent_project_id != NULL %}
 				<div class="table-row">
 					<div class="table-cell">Parent Project:</div>
-					<div class="table-cell">{{ theproject.ParentProjectID.ProjectName }}</div>
+					<div class="table-cell">{{ theproject.parent_project_id.project_name }}</div>
 				</div>
 			{% endif %}
 			<div class="table-row">
 				<div class="table-cell">Division:</div>
-				<div class="table-cell">{{ theproject.DivisionID.DivisionName }}</div>
+				<div class="table-cell">{{ theproject.division_id.division_name }}</div>
 			</div>
 			<div class="table-row">
 				<div class="table-cell">Division Coordinator(s):</div>
 				<div class="table-cell">
 					{% for coordinator in mycoordinatorlist %}
-						<a href="{{ coordinator.UserID.email }}/">{{ coordinator.UserID.email }}</a><br>
+						<a href="{{ coordinator.user_id.email }}/">{{ coordinator.user_id.email }}</a><br>
 					{% endfor %}
 				</div>
 			</div>
@@ -51,13 +51,13 @@
 				<div class="table-row">
 					<div class="table-cell">Mentor:</div>
 					<div class="table-cell">
-						<a href="mailto:{{ theproject.MentorID.UserID.email }}">{{ theproject.MentorID.UserID.email }}</a>
+						<a href="mailto:{{ theproject.mentor_id.user_id.email }}">{{ theproject.mentor_id.user_id.email }}</a>
 					</div>
 				</div>
 				<div class="table-row">
 					<div class="table-cell">Mentee:</div>
 					<div class="table-cell">
-						{% if theproject.MenteeID == NULL %}
+						{% if theproject.mentee_id == NULL %}
 							{% if role == "vouched mentor" %}
 								<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
 									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
@@ -67,15 +67,15 @@
 								None
 							{% endif %}
 						{% else %}	
-							<a href="mailto:{{ theproject.MenteeID.UserID.email }}">{{ theproject.MenteeID.UserID.email }}</a>
+							<a href="mailto:{{ theproject.mentee_id.user_id.email }}">{{ theproject.mentee_id.user_id.email }}</a>
 						{% endif %}
 					</div>
 				</div>
 				<div class="table-row">
-					<div class="table-cell">Approved?</div>
+					<div class="table-cell">approved?</div>
 					<div class="table-cell">
-						{% if theproject.Approved %}
-							Approved by <a href="mailto:{{ theproject.ApprovedBy.UserID.email }}">{{ theproject.ApprovedBy.UserID.email }}</a>
+						{% if theproject.approved%}
+							approved_by <a href="mailto:{{ theproject.approved_by.user_id.email }}">{{ theproject.approved_by.user_id.email }}</a>
 						{% else %}
 							Not yet
 						{% endif %}
@@ -86,15 +86,15 @@
 			
 			<div class="table-row">
 				<div class="table-cell">Project Description:</div>
-				<div class="table-cell">{{ theproject.ProjectDescription }}</div>
+				<div class="table-cell">{{ theproject.project_description }}</div>
 			</div>
 			<div class="table-row">
 				<div class="table-cell">Skills Required</div>
-				<div class="table-cell">{{ theproject.SkillsRequired }}</div>
+				<div class="table-cell">{{ theproject.skills_required }}</div>
 			</div>
 			<div class="table-row">
-				<div class="table-cell">Status</div>
-				<div class="table-cell">{{ theproject.ProjectStatusID.Status }}</div>
+				<div class="table-cell">status</div>
+				<div class="table-cell">{{ theproject.project_status_id.status }}</div>
 			</div>
 		</div>
 		
@@ -108,14 +108,14 @@
 							<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
 							{% for menteeRel in expressedinterestlist %}
 								<div class="table-row">
-									<div class="table-cell"><a href="mailto:{{ menteeRel.MenteeID.UserID.email }}">{{ menteeRel.MenteeID.UserID.email }}</a></div>
+									<div class="table-cell"><a href="mailto:{{ menteeRel.mentee_id.user_id.email }}">{{ menteeRel.mentee_id.user_id.email }}</a></div>
 									<div class="table-cell">
 										<!-- ASSUMPTION: Vouched or nonvouched mentor can add a mentee who has already expressed interest to the project -->
 										<!-- show form only if no mentee is in the project yet -->
-										{% if theproject.MenteeID == NULL %}
+										{% if theproject.mentee_id == NULL %}
 										<form id="selectmentee" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
 											<input type="hidden" id="project" name="project" value="{{ theproject.pk }}">
-											<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.MenteeID.UserID.email }}">
+											<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.mentee_id.user_id.email }}">
 											<input type="submit" id="selectmentee" name = "selectmentee" value="select mentee" />
 										</form>
 										{% endif %}
@@ -137,7 +137,7 @@
 			<div id="table">
 				<div class="table-row">
 					<div class="table-cell">Name</div>
-					<div class="table-cell">Status</div>
+					<div class="table-cell">status</div>
 					<div class="table-cell">Start Date</div>
 					<div class="table-cell">Projected End Date</div>
 					<div class="table-cell">Completed Date</div>
@@ -149,12 +149,12 @@
 				</div>
 				{% for milestone in milestoneslist %}
 					<div class="table-row">
-						<div class="table-cell">{{ milestone.MilestoneName }}</div>
-						<div class="table-cell">{{ milestone.MilestoneStatus }}</div>
-						<div class="table-cell">{{ milestone.StartDate|date:"M d, Y" }}</div>
-						<div class="table-cell">{{ milestone.ProjectedEndDate|date:"M d, Y" }}</div>
-						<div class="table-cell">{{ milestone.CompletionDate|date:"M d, Y" }}</div>
-						<div class="table-cell" style="width: *">{{ milestone.MilestoneComments }}</div>	
+						<div class="table-cell">{{ milestone.milestone_name }}</div>
+						<div class="table-cell">{{ milestone.milestone_status }}</div>
+						<div class="table-cell">{{ milestone.start_date|date:"M d, Y" }}</div>
+						<div class="table-cell">{{ milestone.projected_end_date|date:"M d, Y" }}</div>
+						<div class="table-cell">{{ milestone.completion_date|date:"M d, Y" }}</div>
+						<div class="table-cell" style="width: *">{{ milestone.milestone_comments }}</div>	
 						{% if isbelong %}
 							<!-- ASSUMPTION: Can only edit/delete milestone if user already belongs to project, but anyone in the project can edit or delete milestones -->
 							<div class="table-cell" style="width: 150px">						
@@ -177,7 +177,7 @@
 		<!-- ASSUMPTION: allow anyone that belongs the project (mentor vouched or not vouched, mentee and coordinator) to add of milestone in the project -->
 		{% if isbelong %}			
 			<form id="milestoneadd{{ project.pk }}" action="/matchmaker/milestoneadd/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneadd/')">{% csrf_token %}
-				<input type="hidden" id="ProjectID" name="ProjectID" value="{{ theproject.pk }}" />
+				<input type="hidden" id="project_id" name="project_id" value="{{ theproject.pk }}" />
 				<input type="submit" value="add milestone" />
 			</form>
 		{% endif %}

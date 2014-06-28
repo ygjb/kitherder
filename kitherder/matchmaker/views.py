@@ -11,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import redirect
 
-from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, ProjectStatus, MenteeInterestInProject, Milestone
+from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, Projectstatus, MenteeInterestInProject, Milestone
 from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm, MenteeEditProjectForm, MentorEditProjectForm, CoordinatorEditProjectForm, MentorMenteeMilestoneForm
 
 
@@ -32,48 +32,48 @@ def findUserRole(email):
 	# always assume most privileged in this case so if user is both mentor and mentee, show for mentor 
 	# or if coordinator is also a mentor, assume coordinator
 	role = ""
-	coordinator = Coordinator.objects.filter(UserID__email=email)
+	coordinator = Coordinator.objects.filter(user_id__email=email)
 	if coordinator.count() > 0:
 		role = "coordinator"
 	else:
-		mentor = Mentor.objects.filter(UserID__email=email)
+		mentor = Mentor.objects.filter(user_id__email=email)
 		if mentor.count() > 0:
-			if mentor[0].IsVouched == True:
+			if mentor[0].is_vouched == True:
 				role = "vouched mentor"
 			else:
 				role = "non-vouched mentor"
 		else:
-			mentee = Mentee.objects.filter(UserID__email=email)
+			mentee = Mentee.objects.filter(user_id__email=email)
 			if mentee.count() > 0:
 				role = "mentee"
 	return role
 	
-def belongToProject(email, projectid):
+def belongToProject(email, project_id):
 	role = findUserRole(email)
-	theproject = Project.objects.get(pk=projectid)
+	theproject = Project.objects.get(pk=project_id)
 	if role == "vouched mentor" or role == "non-vouched mentor":
 		try: 
-			if theproject.MentorID.UserID.email == email:
+			if theproject.mentor_id.user_id.email == email:
 				return True
 		except:
 			return False
 	elif role == "coordinator":
 		# get a list of all the coordinators involved with the project
-		coordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
-		currentcoordinator = Coordinator.objects.get(UserID__email=email)
+		coordinatorlist = Coordinator.objects.select_related().filter(division_id=theproject.division_id)
+		currentcoordinator = Coordinator.objects.get(user_id__email=email)
 		if currentcoordinator in coordinatorlist:
 			return True
 	else:
 		# assume role is mentee
 		try:
-			if theproject.MenteeID.UserID.email == email:
+			if theproject.mentee_id.user_id.email == email:
 				return True
 		except:
 			return False
 	return False
 	
 def findDivisionsCorrespondingCoordinator(email):
-	mydivisionList = Division.objects.select_related().filter(coordinator__UserID__email=email)
+	mydivisionList = Division.objects.select_related().filter(coordinator__user_id__email=email)
 	return mydivisionList
 	
 			
@@ -88,18 +88,18 @@ def myprojects(request):
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	
 	if role == "vouched mentor" or role == "non-vouched mentor":
-		myprojectslist = Project.objects.filter(MentorID__UserID__email=request.user.email)
+		myprojectslist = Project.objects.filter(mentor_id__user_id__email=request.user.email)
 	elif role == "mentee":
-		myprojectslist = Project.objects.filter(MenteeID__UserID__email=request.user.email)
+		myprojectslist = Project.objects.filter(mentee_id__user_id__email=request.user.email)
 	elif role == "coordinator":
 		divisionList = findDivisionsCorrespondingCoordinator(request.user.email)
-		myprojectslist = Project.objects.filter(DivisionID__in = divisionList)
+		myprojectslist = Project.objects.filter(division_id__in = divisionList)
 		
 		if request.method == 'POST' and "approveproject" in request.POST:
 			p = Project.objects.get(pk=request.POST['project'])
-			c = Coordinator.objects.get(UserID__email=request.user.email)
-			p.Approved = True
-			p.ApprovedBy = c
+			c = Coordinator.objects.get(user_id__email=request.user.email)
+			p.approved= True
+			p.approved_by = c
 			p.save()
 
 	return render_to_response('matchmaker/templates/myprojects.html', {'myprojectslist': myprojectslist, 'role': role}, context_instance=RequestContext(request))	
@@ -116,7 +116,7 @@ def searchproject(request):
 		form = SearchForm(request.POST)
 		if form.is_valid():
 			searchterm = form.cleaned_data['searchterm']
-			resultprojectslist = Project.objects.filter(Q(DivisionID__DivisionName__icontains=searchterm) | Q(ProjectName__icontains=searchterm) | Q(ProjectDescription__icontains=searchterm) | Q(SkillsRequired__icontains=searchterm) | Q(ParentProjectID__ProjectName__icontains=searchterm))
+			resultprojectslist = Project.objects.filter(Q(division_id__division_name__icontains=searchterm) | Q(project_name__icontains=searchterm) | Q(project_description__icontains=searchterm) | Q(skills_required__icontains=searchterm) | Q(parent_project_id__project_name__icontains=searchterm))
 			return render_to_response('matchmaker/templates/searchproject.html', {'resultprojectslist': resultprojectslist, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
 	searched = 0;
 	form = SearchForm()
@@ -125,16 +125,16 @@ def searchproject(request):
 
 
 @login_required	
-def projectdetail(request, projectID):
+def projectdetail(request, project_id):
 	status="nothing";
 	role = findUserRole(request.user.email)
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	
-	isbelong = belongToProject(request.user.email,projectID)
+	isbelong = belongToProject(request.user.email,project_id)
 
-	theproject = Project.objects.get(pk=projectID)
-	mycoordinatorlist = Coordinator.objects.select_related().filter(DivisionID=theproject.DivisionID)
+	theproject = Project.objects.get(pk=project_id)
+	mycoordinatorlist = Coordinator.objects.select_related().filter(division_id=theproject.division_id)
 	
 
 	if request.method == 'POST' and 'deleteMilestone' in request.POST:
@@ -143,17 +143,17 @@ def projectdetail(request, projectID):
 		status="deletedMilestone"
 		
 	# assume anyone can see the milestones list
-	milestoneslist = Milestone.objects.select_related().filter(ProjectID=projectID)
+	milestoneslist = Milestone.objects.select_related().filter(project_id=project_id)
 	
 	# check to see if user is a mentee and is not a member of the project, whether they have expressed interest already in the project
 	expressedinterest = 0
 	if not isbelong and role == "mentee":
 		# if user has clicked on the express interest button
 		if request.method == 'POST' and "expressinterest" in request.POST:
-			mentee = Mentee.objects.get(UserID__email=request.user.email)
-			interest = MenteeInterestInProject(ProjectID=theproject, MenteeID=mentee)
+			mentee = Mentee.objects.get(user_id__email=request.user.email)
+			interest = MenteeInterestInProject(project_id=theproject, mentee_id=mentee)
 			interest.save()
-		expressedinterest = MenteeInterestInProject.objects.filter(MenteeID__UserID__email=request.user.email,ProjectID=projectID).count()
+		expressedinterest = MenteeInterestInProject.objects.filter(mentee_id__user_id__email=request.user.email,project_id=project_id).count()
 		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest, 'status': status}, context_instance=RequestContext(request))
 	
 	
@@ -161,33 +161,33 @@ def projectdetail(request, projectID):
 	# check to see if user is a mentor and list all mentees who had expressed interest
 	if (isbelong and (role == "vouched mentor" or  role == "non-vouched mentor")) or role =="coordinator":
 		# if user has clicked on select mentee to add a mentee from the "expressed interest" list
-		# ASSUMPTION: both a vouched and a non vouched mentor can add a mentee who has expressed interest in their project to the project but the triad still has to be approved by coordinator
+		# ASSUMPTION: both a vouched and a non vouched mentor can add a mentee who has expressed interest in their project to the project but the triad still has to be approved_by coordinator
 		# COROLLARY ASSUMPTION: a vouched mentor can add any mentee who is currently marked to be looking for a project (whether they have expressed interest or not)
 		if request.method == 'POST' and "selectmentee" in request.POST:
 			p = Project.objects.get(pk=request.POST['project'])
-			m = Mentee.objects.get(UserID__email=request.POST['selectedmentee'])
-			p.MenteeID = m
+			m = Mentee.objects.get(user_id__email=request.POST['selectedmentee'])
+			p.mentee_id = m
 			p.save()
-			theproject = Project.objects.get(pk=projectID)			
+			theproject = Project.objects.get(pk=project_id)			
 		
-		expressedinterestlist = MenteeInterestInProject.objects.filter(ProjectID=projectID)
+		expressedinterestlist = MenteeInterestInProject.objects.filter(project_id=project_id)
 
 		return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterestlist': expressedinterestlist, 'status': status}, context_instance=RequestContext(request))
 	return render_to_response('matchmaker/templates/projectdetails.html', {'theproject': theproject, 'mycoordinatorlist': mycoordinatorlist, 'milestoneslist': milestoneslist, 'role': role, 'isbelong': isbelong, 'expressedinterest': expressedinterest, 'status': status}, context_instance=RequestContext(request))
 
 @login_required	
-def projectedit(request, projectID):
+def projectedit(request, project_id):
 	role = findUserRole(request.user.email)
-	redirecturl = '/matchmaker/project/' + str(projectID)
+	redirecturl = '/matchmaker/project/' + str(project_id)
 	
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	
-	isbelong = belongToProject(request.user.email,projectID)
+	isbelong = belongToProject(request.user.email,project_id)
 	if (not isbelong):
 		return redirect(redirecturl, context_instance=RequestContext(request))
 	
-	theproject = Project.objects.get(pk=projectID)
+	theproject = Project.objects.get(pk=project_id)
 	
 	if role == "mentee":
 		if request.method == 'POST':
@@ -230,21 +230,21 @@ def submitproject(request):
 				newproject = submitform.save(commit=False)
 				
 				# allow coordinator to approve during submission
-				if ("Approved" in request.POST):
-					currcoordinator = Coordinator.objects.get(UserID__email=request.user.email)
-					newproject.ApprovedBy = currcoordinator
+				if ("approved" in request.POST):
+					currcoordinator = Coordinator.objects.get(user_id__email=request.user.email)
+					newproject.approved_by = currcoordinator
 				
 				# ASSUMPTION that terms have been agreed on already
-				newproject.TermsAgree = True
+				newproject.terms_agree = True
 				
 				newproject.save()
 				return redirect('/matchmaker/', context_instance=RequestContext(request))		
 		else:
 			submitform = CoordinatorProjectForm()
 			divisionlist = findDivisionsCorrespondingCoordinator(request.user.email)
-			parentProjectList = Project.objects.filter(DivisionID__in = divisionlist)
+			parentProjectList = Project.objects.filter(division_id__in = divisionlist)
 			
-			submitform.fields["DivisionID"].queryset = divisionlist
+			submitform.fields["division_id"].queryset = divisionlist
 	else:
 		if request.method == 'POST':
 			submitform = MentorMenteeProjectForm(request.POST)
@@ -253,17 +253,17 @@ def submitproject(request):
 				newproject = submitform.save(commit=False)
 				
 				# setting default status as submitted
-				defaultProjectStatus = ProjectStatus.objects.get(Status="submitted")
-				newproject.ProjectStatusID = defaultProjectStatus
+				defaultProjectstatus = Projectstatus.objects.get(status="submitted")
+				newproject.project_status_id = defaultProjectstatus
 				
 				
 				# setting default mentor if logged in user is a mentor		
 				if role == "vouched mentor" or role == "non-vouched mentor":
-					mentor = Mentor.objects.get(UserID__email=request.user.email)				
-					newproject.MentorID = mentor
+					mentor = Mentor.objects.get(user_id__email=request.user.email)				
+					newproject.mentor_id = mentor
 				elif role == "mentee":
-					mentee = Mentee.objects.get(UserID__email=request.user.email)
-					newproject.MenteeID = mentee
+					mentee = Mentee.objects.get(user_id__email=request.user.email)
+					newproject.mentee_id = mentee
 								
 				newproject.save()
 				return redirect('/matchmaker/', context_instance=RequestContext(request))
@@ -282,17 +282,17 @@ def people(request):
 	
 	
 	if request.method == 'POST':
-		mentor = Mentor.objects.get(UserID__email=request.POST["selectedmentor"])
-		mentor.IsVouched = True;
+		mentor = Mentor.objects.get(user_id__email=request.POST["selectedmentor"])
+		mentor.is_vouched = True;
 		mentor.save()
 	
 	# get list of projects that have unvouched mentors involved in the coordinator's area
 	divisionList = findDivisionsCorrespondingCoordinator(request.user.email)
-	projectslist = Project.objects.filter(DivisionID__in = divisionList)
-	mentorslist = Mentor.objects.filter(IsVouched=False,pk__in=projectslist)
+	projectslist = Project.objects.filter(division_id__in = divisionList)
+	mentorslist = Mentor.objects.filter(is_vouched=False,pk__in=projectslist)
 	
 	# get list of all unvouched mentors
-	allunvouchedmentors = Mentor.objects.filter(IsVouched=False)
+	allunvouchedmentors = Mentor.objects.filter(is_vouched=False)
 	
 		
 	return render_to_response('matchmaker/templates/people.html', {'role':role, 'mentorslist':mentorslist, 'allunvouchedmentors':allunvouchedmentors}, context_instance=RequestContext(request))
@@ -314,19 +314,19 @@ def searchmentee(request):
 		if form.is_valid():
 			project = form.cleaned_data['project']
 			searchterm = form.cleaned_data['searchterm']
-			resultmenteeslist = Mentee.objects.filter(UserID__email__icontains=searchterm, IsLooking=True)
+			resultmenteeslist = Mentee.objects.filter(user_id__email__icontains=searchterm, is_looking=True)
 			return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
 			
 	if request.method =='POST' and 'selectedmentee' in request.POST:
 		p = Project.objects.get(pk=request.POST['project'])
-		m = Mentee.objects.get(UserID__email=request.POST['selectedmentee'])
-		p.MenteeID = m
+		m = Mentee.objects.get(user_id__email=request.POST['selectedmentee'])
+		p.mentee_id = m
 		p.save()
-		return render_to_response('matchmaker/templates/menteefindersuccess.html', {'mentee': request.POST['selectedmentee'], 'projectname': p.ProjectName}, context_instance=RequestContext(request))		
+		return render_to_response('matchmaker/templates/menteefindersuccess.html', {'mentee': request.POST['selectedmentee'], 'project_name': p.project_name}, context_instance=RequestContext(request))		
 	
 	searched = 0;
 	form = SearchMenteeForm(initial={'project': project})
-	resultmenteeslist = Mentee.objects.filter(IsLooking=True)
+	resultmenteeslist = Mentee.objects.filter(is_looking=True)
 	return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))
 	
 	
@@ -346,15 +346,15 @@ def searchmentor(request):
 		if form.is_valid():
 			project = form.cleaned_data['project']
 			searchterm = form.cleaned_data['searchterm']
-			resultmentorslist = Mentor.objects.filter(UserID__email__icontains=searchterm)
+			resultmentorslist = Mentor.objects.filter(user_id__email__icontains=searchterm)
 			return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
 			
 	if request.method =='POST' and 'selectedmentor' in request.POST:
 		p = Project.objects.get(pk=request.POST['project'])
-		m = Mentor.objects.get(UserID__email=request.POST['selectedmentor'])
-		p.MentorID = m
+		m = Mentor.objects.get(user_id__email=request.POST['selectedmentor'])
+		p.mentor_id = m
 		p.save()
-		return render_to_response('matchmaker/templates/mentorfindersuccess.html', {'mentor': request.POST['selectedmentor'], 'projectname': p.ProjectName}, context_instance=RequestContext(request))		
+		return render_to_response('matchmaker/templates/mentorfindersuccess.html', {'mentor': request.POST['selectedmentor'], 'project_name': p.project_name}, context_instance=RequestContext(request))		
 	
 	searched = 0;
 	form = SearchMentorForm(initial={'project': project})
@@ -370,9 +370,9 @@ def milestoneadd(request):
 
 	project =""
 	if request.method == 'POST':
-		project = request.POST['ProjectID']
+		project = request.POST['project_id']
 	
-	form = MentorMenteeMilestoneForm(initial={'ProjectID': project, 'MilestoneStatus': 'started'})
+	form = MentorMenteeMilestoneForm(initial={'project_id': project, 'milestone_status': 'started'})
 		
 	if request.method =='POST' and 'submit' in request.POST:
 		form = MentorMenteeMilestoneForm(request.POST)

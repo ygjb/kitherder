@@ -38,11 +38,11 @@
 				<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
 				{% for mentee in resultmenteeslist %}
 					<div class="table-row">
-						<div class="table-cell"><a href="mailto:{{ mentee.UserID.email }}">{{ mentee.UserID.email }}</a></div>
+						<div class="table-cell"><a href="mailto:{{ mentee.user_id.email }}">{{ mentee.user_id.email }}</a></div>
 						<div class="table-cell">
 							<form id="selectmentee" method="post" action="/matchmaker/menteefinder/">{% csrf_token %}
 								<input type="hidden" id="project" name="project" value="{{ project }}">
-								<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ mentee.UserID.email }}">
+								<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ mentee.user_id.email }}">
 								<input type="submit" value="Select Mentee" />
 							</form>
 						</div>

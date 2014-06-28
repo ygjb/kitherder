@@ -18,32 +18,32 @@ from matchmaker.models import Mentor, Mentee
 from matchmaker.views import findUserRole
 
 
-class IsLookingForm(forms.Form):
+class is_lookingForm(forms.Form):
 	CHOICES =[('yes', 'yes'), ('no', 'no')]
-	islooking = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
+	is_looking = forms.ChoiceField(widget=forms.RadioSelect, choices=CHOICES)
 
 @login_required	
 def userprofile(request):
 	role = findUserRole(request.user.email)	
 	user = User.objects.get(email=request.user.email)
 	if role == "mentee":
-		mentee = Mentee.objects.get(UserID__email=request.user.email)
-		if request.method == 'POST' and "islooking" in request.POST:
-			form = IsLookingForm(request.POST)
+		mentee = Mentee.objects.get(user_id__email=request.user.email)
+		if request.method == 'POST' and "is_looking" in request.POST:
+			form = is_lookingForm(request.POST)
 			if form.is_valid():
-				islooking = form.cleaned_data['islooking']
-				if islooking == "yes":
-					mentee.IsLooking = True;
+				is_looking = form.cleaned_data['is_looking']
+				if is_looking == "yes":
+					mentee.is_looking = True;
 				else:
-					mentee.IsLooking = False;
+					mentee.is_looking = False;
 				mentee.save()
-				mentee = Mentee.objects.get(UserID__email=request.user.email)
-		islooking = mentee.IsLooking
+				mentee = Mentee.objects.get(user_id__email=request.user.email)
+		is_looking = mentee.is_looking
 	else:
-		islooking = False
+		is_looking = False
 
 			
-	form = IsLookingForm()
+	form = is_lookingForm()
 	
-	return render_to_response('userprofile/templates/profile.html', {'form': form, 'role':role, 'islooking': islooking, 'user':user}, context_instance=RequestContext(request))	
+	return render_to_response('userprofile/templates/profile.html', {'form': form, 'role':role, 'is_looking': is_looking, 'user':user}, context_instance=RequestContext(request))	
 
