@@ -44,8 +44,8 @@ class Projectstatus(models.Model):
 # ASSUMPTION: Project:Mentor:Mentee is a one-to-one-to-one relationship	
 class Project(models.Model):
 	project_name = models.CharField(max_length=70, unique=True)
-	parent_project_id = models.ForeignKey('self', null=True, blank=True)
-	division_id = models.ForeignKey(Division)
+	parent_project_id = models.ForeignKey('self', null=True, blank=True, verbose_name="Parent project")
+	division_id = models.ForeignKey(Division, verbose_name="Division")
 	mentor_id = models.ForeignKey(Mentor, null=True, blank=True)
 	mentee_id = models.ForeignKey(Mentee, null=True, blank=True)
 	approved= models.BooleanField()

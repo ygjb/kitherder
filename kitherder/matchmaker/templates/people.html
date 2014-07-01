@@ -8,7 +8,7 @@
    <b>Unvouched Mentors Involved in Project In Your Division</b> <a href="#" onClick="ToggleList('unvouchedmentor')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
 	<div id="unvouchedmentor" class="divInfo" style="display: block">
 		{% if mentorslist.count > 0 %}  
-			<div id="table"> <!-- table to hold search results -->
+			<div class="table"> <!-- table to hold search results -->
 				<div class="table-row"><div class="table-header-cell">Mentor's Email</div><div class="table-header-cell">&nbsp;</div></div>
 				{% for mentor in mentorslist %}
 					<div class="table-row">
@@ -31,7 +31,7 @@
     <b>All Un-Vouched Mentors</b> <a href="#" onClick="ToggleList('allunvouchedmentor')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
 	<div id="allunvouchedmentor" class="divInfo">
 		{% if allunvouchedmentorslist.count > 0 %}  
-			<div id="table"> <!-- table to hold search results -->
+			<div class="table"> <!-- table to hold search results -->
 				<div class="table-row"><div class="table-header-cell">Mentor's Email</div><div class="table-header-cell">&nbsp;</div></div>
 				{% for mentor in allunvouchedmentorslist %}
 					<div class="table-row">

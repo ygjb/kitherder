@@ -1,10 +1,12 @@
-from django.forms import ModelForm, Textarea, HiddenInput
+from django.forms import ModelForm, Textarea, HiddenInput, DateInput
 from django import forms
 from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, Milestone
 
+
 class ProjectForm(ModelForm):
-    class Meta:
-        model = Project
+	class Meta:
+		model = Project
+
 		
 class MilestoneForm(ModelForm):
 	class Meta:
@@ -52,4 +54,7 @@ class MentorMenteeMilestoneForm(MilestoneForm):
 		widgets = {
 			'project_id': HiddenInput,
 			'milestone_comments': Textarea(attrs={'cols': 30, 'rows': 10}),
+			'start_date': DateInput(attrs={'class': 'date'}),
+			'projected_end_date': DateInput(attrs={'class': 'date'}),
+			'completion_date': DateInput(attrs={'class': 'date'}),
         }

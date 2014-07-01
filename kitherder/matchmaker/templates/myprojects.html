@@ -11,7 +11,7 @@
   		{% if myprojectslist.count > 0 %}  	
 			{% if role == "vouched mentor" or role == "non-vouched mentor" %}			
 				<!-- mentor view -->
-				<div id="table"> <!-- table to hold search results -->	
+				<div class="table"> <!-- table to hold search results -->	
 					<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentee</div><div class="table-header-cell">status</div></div>
 					{% for project in myprojectslist %}
 						<div class="table-row">
@@ -43,7 +43,7 @@
 			{% else %}
 				{% if role == "coordinator" %}
 					<!-- coordinator view -->
-					<div id="table"> <!-- table to hold search results -->	
+					<div class="table"> <!-- table to hold search results -->	
 						<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentor</div><div class="table-header-cell">Mentee</div><div class=table-header-cell>approved</div></div>
 						{% for project in myprojectslist %}
 							<div class="table-row">
@@ -89,7 +89,7 @@
 					<!-- end of coordinator view -->
 				{% else %}	
 					<!-- assume mentee view -->
-					<div id="table"> <!-- table to hold search results -->	
+					<div class="table"> <!-- table to hold search results -->	
 						<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Mentor</div><div class="table-header-cell">status</div></div>
 						{% for project in myprojectslist %}
 							<div class="table-row">

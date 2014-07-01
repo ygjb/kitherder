@@ -1,11 +1,10 @@
 @charset "UTF-8";
 /* CSS Document */
 
-#table
+.table
 {
-	width: 100%;
 	display: table;
-	table-layout: fixed;
+	width: 100%;
 }
 
 .table-row
@@ -25,9 +24,9 @@
 .table-cell
 {
 	display:table-cell;
-	padding-top: 3px;
-	padding-bottom: 3px;
+	padding: 6px;
 	border-bottom: dotted 1px #ccc;
+	
 }
 
 
