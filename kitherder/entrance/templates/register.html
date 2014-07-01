@@ -38,6 +38,9 @@
 
 <p>Welcome to Kitherder. One last question.</p>
 <p><b>Are you enrolling as a mentor or a mentee?</b></p>
+<style>
+	label {float: none}
+</style>
 <form name="rolequestion" action="/entrance/register/" method="post">{% csrf_token %}
 	{{ form.non_field_errors }}
 	<div class="fieldWrapper">
