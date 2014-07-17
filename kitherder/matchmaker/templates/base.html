@@ -66,12 +66,10 @@
 <div id="Nav">
 <div class="table"> <!-- start of table --> 
     	<p>  <!-- start of row -->
-        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/myprojects/">My Projects </a> </span> 
+        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/myprojects/">My {% if role == "coordinator" %}Divisional {% endif %}Projects </a> </span> 
 		 	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 
-        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 
-        	{% if role == "coordinator" %}
-				<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/people/">People Management</a></span> 
-        	{% endif %}
+        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/submitproject/">Submit Project</a></span> 
+        </p> <!-- end of row -->
         </p> <!-- end of row -->
 </div> <!-- end table -->           
 </div> <!-- end Nav -->

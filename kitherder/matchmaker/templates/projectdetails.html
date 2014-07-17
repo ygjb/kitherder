@@ -58,14 +58,10 @@
 					<div class="table-cell"><b>Mentee:</b></div>
 					<div class="table-cell">
 						{% if theproject.mentee_id == NULL %}
-							{% if role == "vouched mentor" %}
-								<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
-									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
-									<input type="submit" value="add mentee" />
-								</form>
-							{% else %}
-								None
-							{% endif %}
+							<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
+								<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
+								<input type="submit" value="add mentee" />
+							</form>
 						{% else %}	
 							<a href="mailto:{{ theproject.mentee_id.user_id.email }}">{{ theproject.mentee_id.user_id.email }}</a>
 						{% endif %}
@@ -99,7 +95,7 @@
 		</div>
 		
 		{% if isbelong %}
-			{% if role == "non-vouched mentor" or role == "vouched mentor" or role == "coordinator" %}
+			{% if role == "mentor" or role == "coordinator" %}
 				{% if expressedinterestlist %}
 					<br>&nbsp;<br>
 					<b>Mentees who have expressed interest</b> <a href="#" onClick="ToggleList('expressinterest')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
@@ -110,7 +106,7 @@
 								<div class="table-row">
 									<div class="table-cell"><a href="mailto:{{ menteeRel.mentee_id.user_id.email }}">{{ menteeRel.mentee_id.user_id.email }}</a></div>
 									<div class="table-cell">
-										<!-- ASSUMPTION: Vouched or nonvouched mentor can add a mentee who has already expressed interest to the project -->
+										<!-- ASSUMPTION: mentor or coordinator can also add a mentee who has already expressed interest to the project -->
 										<!-- show form only if no mentee is in the project yet -->
 										{% if theproject.mentee_id == NULL %}
 										<form id="selectmentee" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
@@ -202,7 +198,7 @@
 		{% endif %}	
 		
 		<br />
-		<!-- ASSUMPTION: allow anyone that belongs the project (mentor vouched or not vouched, mentee and coordinator) to add of milestone in the project -->
+		<!-- ASSUMPTION: allow anyone that belongs the project (mentor, mentee and coordinator) to add of milestone in the project -->
 		{% if isbelong %}			
 			<form id="milestoneadd{{ project.pk }}" action="/matchmaker/milestoneadd/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneadd/')">{% csrf_token %}
 				<input type="hidden" id="project_id" name="project_id" value="{{ theproject.pk }}" />

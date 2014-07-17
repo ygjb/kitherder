@@ -21,7 +21,6 @@ class Mentee(models.Model):
 	
 class Mentor(models.Model):
 	user_id = models.ForeignKey(User, unique=True)
-	is_vouched = models.BooleanField()
 	
 	
 	def __unicode__(self):

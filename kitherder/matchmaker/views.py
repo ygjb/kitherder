@@ -38,10 +38,7 @@ def findUserRole(email):
 	else:
 		mentor = Mentor.objects.filter(user_id__email=email)
 		if mentor.count() > 0:
-			if mentor[0].is_vouched == True:
-				role = "vouched mentor"
-			else:
-				role = "non-vouched mentor"
+			role = "mentor"
 		else:
 			mentee = Mentee.objects.filter(user_id__email=email)
 			if mentee.count() > 0:
@@ -51,7 +48,7 @@ def findUserRole(email):
 def belongToProject(email, project_id):
 	role = findUserRole(email)
 	theproject = Project.objects.get(pk=project_id)
-	if role == "vouched mentor" or role == "non-vouched mentor":
+	if role == "mentor":
 		try: 
 			if theproject.mentor_id.user_id.email == email:
 				return True
@@ -87,7 +84,7 @@ def myprojects(request):
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	
-	if role == "vouched mentor" or role == "non-vouched mentor":
+	if role == "mentor":
 		myprojectslist = Project.objects.filter(mentor_id__user_id__email=request.user.email)
 	elif role == "mentee":
 		myprojectslist = Project.objects.filter(mentee_id__user_id__email=request.user.email)
@@ -159,10 +156,10 @@ def projectdetail(request, project_id):
 	
 	
 	# check to see if user is a mentor and list all mentees who had expressed interest
-	if (isbelong and (role == "vouched mentor" or  role == "non-vouched mentor")) or role =="coordinator":
+	if (isbelong and role == "mentor") or role =="coordinator":
 		# if user has clicked on select mentee to add a mentee from the "expressed interest" list
-		# ASSUMPTION: both a vouched and a non vouched mentor can add a mentee who has expressed interest in their project to the project but the triad still has to be approved_by coordinator
-		# COROLLARY ASSUMPTION: a vouched mentor can add any mentee who is currently marked to be looking for a project (whether they have expressed interest or not)
+		# ASSUMPTION: mentors can add a mentee who has expressed interest in their project to the project but the triad still has to be approved_by coordinator
+		# COROLLARY ASSUMPTION: a mentor can also add any mentee who is currently marked to be looking for a project (whether they have expressed interest or not)
 		if request.method == 'POST' and "selectmentee" in request.POST:
 			p = Project.objects.get(pk=request.POST['project'])
 			m = Mentee.objects.get(user_id__email=request.POST['selectedmentee'])
@@ -258,7 +255,7 @@ def submitproject(request):
 				
 				
 				# setting default mentor if logged in user is a mentor		
-				if role == "vouched mentor" or role == "non-vouched mentor":
+				if role == "mentor":
 					mentor = Mentor.objects.get(user_id__email=request.user.email)				
 					newproject.mentor_id = mentor
 				elif role == "mentee":
@@ -271,31 +268,6 @@ def submitproject(request):
 			submitform = MentorMenteeProjectForm()
 	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'role':role,}, context_instance=RequestContext(request))
 
-@login_required
-def people(request):
-	role = findUserRole(request.user.email)	
-	if role == "":
-		return redirect('/entrance/register/', context_instance=RequestContext(request))
-	
-	if role != "coordinator":
-		return redirect('/matchmaker/myprojects', context_instance=RequestContext(request))
-	
-	
-	if request.method == 'POST':
-		mentor = Mentor.objects.get(user_id__email=request.POST["selectedmentor"])
-		mentor.is_vouched = True;
-		mentor.save()
-	
-	# get list of projects that have unvouched mentors involved in the coordinator's area
-	divisionList = findDivisionsCorrespondingCoordinator(request.user.email)
-	projectslist = Project.objects.filter(division_id__in = divisionList)
-	mentorslist = Mentor.objects.filter(is_vouched=False,pk__in=projectslist)
-	
-	# get list of all unvouched mentors
-	allunvouchedmentors = Mentor.objects.filter(is_vouched=False)
-	
-		
-	return render_to_response('matchmaker/templates/people.html', {'role':role, 'mentorslist':mentorslist, 'allunvouchedmentors':allunvouchedmentors}, context_instance=RequestContext(request))
 
 
 @login_required	
