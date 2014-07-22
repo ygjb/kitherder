@@ -14,17 +14,9 @@ from django.shortcuts import redirect
 from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, Projectstatus, MenteeInterestInProject, Milestone
 from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm, MenteeEditProjectForm, MentorEditProjectForm, CoordinatorEditProjectForm, MentorMenteeMilestoneForm
 
+import json
+import requests
 
-class SearchForm(forms.Form):
-    searchterm = forms.CharField(max_length=500)
-	
-class SearchMenteeForm(forms.Form):
-	project = forms.IntegerField(widget=forms.HiddenInput)
-	searchterm = forms.CharField(max_length=500)
-	
-class SearchMentorForm(forms.Form):
-	project = forms.IntegerField(widget=forms.HiddenInput)
-	searchterm = forms.CharField(max_length=500)
 
 # helper functions here
 def findUserRole(email):
@@ -73,10 +65,44 @@ def findDivisionsCorrespondingCoordinator(email):
 	mydivisionList = Division.objects.select_related().filter(coordinator__user_id__email=email)
 	return mydivisionList
 	
-			
+def getMozillianDataByUser(email):
+	url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + email
+	r = requests.get(url)
+
+	objs = json.loads(r.text)
+
+	return objs	
 
 # end helper functions
 
+	
+# some extra forms #
+
+class SearchForm(forms.Form):
+    searchterm = forms.CharField(max_length=500)
+	
+class SearchMenteeForm(forms.Form):
+	project = forms.IntegerField(widget=forms.HiddenInput)
+	searchterm = forms.CharField(max_length=500)
+	
+class SearchMentorForm(forms.Form):
+	project = forms.IntegerField(widget=forms.HiddenInput)
+	searchterm = forms.CharField(max_length=500)
+	
+class DivisionGroupForm(forms.Form):
+	division = forms.IntegerField(widget=forms.HiddenInput)
+
+	def __init__(self,*args,**kwargs):
+		email = kwargs.pop("email")     # client is the parameter passed from views.py
+		super(DivisionGroupForm, self).__init__(*args,**kwargs)
+		self.fields['mozilliangroup'] = forms.ChoiceField(label="", choices=[(item, item) for item in getMozillianDataByUser(email)['objects'][0]['groups']])
+
+
+
+# end of extra forms #	
+	
+	
+	
 	
 @login_required
 def myprojects(request):
@@ -118,7 +144,7 @@ def searchproject(request):
 	searched = 0;
 	form = SearchForm()
 	
-	return render_to_response('matchmaker/templates/searchproject.html', {'form': form, 'searched': searched}, context_instance=RequestContext(request))
+	return render_to_response('matchmaker/templates/searchproject.html', {'form': form, 'role':role, 'searched': searched}, context_instance=RequestContext(request))
 
 
 @login_required	
@@ -390,3 +416,29 @@ def milestoneedit(request, milestoneID):
 			return render_to_response('matchmaker/templates/milestoneaddsuccess.html', {}, context_instance=RequestContext(request))		
 		
 	return render_to_response('matchmaker/templates/milestoneedit.html', {'form': form}, context_instance=RequestContext(request))
+	
+	
+@login_required	
+def managedivision(request):
+	role = findUserRole(request.user.email)
+	if role == "":
+		return redirect('/entrance/register/', context_instance=RequestContext(request))
+	
+	if role != "coordinator":
+		return redirect('/matchmaker/myprojects/', context_instance=RequestContext(request))
+	
+	
+	division = findDivisionsCorrespondingCoordinator(request.user.email)[0]	
+
+	
+	if request.method == 'POST' and 'submit' in request.POST:
+		form = DivisionGroupForm(request.POST, email=request.user.email)
+		if form.is_valid():
+			thedivision = Division.objects.get(pk=form.cleaned_data['division'])
+			thedivision.mozillian_group = form.cleaned_data['mozilliangroup']
+			thedivision.save()			
+	
+	
+	form = DivisionGroupForm(initial={'division':division.pk}, email=request.user.email)
+		
+	return render_to_response('matchmaker/templates/managedivision.html', {'form': form, 'division': division}, context_instance=RequestContext(request))

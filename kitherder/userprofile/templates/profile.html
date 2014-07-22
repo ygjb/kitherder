@@ -19,9 +19,41 @@
    		<div class="table-cell">Role</div>
    		<div class="table-cell">{{ role }}</div>
    	</div>
+   	{% if division %}
+   		<div class="table-row">
+   			<div class="table-cell">Division</div>
+   			<div class="table-cell">{{ division }}</div>
+   		</div>
+   	{% endif %}
    	<div class="table-row">
    		<div class="table-cell">Skills</div>
-   		<div class="table-cell">{{ skills }}<br />Change your skills at <a href="https://mozillians.org">Mozillian</a></div>
+   		<div class="table-cell">
+   			{% if skills == 'user not in mozillian' %}
+   				You have not registered as a Mozillian yet. Go to <a href="https://mozillians.org">Mozillian</a> now to register to network with others and for added functionality.
+   			{% else %}
+   				{% if skills == '' %}
+   					You have not added any skills yet in your Mozillian profile. Go to <a href="https://mozillians.org">Mozillian</a> to add some skills.
+   				{% else %}
+   					{{ skills }}<br />Edit your list of skills at <a href="https://mozillians.org">Mozillian</a>
+   				{% endif %}
+   			{% endif %}
+   				
+   		</div>
+   	</div>
+   	<div class="table-row">
+   		<div class="table-cell">Groups</div>
+   		<div class="table-cell">
+   			{% if groups == 'user not in mozillian' %}
+   				You have not registered as a Mozillian yet. Go to <a href="https://mozillians.org">Mozillian</a> now to register to network with others and for added functionality.
+   			{% else %}
+   				{% if groups == '' %}
+   					You have not joined any Kitherder-specific groups in Mozillian yet. Go to <a href="https://mozillians.org">Mozillian</a> to join some groups.
+   				{% else %}
+   					{{ groups }}<br />Edit your groups at <a href="https://mozillians.org">Mozillian</a>
+   				{% endif %}
+   			{% endif %}
+   				
+   		</div>
    	</div>
    </div>
    

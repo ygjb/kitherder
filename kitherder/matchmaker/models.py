@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 class Division(models.Model):
 	division_name = models.CharField(max_length=50, unique=True)
+	mozillian_group = models.CharField(max_length=50, unique=True, blank=True)
 	
 	def __unicode__(self):
 		return self.division_name
