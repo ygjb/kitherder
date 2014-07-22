@@ -58,7 +58,7 @@
 					<div class="table-cell"><b>Mentee:</b></div>
 					<div class="table-cell">
 						{% if theproject.mentee_id == NULL %}
-							<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
+							<form id="invitementee{{ theproject.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
 								<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
 								<input type="submit" value="add mentee" />
 							</form>
@@ -74,6 +74,11 @@
 							approved_by <a href="mailto:{{ theproject.approved_by.user_id.email }}">{{ theproject.approved_by.user_id.email }}</a>
 						{% else %}
 							Not yet
+							
+							<form id="approveproject{{ theproject.pk }}" action="/matchmaker/project/{{ theproject.pk }}/" method="POST" style="display: inline">{% csrf_token %}
+								<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
+								<input type="submit" name="approveproject" value="approve now" />
+							</form>
 						{% endif %}
 					</div>
 				</div>

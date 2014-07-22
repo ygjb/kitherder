@@ -129,6 +129,16 @@ def projectdetail(request, project_id):
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	
 	isbelong = belongToProject(request.user.email,project_id)
+	
+	if role == "coordinator":
+		if request.method == 'POST' and "approveproject" in request.POST:
+			p = Project.objects.get(pk=request.POST['project'])
+			c = Coordinator.objects.get(user_id__email=request.user.email)
+			p.approved= True
+			p.approved_by = c
+			p.save()
+	
+	
 
 	theproject = Project.objects.get(pk=project_id)
 	mycoordinatorlist = Coordinator.objects.select_related().filter(division_id=theproject.division_id)

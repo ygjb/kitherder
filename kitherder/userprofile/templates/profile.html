@@ -19,15 +19,19 @@
    		<div class="table-cell">Role</div>
    		<div class="table-cell">{{ role }}</div>
    	</div>
+   	<div class="table-row">
+   		<div class="table-cell">Skills</div>
+   		<div class="table-cell">{{ skills }}<br />Change your skills at <a href="https://mozillians.org">Mozillian</a></div>
+   	</div>
    </div>
    
    <br>&nbsp;<br>
    
    {% if role == "mentee" %}
    		{% if is_looking %}
-   			<b>You are currently looking for a project</b>
+   			<b>You are currently <span style="color: #ff0000">looking</span> for a project</b>
    		{% else %}
-   			<b>You are currently not looking for a project</b>
+   			<b>You are currently <span style="color: #ff0000">not looking</span> for a project</b>
    		{% endif %}
    		
    		<br>&nbsp;<br>
@@ -36,7 +40,7 @@
 			label {float: none}
 		</style>
    		
-   		<b>Change your status: </b><br>
+   		<b>Change your status here:</b><br />
 		<form name="is_lookingform" action="/userprofile/" method="post">{% csrf_token %}
 			{{ form.non_field_errors }}
 			<div class="fieldWrapper">

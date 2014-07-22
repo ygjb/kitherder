@@ -17,6 +17,9 @@ from django.contrib.auth.models import User
 from matchmaker.models import Mentor, Mentee
 from matchmaker.views import findUserRole
 
+import json
+import requests
+
 
 class is_lookingForm(forms.Form):
 	CHOICES =[('yes', 'yes'), ('no', 'no')]
@@ -45,5 +48,19 @@ def userprofile(request):
 			
 	form = is_lookingForm()
 	
-	return render_to_response('userprofile/templates/profile.html', {'form': form, 'role':role, 'is_looking': is_looking, 'user':user}, context_instance=RequestContext(request))	
+	
+	
+	url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + request.user.email
+	r = requests.get(url)
+
+	objs = json.loads(r.text)
+	
+	skills = ''
+	for item in objs['objects'][0]['skills']:
+		skills = skills +  ", " + item
+	skills = skills[2:]
+	
+
+	
+	return render_to_response('userprofile/templates/profile.html', {'form': form, 'role':role, 'is_looking': is_looking, 'user':user, 'skills':skills}, context_instance=RequestContext(request))	
 
