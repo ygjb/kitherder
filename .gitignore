@@ -63,3 +63,10 @@ local_settings.py
 
 # SQLite database
 *.db
+.DS_Store
+
+kitherder/.DS_Store
+
+kitherder/matchmaker/.DS_Store
+
+kitherder/matchmaker/templates/.DS_Store

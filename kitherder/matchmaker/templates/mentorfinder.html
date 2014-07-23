@@ -1,6 +1,6 @@
 {% extends "basepopup.html" %}
 
-{% block title%}KitHerder: Mentee Finder{% endblock %}
+{% block title%}KitHerder: Mentor Finder{% endblock %}
 
 
 {% block content %}
@@ -19,7 +19,7 @@
 		<div class="fieldWrapper">
 			{{ form.subject_errors }}
 			{{ form.project }}
-			<label for"searchterm">Search: </label>
+			<label for"searchterm" style="float: none;">Search by email: </label>
 			{{ form.searchterm }}
 			<input type="submit" value="Search">
 		</div>

@@ -17,63 +17,8 @@ from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorPr
 import json
 import requests
 
+from matchmaker.utils import findUserRole, belongToProject, findDivisionsCorrespondingCoordinator, findDivisionsCorrespondingMentor,getMozillianDataByUser, getMozillianGroupsbyUser
 
-# helper functions here
-def findUserRole(email):
-	# checking to see if the user is a mentor or mentee so we can present the appropriate form
-	# always assume most privileged in this case so if user is both mentor and mentee, show for mentor 
-	# or if coordinator is also a mentor, assume coordinator
-	role = ""
-	coordinator = Coordinator.objects.filter(user_id__email=email)
-	if coordinator.count() > 0:
-		role = "coordinator"
-	else:
-		mentor = Mentor.objects.filter(user_id__email=email)
-		if mentor.count() > 0:
-			role = "mentor"
-		else:
-			mentee = Mentee.objects.filter(user_id__email=email)
-			if mentee.count() > 0:
-				role = "mentee"
-	return role
-	
-def belongToProject(email, project_id):
-	role = findUserRole(email)
-	theproject = Project.objects.get(pk=project_id)
-	if role == "mentor":
-		try: 
-			if theproject.mentor_id.user_id.email == email:
-				return True
-		except:
-			return False
-	elif role == "coordinator":
-		# get a list of all the coordinators involved with the project
-		coordinatorlist = Coordinator.objects.select_related().filter(division_id=theproject.division_id)
-		currentcoordinator = Coordinator.objects.get(user_id__email=email)
-		if currentcoordinator in coordinatorlist:
-			return True
-	else:
-		# assume role is mentee
-		try:
-			if theproject.mentee_id.user_id.email == email:
-				return True
-		except:
-			return False
-	return False
-	
-def findDivisionsCorrespondingCoordinator(email):
-	mydivisionList = Division.objects.select_related().filter(coordinator__user_id__email=email)
-	return mydivisionList
-	
-def getMozillianDataByUser(email):
-	url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + email
-	r = requests.get(url)
-
-	objs = json.loads(r.text)
-
-	return objs	
-
-# end helper functions
 
 	
 # some extra forms #
@@ -95,7 +40,7 @@ class DivisionGroupForm(forms.Form):
 	def __init__(self,*args,**kwargs):
 		email = kwargs.pop("email")     # client is the parameter passed from views.py
 		super(DivisionGroupForm, self).__init__(*args,**kwargs)
-		self.fields['mozilliangroup'] = forms.ChoiceField(label="", choices=[(item, item) for item in getMozillianDataByUser(email)['objects'][0]['groups']])
+		self.fields['mozilliangroup'] = forms.ChoiceField(label="", choices=[(item, item) for item in getMozillianGroupsbyUser(email)])
 
 
 
@@ -106,7 +51,7 @@ class DivisionGroupForm(forms.Form):
 	
 @login_required
 def myprojects(request):
-	role = findUserRole(request.user.email)
+	role = findUserRole(request.user.email)	
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 	
@@ -302,6 +247,16 @@ def submitproject(request):
 				return redirect('/matchmaker/', context_instance=RequestContext(request))
 		else:
 			submitform = MentorMenteeProjectForm()
+			if role == "mentor":
+				divisionlist = findDivisionsCorrespondingMentor(request.user.email)
+				print divisionlist
+				if len(divisionlist) > 0: 	
+					submitform.fields["division_id"].queryset = divisionlist
+				else:
+					return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'cannotsubmit': 1, 'role':role,}, context_instance=RequestContext(request))
+
+		
+			
 	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'role':role,}, context_instance=RequestContext(request))
 
 

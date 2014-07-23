@@ -53,6 +53,7 @@ def userprofile(request):
 	form = is_lookingForm()
 	
 	#add division if role is coordinator
+	division = '';
 	if role == "coordinator":
 		division = findDivisionsCorrespondingCoordinator(request.user.email)[0]
 	
@@ -79,7 +80,7 @@ def userprofile(request):
 			# check to see if group is one of the ones associated with a division
 			group_in_kitherder = Division.objects.filter(mozillian_group=group_item).count()
 			if group_in_kitherder > 0:
-				groups = groups = ", " + group_item
+				groups = groups + ", " + group_item
 		groups = groups[2:]
 		
 	else:
