@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title%}KitHerder: Manage Division{% endblock %}
+
+{% block content %}
+	<h3>Manage Division</h3>
+
+    <p><i>Identify which Mozillian group is used for managing mentors and mentees for your division.</i></p>
+   	Current Mozillian group for {{ division }} division: 
+   	{% if division.mozillian_group %}
+   		{{ division.mozillian_group }}
+   	{% else %}
+   		No group yet
+   	{% endif %}
+   	
+   	<br />&nbsp;<br />
+   	
+   	<h4>Change the division's group</h4>
+   	
+   	<form method="post" action="">{% csrf_token %}
+		<label for"mozilliangroup" style="float: none">New group: </label>
+		{{ form }}
+		<input type="submit" name="submit" id="submit" value="Submit" />
+	</form>
+	<p><i>Can't find the division you're looking for? Check to see if you are a member of that division. You can only see Mozillian groups that you are a member of here.</i></p>
+	   
+{% endblock %}

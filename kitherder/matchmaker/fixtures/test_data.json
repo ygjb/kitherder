@@ -4,7 +4,7 @@
   	"pk": 1,
   	"fields":
   	{
-  		"DivisionName": "Security"
+  		"division_name": "Security"
   	}
   },
  
@@ -14,8 +14,8 @@
   	"pk": 1,
   	"fields":
   	{
-  		"Status": "submitted",
-  		"Deprecated": false
+  		"status": "submitted",
+  		"deprecated": false
   	}
   },
   {
@@ -23,8 +23,8 @@
   	"pk": 2,
   	"fields":
   	{
-  		"Status": "in progress",
-  		"Deprecated": false
+  		"status": "in progress",
+  		"deprecated": false
   	}
   },  
   {
@@ -32,8 +32,8 @@
   	"pk": 3,
   	"fields":
   	{
-  		"Status": "on hold",
-  		"Deprecated": false
+  		"status": "on hold",
+  		"deprecated": false
   	}
   },
   {
@@ -41,8 +41,8 @@
   	"pk": 4,
   	"fields":
   	{
-  		"Status": "completed",
-  		"Deprecated": false
+  		"status": "completed",
+  		"deprecated": false
   	}
   }
 

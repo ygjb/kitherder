@@ -3,75 +3,75 @@ from django.contrib.auth.models import User
 # Here is the complete model for kitherder including matchmaker and other apps.
 
 class Division(models.Model):
-	DivisionName = models.CharField(max_length=50, unique=True)
+	division_name = models.CharField(max_length=50, unique=True)
+	mozillian_group = models.CharField(max_length=50, unique=True, blank=True)
 	
 	def __unicode__(self):
-		return self.DivisionName
+		return self.division_name
 		
 	class Meta:
-		ordering = ('DivisionName',)
+		ordering = ('division_name',)
 	
 	
 class Mentee(models.Model):
-	UserID = models.ForeignKey(User, unique=True)
-	IsLooking = models.BooleanField()
+	user_id = models.ForeignKey(User, unique=True)
+	is_looking = models.BooleanField()
 		
 	def __unicode__(self):
-		return self.UserID.username	
+		return self.user_id.username	
 	
 class Mentor(models.Model):
-	UserID = models.ForeignKey(User, unique=True)
-	IsVouched = models.BooleanField()
+	user_id = models.ForeignKey(User, unique=True)
 	
 	
 	def __unicode__(self):
-		return self.UserID.username
+		return self.user_id.username
 
 class Coordinator(models.Model):
-	UserID = models.ForeignKey(User, unique=True)
-	DivisionID = models.ManyToManyField(Division)
+	user_id = models.ForeignKey(User, unique=True)
+	division_id = models.ManyToManyField(Division)
 	# ASSUMPTION: coordinator comes into the system already vouched. Probably admin will add him/her in
 	
 	def __unicode__(self):
-		return self.UserID.username	
+		return self.user_id.username	
 	
-class ProjectStatus(models.Model):
-	Status = models.CharField(max_length=30, unique=True)
-	Deprecated = models.BooleanField()
+class Projectstatus(models.Model):
+	status = models.CharField(max_length=30, unique=True)
+	deprecated = models.BooleanField()
 	def __unicode__(self):
-		return self.Status
+		return self.status
 
 # ASSUMPTION: Project:Mentor:Mentee is a one-to-one-to-one relationship	
 class Project(models.Model):
-	ProjectName = models.CharField(max_length=70, unique=True)
-	ParentProjectID = models.ForeignKey('self', null=True, blank=True)
-	DivisionID = models.ForeignKey(Division)
-	MentorID = models.ForeignKey(Mentor, null=True, blank=True)
-	MenteeID = models.ForeignKey(Mentee, null=True, blank=True)
-	Approved = models.BooleanField()
-	ApprovedBy = models.ForeignKey(Coordinator, null=True, blank=True)
-	ProjectDescription = models.CharField(max_length=300)
-	TermsAgree = models.BooleanField()
-	ProjectStatusID = models.ForeignKey(ProjectStatus)
-	SkillsRequired = models.CharField(max_length=300)
+	project_name = models.CharField(max_length=70, unique=True)
+	parent_project_id = models.ForeignKey('self', null=True, blank=True, verbose_name="Parent project")
+	division_id = models.ForeignKey(Division, verbose_name="Division")
+	mentor_id = models.ForeignKey(Mentor, null=True, blank=True)
+	mentee_id = models.ForeignKey(Mentee, null=True, blank=True)
+	approved= models.BooleanField()
+	approved_by = models.ForeignKey(Coordinator, null=True, blank=True)
+	project_description = models.CharField(max_length=300)
+	terms_agree = models.BooleanField()
+	project_status_id = models.ForeignKey(Projectstatus)
+	skills_required = models.CharField(max_length=300)
 	
 	def __unicode__(self):
-		return self.ProjectName
+		return self.project_name
 
 class MenteeInterestInProject(models.Model):
-	ProjectID = models.ForeignKey(Project)
-	MenteeID = models.ForeignKey(Mentee)
+	project_id = models.ForeignKey(Project)
+	mentee_id = models.ForeignKey(Mentee)
 			
 class Milestone(models.Model):
-	ProjectID = models.ForeignKey(Project)
-	MilestoneName = models.CharField(max_length=100)
-	MilestoneStatus = models.CharField(max_length=80)
-	MilestoneComments = models.CharField(max_length=500)
-	StartDate = models.DateTimeField()
-	ProjectedEndDate = models.DateTimeField()
-	CompletionDate = models.DateTimeField()
+	project_id = models.ForeignKey(Project)
+	milestone_name = models.CharField(max_length=100)
+	milestone_status = models.CharField(max_length=80)
+	milestone_comments = models.CharField(max_length=500)
+	start_date = models.DateTimeField()
+	projected_end_date = models.DateTimeField()
+	completion_date = models.DateTimeField(null=True, blank=True )
 	
 	def __unicode__(self):
-		return self.MilestoneName
+		return self.milestone_name
 	
 	

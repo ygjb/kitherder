@@ -52,3 +52,17 @@ a:hover {color:#00539F;}
 
 
 .divInfo { display:none; }
+
+label {float: right;} /* for all django forms */
+th {vertical-align: top;} /* for all django forms */
+td {padding: 5px;} /* for all django forms */
+
+.ui-dialog  .ui-dialog-content {
+    font-size: 14px;
+}
+
+.ui-dialog  .ui-dialog-title {
+    font-size: 14px;
+}
+
+

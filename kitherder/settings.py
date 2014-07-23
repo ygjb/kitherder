@@ -1,4 +1,5 @@
 # Django settings for kitherder project.
+import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -9,10 +10,12 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/kitherder/kitherder/sqlite3.db',                      # Or path to database file if using sqlite3.
+        'NAME': 'sqlite3.db',                      # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -76,7 +79,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/kitherder/kitherder/static/',
+	os.path.abspath(os.path.join(ROOT_PATH, 'static')),
 )
 
 # List of finder classes that know how to find static files in
@@ -105,13 +108,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
 )
 
-ROOT_URLCONF = 'kitherder.urls'
+ROOT_URLCONF = 'urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-	'/home/kitherder/kitherder'
+	ROOT_PATH,
 )
 
 INSTALLED_APPS = (
@@ -145,7 +148,7 @@ AUTHENTICATION_BACKENDS = (
    'django_browserid.auth.BrowserIDBackend',
 )
 
-SITE_URL = 'http://127.0.0.1:8080'
+SITE_URL = 'http://127.0.0.1:8000'
 BROWSERID_CREATE_USER = True
 def username(email):
     return email

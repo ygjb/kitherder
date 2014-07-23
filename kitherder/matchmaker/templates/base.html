@@ -7,7 +7,13 @@
 <title>{% block title %}{% endblock %}</title>
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 
-<link href="//mozorg.cdn.mozilla.net/media/css/tabzilla-min.css" rel="stylesheet" />
+<meta charset="utf-8">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+
+
+<link href="http://mozorg.cdn.mozilla.net/media/css/tabzilla-min.css" rel="stylesheet" />
 <script src="https://browserid.org/include.js" type="text/javascript"></script>
 
 
@@ -19,7 +25,7 @@
 <script language="JavaScript">
 	function target_popup(form, popupcontent)
 	{
-		window.open(popupcontent, 'formpopup', 'scrollbars=no,locationbar=no,nmenubar=no,toolbar=no,status=no,width=550,height=450');
+		window.open(popupcontent, 'formpopup', 'scrollbars=1,locationbar=no,nmenubar=no,toolbar=no,status=no,width=550,height=500');
 		form.target = 'formpopup';
 	}
 	
@@ -36,6 +42,8 @@
         }
 	}
 </script>
+
+
 
 </head>
 
@@ -56,14 +64,15 @@
 
 
 <div id="Nav">
-<div id="table"> <!-- start of table --> 
+<div class="table"> <!-- start of table --> 
     	<p>  <!-- start of row -->
-        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/myprojects/">My Projects </a> </span> 
+        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/myprojects/">My {% if role == "coordinator" %}Divisional {% endif %}Projects </a> </span> 
 		 	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/searchproject/">Search Projects</a></span> 
-        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/submitproject/">Submit Project</a>	</span> 
+        	<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/submitproject/">Submit Project</a></span> 
         	{% if role == "coordinator" %}
-				<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/people/">People Management</a></span> 
+        		<span class="table-cell" style="border-bottom: none"> <a href="/matchmaker/managedivision/">Manage Division</a></span> 
         	{% endif %}
+        </p> <!-- end of row -->
         </p> <!-- end of row -->
 </div> <!-- end table -->           
 </div> <!-- end Nav -->
@@ -79,7 +88,6 @@ footer
 </div> <!-- end Footer -->
 <script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
 </div> <!--end main wrapper -->
-<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 {% browserid_js %}
 </body>
 </html>

@@ -1,0 +1,29 @@
+{% extends "basepopup.html" %}
+
+{% block title%}KitHerder: Add Milestone{% endblock %}
+
+
+{% block content %}
+	<script language="JavaScript">
+		function target_popup(form)
+		{
+			window.close();
+			form.target = 'formpopup';
+		}
+	</script>
+	
+	<p><b>Edit milestone</b></p>
+
+    <br />
+    <br />
+   	<form method="post" action="">{% csrf_token %}
+		<table>
+		{{ form.as_table }}
+		<tr><td>&nbsp;</td><td><input type="submit" name="submit" id="submitmilestone" value="Submit" /></td></tr>
+		</table>
+	</form>
+	   
+
+
+	   
+{% endblock %}

@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 # Uncomment the next two lines to enable the admin:
@@ -20,11 +20,13 @@ urlpatterns = patterns('',
 	url(r'^myprojects', 'matchmaker.views.myprojects'),
 	url(r'^submitproject', 'matchmaker.views.submitproject'),
 	url(r'^searchproject', 'matchmaker.views.searchproject'),
-	url(r'^people', 'matchmaker.views.people'),
-	url(r'^project/(?P<projectID>\d+)/$', 'matchmaker.views.projectdetail'),
-	url(r'^project/(?P<projectID>\d+)/edit', 'matchmaker.views.projectedit'),
+	url(r'^managedivision', 'matchmaker.views.managedivision'),
+	url(r'^project/(?P<project_id>\d+)/$', 'matchmaker.views.projectdetail'),
+	url(r'^project/(?P<project_id>\d+)/edit', 'matchmaker.views.projectedit'),
 	url(r'^menteefinder', 'matchmaker.views.searchmentee'),
 	url(r'^mentorfinder', 'matchmaker.views.searchmentor'),
+	url(r'^milestoneadd', 'matchmaker.views.milestoneadd'),
+	url(r'^milestoneedit/(?P<milestoneID>\d+)/$', 'matchmaker.views.milestoneedit'),
 	url(r'^browserid/', include('django_browserid.urls')),
 )
 
