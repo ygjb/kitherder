@@ -17,7 +17,7 @@ from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorPr
 import json
 import requests
 
-from matchmaker.utils import findUserRole, belongToProject, findDivisionsCorrespondingCoordinator, findDivisionsCorrespondingMentor,getMozillianDataByUser, getMozillianGroupsbyUser
+from matchmaker.utils import findUserRole, belongToProject, findDivisionsCorrespondingCoordinator, findDivisionsCorrespondingMentor,getMozillianDataByUser, getMozillianGroupsbyUser, getVouchedMembersofDivision
 
 
 	
@@ -219,10 +219,14 @@ def submitproject(request):
 				return redirect('/matchmaker/', context_instance=RequestContext(request))		
 		else:
 			submitform = CoordinatorProjectForm()
+			# ASSUMPTION: coordinators can only submit projects to the division they are coordinating for
 			divisionlist = findDivisionsCorrespondingCoordinator(request.user.email)
-			parentProjectList = Project.objects.filter(division_id__in = divisionlist)
-			
 			submitform.fields["division_id"].queryset = divisionlist
+			
+			# ASSUMPTION: parent project must be not completed, so user can only select from a list of non-completed projectsZ
+			parentprojectlist = Project.objects.exclude(project_status_id__status="completed")
+			submitform.fields["parent_project_id"].queryset = parentprojectlist
+			
 	else:
 		if request.method == 'POST':
 			submitform = MentorMenteeProjectForm(request.POST)
@@ -247,15 +251,18 @@ def submitproject(request):
 				return redirect('/matchmaker/', context_instance=RequestContext(request))
 		else:
 			submitform = MentorMenteeProjectForm()
+			# ASSUMPTION: mentor can only submit projects to a division with mozillian group they belong to, if they do not belong to a group, they cannot submit a project yet
 			if role == "mentor":
 				divisionlist = findDivisionsCorrespondingMentor(request.user.email)
-				print divisionlist
+				
 				if len(divisionlist) > 0: 	
 					submitform.fields["division_id"].queryset = divisionlist
 				else:
 					return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'cannotsubmit': 1, 'role':role,}, context_instance=RequestContext(request))
 
-		
+			# ASSUMPTION: parent project must be not completed, so user can only select from a list of non-completed projects, but parent projects can be from any division
+			parentprojectlist = Project.objects.exclude(project_status_id__status="completed")
+			submitform.fields["parent_project_id"].queryset = parentprojectlist
 			
 	return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'role':role,}, context_instance=RequestContext(request))
 
@@ -322,6 +329,7 @@ def searchmentor(request):
 	searched = 0;
 	form = SearchMentorForm(initial={'project': project})
 	resultmentorslist = Mentor.objects.all()
+	# resultmentorslist = getVouchedMembersofDivision(1)
 	return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))
 	
 @login_required	
@@ -396,4 +404,4 @@ def managedivision(request):
 	
 	form = DivisionGroupForm(initial={'division':division.pk}, email=request.user.email)
 		
-	return render_to_response('matchmaker/templates/managedivision.html', {'form': form, 'division': division}, context_instance=RequestContext(request))
+	return render_to_response('matchmaker/templates/managedivision.html', {'form': form, 'division': division, 'role':role}, context_instance=RequestContext(request))
