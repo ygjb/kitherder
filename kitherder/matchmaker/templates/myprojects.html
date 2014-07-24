@@ -22,7 +22,7 @@
 									<!-- assume mentor always is vouched since they're already in the system. therefore, show invite mentee button to all mentors or else just show no mentees yet-->
 									<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
 										<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
-										<input type="submit" value="add mentee" />
+										<input type="submit" value="add mentee" class="button" />
 									</form>
 								{% else %}	
 									<!-- there is already a mentee, can't add another -->
@@ -48,7 +48,7 @@
 									{% if project.mentor_id == NULL %}
 										<form id="invitementor{{ project.pk }}" action="/matchmaker/mentorfinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/mentorfinder/')">{% csrf_token %}
 											<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
-											<input type="submit" value="add mentor" />
+											<input type="submit" value="add mentor" class="button" />
 										</form>
 									{% else %}	
 										<!-- there is already a mentee, can't add another -->
@@ -60,7 +60,7 @@
 									{% if project.mentee_id == NULL %}
 										<form id="invitementee{{ project.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
 											<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
-											<input type="submit" value="add mentee" />
+											<input type="submit" value="add mentee" class="button" />
 										</form>
 									{% else %}	
 										<!-- there is already a mentee, can't add another -->
@@ -74,7 +74,7 @@
 									{% else %}
 										<form id="approveproject{{ project.pk }}" action="/matchmaker/myprojects/" method="POST">{% csrf_token %}
 											<input type="hidden" id="project" name="project" value="{{ project.pk }}" />
-											<input type="submit" name="approveproject" value="approve now" />
+											<input type="submit" name="approveproject" value="approve now" class="button" />
 										</form>
 									{% endif %}
 								</div>

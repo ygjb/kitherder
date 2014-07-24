@@ -21,8 +21,8 @@
 			{{ form.project }}
 			<label for="searchterm" style="float: none;">Search by email: </label>
 			{{ form.searchterm }}
-			<input type="submit" value="Search">
-			<span class="toggle"><input type="button" value="Advanced options"></span>
+			<input type="submit" value="Search" class="button" />
+			<span class="toggle"><input type="button" value="Advanced options" class="button" /></span>
 			
 			<div style="width: 410px; text-align: left;" class="divInfo">
 				{{ form.matchskills }}
@@ -51,7 +51,7 @@
 							<form id="selectmentor" method="post" action="/matchmaker/mentorfinder/">{% csrf_token %}
 								<input type="hidden" id="project" name="project" value="{{ project }}">
 								<input type="hidden" id="selectedmentor" name="selectedmentor" value="{{ mentor.user_id.email }}">
-								<input type="submit" value="Select Mentor" />
+								<input type="submit" value="Select Mentor" class="button" />
 							</form>
 						</div>
 					</div>

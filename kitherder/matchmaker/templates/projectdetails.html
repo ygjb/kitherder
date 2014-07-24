@@ -11,7 +11,7 @@
 			{% if not isbelong and role == "mentee" %}
 				{% if expressedinterest == 0 %}
 					<form name="expressinterest" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
-						<input type="submit" name="expressinterest" value="express interest">
+						<input type="submit" name="expressinterest" value="express interest" class="button" />
 					</form>
 				{% else %}
 					You have expressed interest for this project.
@@ -55,7 +55,7 @@
 							{% if role == "coordinator" %}
 								<form id="invitementor{{ theproject.pk }}" action="/matchmaker/mentorfinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/mentorfinder/')">{% csrf_token %}
 									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
-									<input type="submit" value="add mentor" />
+									<input type="submit" value="add mentor" class="button" />
 								</form>
 							{% else %}
 								None assigned yet
@@ -71,7 +71,7 @@
 						{% if theproject.mentee_id == NULL %}
 							<form id="invitementee{{ theproject.pk }}" action="/matchmaker/menteefinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/menteefinder/')">{% csrf_token %}
 								<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
-								<input type="submit" value="add mentee" />
+								<input type="submit" value="add mentee" class="button" />
 							</form>
 						{% else %}	
 							<a href="mailto:{{ theproject.mentee_id.user_id.email }}">{{ theproject.mentee_id.user_id.email }}</a>
@@ -88,7 +88,7 @@
 							{% if role == "coordinator" %}
 								<form id="approveproject{{ theproject.pk }}" action="/matchmaker/project/{{ theproject.pk }}/" method="POST" style="display: inline">{% csrf_token %}
 									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
-									<input type="submit" name="approveproject" value="approve now" />
+									<input type="submit" name="approveproject" value="approve now" class="button" />
 								</form>
 							{% endif %}
 						{% endif %}
@@ -127,9 +127,9 @@
 										<!-- show form only if no mentee is in the project yet -->
 										{% if theproject.mentee_id == NULL %}
 										<form id="selectmentee" method="post" action="/matchmaker/project/{{ theproject.pk }}/">{% csrf_token %}
-											<input type="hidden" id="project" name="project" value="{{ theproject.pk }}">
-											<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.mentee_id.user_id.email }}">
-											<input type="submit" id="selectmentee" name = "selectmentee" value="select mentee" />
+											<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
+											<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ menteeRel.mentee_id.user_id.email }}" />
+											<input type="submit" id="selectmentee" name = "selectmentee" value="select mentee" class="button" />
 										</form>
 										{% endif %}
 									</div>
@@ -178,7 +178,7 @@
 								<div id="dialog{{ milestone.pk }}" title="{{milestone.milestone_name}}">
 									<pre>{{ milestone.milestone_comments }}</pre>
 								</div>
-								<input type="button" id="commentbutton{{ milestone.pk }}" value="view comments">
+								<input type="button" id="commentbutton{{ milestone.pk }}" value="view comments" class="button" />
 								<script>
 									$(function() {
 										$("#dialog{{ milestone.pk }}").dialog({
@@ -198,11 +198,11 @@
 									});
 								</script> |
 								<form id="milestoneedit{{ project.pk}}" action="/matchmaker/milestoneedit/{{ milestone.pk }}/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneedit/{{ milestone.pk }}/')" style="display: inline">{% csrf_token %}
-									<input type="submit" name="editMilestone" value="edit">
+									<input type="submit" name="editMilestone" value="edit" class="button" />
 								</form> |
 								<form id="milestonedelete{{ project.pk}}" method="POST" style="display: inline;">{% csrf_token %}
 									<input type="hidden" name="milestone" value="{{ milestone.pk }}" />
-									<input type="submit" name="deleteMilestone" value="delete">
+									<input type="submit" name="deleteMilestone" value="delete" class="button" />
 								</form>
 							</div>								
 						{% endif %}		
@@ -219,7 +219,7 @@
 		{% if isbelong %}			
 			<form id="milestoneadd{{ project.pk }}" action="/matchmaker/milestoneadd/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneadd/')">{% csrf_token %}
 				<input type="hidden" id="project_id" name="project_id" value="{{ theproject.pk }}" />
-				<input type="submit" value="add milestone" />
+				<input type="submit" value="add milestone" class="button" />
 			</form>
 		{% endif %}
 	{% else %}

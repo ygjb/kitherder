@@ -21,8 +21,8 @@
 			{{ form.project }}
 			<label for="searchterm" style="float:none">Search: </label>
 			{{ form.searchterm }}
-			<input type="submit" value="Search">
-			<span class="toggle"><input type="button" value="Advanced options"></span>
+			<input type="submit" value="Search" class="button" />
+			<span class="toggle"><input type="button" value="Advanced options"  class="button" /></span>
 			
 			<div style="width: 410px; text-align: left;" class="divInfo">
 				{{ form.matchskills }}
@@ -49,7 +49,7 @@
 							<form id="selectmentee" method="post" action="/matchmaker/menteefinder/">{% csrf_token %}
 								<input type="hidden" id="project" name="project" value="{{ project }}">
 								<input type="hidden" id="selectedmentee" name="selectedmentee" value="{{ mentee.user_id.email }}">
-								<input type="submit" value="Select Mentee" />
+								<input type="submit" value="Select Mentee" class="button" />
 							</form>
 						</div>
 					</div>
