@@ -41,10 +41,18 @@ h4 {
 .Left {float: right;}
 .navRight {float:right;}
 
-body {
-	background-image: url("/Images/grain.png");
+html, body 
+{
+	background-image: url("/images/grain.png");
     background-color:#F6F4EC;
-	font-family: 'Open Sans', sans-serif;}
+	font-family: 'Open Sans', sans-serif;
+}
+
+#Footer 
+{
+	background-color: #444444;
+	color: #ffffff;
+}
 	
 a:link {color:#0095DD;}      /* unvisited link */
 a:visited {color:#0095DD;}  /* visited link */

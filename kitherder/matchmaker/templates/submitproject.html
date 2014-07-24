@@ -3,8 +3,13 @@
 {% block title%}KitHerder: Project Details{% endblock %}
 
 {% block content %}
-    <br />
-    <br />
+    	<script type="text/javascript">
+	    $(document).ready(function() {
+    	    $("#id_skills_required").tagit({allowSpaces: true});
+    	});
+	</script>
+
+	<h2>Submit Project</h2>
     {% if cannotsubmit %}
     	As a mentor, you must join one of the Kitherder groups in Mozillian before you can submit a project. <a href="https://mozillian.org">Go join now.</a>
     {% else %} 

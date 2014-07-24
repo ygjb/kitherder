@@ -12,7 +12,7 @@
 		}
 	</script>
 	
-	<p><b>Searching for Mentor</b></p>
+	<h3>Searching for Mentor</h3><br />
     <div id="Search" align="center" style="padding: 5px;">
     <form name="searchmentorform" action="/matchmaker/mentorfinder" method="post">{% csrf_token %}
 		{{ form.non_field_errors }}
@@ -31,7 +31,9 @@
 		</div>
 	</form>
     </div> <!-- end of search bar-->
-  
+  	
+  	<br />
+  	
 	{% if resultmentorslist.count > 0 %}  
 		<div id="Results"> <!-- div to hold the search results -->
 			{% if searched %}

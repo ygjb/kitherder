@@ -10,10 +10,17 @@
 <script src="https://browserid.org/include.js" type="text/javascript"></script>
 <script src="http://code.jquery.com/jquery-1.11.0.min.js"> type="text/javascript"></script>
 
+<!--[if !lte IE 7]><!-->
+    <link rel="stylesheet" media="screen,projection,tv" href="//mozorg.cdn.mozilla.net/media/css/responsive-min.css?build=1ab6847" />
+<!--<![endif]-->
+<link rel="stylesheet" media="screen,projection,tv" href="//mozorg.cdn.mozilla.net/media/css/styleguide-min.css?build=1ab6847" />
+<link rel="shortcut icon" href="//mozorg.cdn.mozilla.net/media/img/favicon.ico">
+
+
 <link href="http://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet" type="text/css"> <!-- FONTS for opensans -->
-<link href="{{ STATIC_URL }}KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
-<link href="{{ STATIC_URL }}Kitherder.css" rel="stylesheet" type="text/css" />   <!-- the look of kitherder colours fonts etc -->
-<link href="{{ STATIC_URL }}tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
+<link href="{{ STATIC_URL }}css/KitherderLayout.css" rel="stylesheet" type="text/css" />   <!-- my layout CSS with divs for layout and columns-->
+<link href="{{ STATIC_URL }}css/Kitherder.css" rel="stylesheet" type="text/css" />   <!-- the look of kitherder colours fonts etc -->
+<link href="{{ STATIC_URL }}css/tables.css" rel="stylesheet" type="text/css" />  <!-- implements table functionality --> 
 
 
 
@@ -21,8 +28,9 @@
 </head>
 
 <body>
-{% browserid_info %}
 <div id="MainWrapper">
+{% browserid_info %}
+<div id="ContentWrapper">
 <a href="https://www.mozilla.org/" id="tabzilla">mozilla</a>
 <div class="cleaner">&nbsp;</div>
  <header>
@@ -34,7 +42,7 @@
 	{% endif %}
   </div>
 </header>
-<div class="large" id="Title"><img src="{{ STATIC_URL }}Images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
+<div class="large" id="Title"><img src="{{ STATIC_URL }}images/logo.png" align="absmiddle" width="100">KitHerder</div> <!-- end title -->
 
 <p>Welcome to Kitherder. One last question.</p>
 <p><b>Are you enrolling as a mentor or a mentee?</b></p>
@@ -53,9 +61,22 @@
 
 </div> <!--end main wrapper -->
 
+<div id="Footer">
+<div id = "FooterWrapper">
+<br />
+<div style="float: left">
+<a href="http://mozilla.org/"><img src="{{ STATIC_URL}}images/footer-mozilla.png"></a>
+</div>
+<div style="float: right">
+Contribute to Kitherder. <a href="https://github.com/ygjb/kitherder">Make some changes.</a>
+</div>
+</div>
+</div> <!-- end Footer -->
+
 <script src="//mozorg.cdn.mozilla.net/tabzilla/tabzilla.js"></script>
 <script src="https://login.persona.org/include.js"></script>
 <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 {% browserid_js %}
+</div>
 </body>
 </html>

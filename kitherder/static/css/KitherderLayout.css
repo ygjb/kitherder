@@ -1,0 +1,92 @@
+@charset "UTF-8";
+/* CSS Document */
+
+html,body 
+{
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+}
+
+#MainWrapper
+{
+	min-height: 100%; 
+	position: relative;
+}
+
+#ContentWrapper
+{
+	max-width:1024px;  	/* max width */
+	margin:auto; 		/* set the margins so that the main wrapper floats in */									
+						/*the middle.*/
+	width:90%;			/*take up 90% of 1024 */
+	position: relative;
+}
+
+#PopUpWrapper  /* create a wrapper that will limit the size of the pop up window */
+{
+	width:  400px;
+	height: 300px;
+}
+
+#Title
+{
+	margin-bottom:0.3em; 	/*keep the menu's off the bottom*/
+	text-align: center;
+}
+
+#Nav
+{ 
+	width: 100%;
+  	margin-bottom:1em; 
+  	border-bottom:solid 1px #aaa;
+  	border-top:solid 1px #aaa 
+}
+	
+#Search /* a search div to separate and add a border to the search bar */
+{
+	border: solid thin #333;
+}
+
+#Results {} /* a results div to separate the search results */
+
+#Content
+{	
+	clear:both;  /*	have the content sit on its own line */
+	padding-bottom: 130px;
+}
+
+#Footer
+{ 
+	padding: 0px; 
+	margin: 0px;
+	height: 100px;
+	width: 100%;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+
+#FooterWrapper
+{
+	max-width:1024px;  	/* max width */
+	margin:auto; 		/* set the margins so that the main wrapper floats in */									
+						/*the middle.*/
+	width:90%;			/*take up 90% of 1024 */	
+	min-height: 100%;
+}
+
+#Nav a  /* for the menus to have a bit of spacing */
+{
+	margin-left: 1em;
+	margin-right: 1em;
+}
+	
+#Centered  /* for centering a block - used only for the pop up windows */
+{
+  width: 100%;
+  margin-left: auto ;
+  margin-right: auto ;
+}
+

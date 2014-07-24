@@ -3,6 +3,12 @@
 {% block title%}KitHerder: Project Details{% endblock %}
 
 {% block content %}
+	<script type="text/javascript">
+	    $(document).ready(function() {
+    	    $("#id_skills_required").tagit({allowSpaces: true});
+    	});
+	</script>
+
 	<h2>Project Details</h2>
 	
 	{% if theproject %}

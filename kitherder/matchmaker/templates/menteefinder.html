@@ -12,7 +12,7 @@
 		}
 	</script>
 	
-	<p><b>Searching for Mentee</b></p>
+	<h3>Searching for Mentee</h3><br />
     <div id="Search" align="center" style="padding: 5px;">
     <form name="searchmenteeform" action="/matchmaker/menteefinder" method="post">{% csrf_token %}
 		{{ form.non_field_errors }}
@@ -26,12 +26,12 @@
 			
 			<div style="width: 410px; text-align: left;" class="divInfo">
 				{{ form.matchskills }}
-				<label for="matchskills" style="float: none">Projects that match any of my skills only</label>
+				<label for="matchskills" style="float: none">Mentees that match any of project's required skills only</label>
 			</div>
 		</div>
 	</form>
     </div> <!-- end of search bar-->
-  
+  	<br />
 	{% if resultmenteeslist.count > 0 %}  
 		<div id="Results"> <!-- div to hold the search results -->
 			{% if searched %}
