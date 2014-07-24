@@ -29,18 +29,13 @@
 		form.target = 'formpopup';
 	}
 	
-	function ToggleList(IDS) 
-	{
-  		var CState = document.getElementById(IDS);
-  		if (CState.style.display != "block") 
-  		{ 
-  			CState.style.display = "block"; 
-  		}
-        else 
-        {
-        	CState.style.display = "none";
-        }
-	}
+	$(document).ready(function(){
+  		$("span.toggle").click(function(){
+			$(".divInfo").slideToggle("fast");
+		});
+	});
+
+	
 </script>
 
 

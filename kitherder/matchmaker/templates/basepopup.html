@@ -23,6 +23,12 @@
 			$(this).datepicker({ dateFormat: 'yy-mm-dd' });
 		});
 	});
+	
+	$(document).ready(function(){
+  		$("span.toggle").click(function(){
+			$(".divInfo").slideToggle("fast");
+		});
+	});
 </script>
 
 </head>

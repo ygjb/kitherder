@@ -8,10 +8,30 @@
 		{{ form.non_field_errors }}
 		<div class="fieldWrapper">
 			{{ form.subject_errors }}
-			<label for"searchterm" style="float: none">Search: </label>
+			<div style="display: inline-block; vertical-align: top"><label for="searchterm" style="float: none">Search: </label></div>
+			<div style="display: inline-block; vertical-align: top">
+				{{ form.searchterm }}
+				<br />
+				<i style="font-size: 9pt;">(leave blank for all projects)</i>
+			</div>
+			<div style="display: inline-block; vertical-align: top">
+				<input type="submit" value="Search">
+				<span class="toggle"><input type="button" value="Advanced options"></span>
+			</div>
 			
-			{{ form.searchterm }}
-			<input type="submit" value="Search">
+			<div class="cleaner">&nbsp;<br /></div>
+			<div style="width: 410px; text-align: left;" class="divInfo">
+				{{ form.noncompleted }}
+				<label for="noncompleted" style="float: none">Only non-completed projects</label>
+				<br/>
+				{{ form.matchskills }}
+				<label for="matchskills" style="float: none">Projects that match any of my skills only</label>
+				<br />
+				{{ form.mozilliangroups }}
+				<label for="mozilliangroups" style="float: none">Projects in divisions matching my Mozillian groups</label>
+			</div>
+			
+			
 		</div>
 	</form>
     </div> <!-- end of search bar-->
@@ -22,7 +42,7 @@
 				<h4> Projects Matching Your Search </h4> <!-- title -->
 	  
 				<div class="table"> <!-- table to hold search results -->
-					<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">status</div><div class="table-header-cell">Involved In?</div></div>
+					<div class="table-row"><div class="table-header-cell">Project</div><div class="table-header-cell">Division</div><div class="table-header-cell">Status</div><div class="table-header-cell">Involved In?</div></div>
 					{% for project in resultprojectslist %}
 						<div class="table-row">
 							<div class="table-cell"><a href="/matchmaker/project/{{ project.id }}/">{{ project.project_name }}</a></div>

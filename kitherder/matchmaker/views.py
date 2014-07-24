@@ -17,22 +17,27 @@ from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorPr
 import json
 import requests
 
-from matchmaker.utils import findUserRole, belongToProject, findDivisionsCorrespondingCoordinator, findDivisionsCorrespondingMentor,getMozillianDataByUser, getMozillianGroupsbyUser, getVouchedMembersofDivision
+from matchmaker.utils import findUserRole, belongToProject, findDivisionsCorrespondingCoordinator, findDivisionsCorrespondingMentorMentee,getMozillianDataByUser, getMozillianGroupsbyUser, getVouchedMembersofDivision, getMozillianSkillsByUser
 
 
 	
 # some extra forms #
 
 class SearchForm(forms.Form):
-    searchterm = forms.CharField(max_length=500)
+    searchterm = forms.CharField(max_length=500, required=False)
+    noncompleted = forms.BooleanField(initial=True,required=False)
+    matchskills = forms.BooleanField(required=False)
+    mozilliangroups = forms.BooleanField(required=False)
 	
 class SearchMenteeForm(forms.Form):
 	project = forms.IntegerField(widget=forms.HiddenInput)
-	searchterm = forms.CharField(max_length=500)
+	searchterm = forms.CharField(max_length=500,required=False)
+	matchskills = forms.BooleanField(required=False)
 	
 class SearchMentorForm(forms.Form):
 	project = forms.IntegerField(widget=forms.HiddenInput)
-	searchterm = forms.CharField(max_length=500)
+	searchterm = forms.CharField(max_length=500,required=False)
+	matchskills = forms.BooleanField(required=False)
 	
 class DivisionGroupForm(forms.Form):
 	division = forms.IntegerField(widget=forms.HiddenInput)
@@ -75,17 +80,49 @@ def myprojects(request):
 
 @login_required	
 def searchproject(request):
+	# ASSUMPTION: By default, everyone can search and see everyone else's project (unless advanced search options/filters are used)
+	
 	role = findUserRole(request.user.email)
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
 
+	
 	if request.method == 'POST':
 		searched = 1;
 		form = SearchForm(request.POST)
 		if form.is_valid():
 			searchterm = form.cleaned_data['searchterm']
-			resultprojectslist = Project.objects.filter(Q(division_id__division_name__icontains=searchterm) | Q(project_name__icontains=searchterm) | Q(project_description__icontains=searchterm) | Q(skills_required__icontains=searchterm) | Q(parent_project_id__project_name__icontains=searchterm))
-			return render_to_response('matchmaker/templates/searchproject.html', {'resultprojectslist': resultprojectslist, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
+
+			if searchterm == '':
+				resultprojectslist = Project.objects.all()		
+			else:
+				resultprojectslist = Project.objects.filter(Q(division_id__division_name__icontains=searchterm) | Q(project_name__icontains=searchterm) | Q(project_description__icontains=searchterm) | Q(skills_required__icontains=searchterm) | Q(parent_project_id__project_name__icontains=searchterm))
+			
+			
+			# advanced option: refine by if only in user's group (warning: if user is not in group, will return no results)
+			if form.cleaned_data['mozilliangroups']:
+				if role == 'coordinator':
+					division = findDivisionsCorrespondingCoordinator(request.user.email)[0]
+					resultprojectslist = resultprojectslist.filter(division_id = division.pk)
+				else:
+					userdivision = findDivisionsCorrespondingMentorMentee(request.user.email)		
+					resultprojectslist = resultprojectslist.filter(division_id__in=[item.pk for item in userdivision])
+			
+			# advanced option: refine by showing non completed projects (default checked)
+			if form.cleaned_data['noncompleted']:
+				resultprojectslist = resultprojectslist.exclude(project_status_id__status = "completed")
+
+			# advanced option: only matching user's skills (warning, if user have not entered skills in mozillian, will return no results)
+			if form.cleaned_data['matchskills']:
+				filter = Q()
+				for skill in getMozillianSkillsByUser(request.user.email):
+					filter	= filter | Q(skills_required__icontains = skill)
+				
+				resultprojectslist = resultprojectslist.filter(filter)
+			
+			return render_to_response('matchmaker/templates/searchproject.html', {'resultprojectslist': resultprojectslist, 'role':role, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
+			
+			
 	searched = 0;
 	form = SearchForm()
 	
@@ -253,7 +290,7 @@ def submitproject(request):
 			submitform = MentorMenteeProjectForm()
 			# ASSUMPTION: mentor can only submit projects to a division with mozillian group they belong to, if they do not belong to a group, they cannot submit a project yet
 			if role == "mentor":
-				divisionlist = findDivisionsCorrespondingMentor(request.user.email)
+				divisionlist = findDivisionsCorrespondingMentorMentee(request.user.email)
 				
 				if len(divisionlist) > 0: 	
 					submitform.fields["division_id"].queryset = divisionlist
@@ -270,9 +307,14 @@ def submitproject(request):
 
 @login_required	
 def searchmentee(request):
+	# currently restricted to be used only by only used by coordinators or mentors
+	# ASSUMPTION all mentees that are looking for projects is searchable (since mentees are not necessariy vouched and have not necessarily joined a group yet)
+	
 	role = findUserRole(request.user.email)	
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
+	if role == "mentee":
+		return redirect('/matchmaker/myprojects', context_instance=RequestContext(request))
 
 	project =""
 	if request.method == 'POST':
@@ -285,6 +327,24 @@ def searchmentee(request):
 			project = form.cleaned_data['project']
 			searchterm = form.cleaned_data['searchterm']
 			resultmenteeslist = Mentee.objects.filter(user_id__email__icontains=searchterm, is_looking=True)
+			
+			# advanced option: show mentees whose skills matches the projects' needs (warning, if user have not entered skills in mozillian, user will not be included in this search)
+			if form.cleaned_data['matchskills']:
+				projectskills = Project.objects.filter(pk=project)[0].skills_required
+				
+				#check each mentee to see if they have a single skill that matches one of the project's
+				for mentee in resultmenteeslist:
+					numskillsmatched = 0
+
+					for skill in getMozillianSkillsByUser(mentee.user_id.email):
+						print skill
+						if projectskills.lower().find(skill.lower()) != -1:
+							numskillsmatched = numskillsmatched + 1
+
+					if numskillsmatched < 1:
+						resultmenteeslist = resultmenteeslist.exclude(pk=mentee.pk)
+						
+			
 			return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
 			
 	if request.method =='POST' and 'selectedmentee' in request.POST:
@@ -302,13 +362,21 @@ def searchmentee(request):
 	
 @login_required	
 def searchmentor(request):
+	# currently restricted to be used only by only used by coordinators
 	role = findUserRole(request.user.email)	
 	if role == "":
 		return redirect('/entrance/register/', context_instance=RequestContext(request))
+	if role != "coordinator":
+		return redirect('/matchmaker/myprojects', context_instance=RequestContext(request))
 
-	project =""
+	project = ""
+	divisionslist = findDivisionsCorrespondingCoordinator(request.user.email)
+	for division in divisionslist:
+		divisionmentorlist = getVouchedMembersofDivision(division.pk)
+	
 	if request.method == 'POST':
 		project = request.POST['project']
+	
 		
 	if request.method == 'POST' and 'searchterm' in request.POST:
 		searched = 1;
@@ -316,7 +384,29 @@ def searchmentor(request):
 		if form.is_valid():
 			project = form.cleaned_data['project']
 			searchterm = form.cleaned_data['searchterm']
-			resultmentorslist = Mentor.objects.filter(user_id__email__icontains=searchterm)
+			searchedmentorslist = Mentor.objects.filter(user_id__email__icontains=searchterm)
+			
+			# further filter based on only mentors that are in the coordinator's division
+			resultmentorslist = searchedmentorslist.filter(pk__in = [item.pk for item in divisionmentorlist])
+			
+			# advanced option: show mentors whose skills matches the projects' needs (warning, if user have not entered skills in mozillian, user will not be included in this search)
+			if form.cleaned_data['matchskills']:
+				projectskills = Project.objects.filter(pk=project)[0].skills_required
+				
+				#check each mentor to see if they have a single skill that matches one of the project's
+				for mentor in resultmentorslist:
+					numskillsmatched = 0
+
+					for skill in getMozillianSkillsByUser(mentor.user_id.email):
+						print skill
+						if projectskills.lower().find(skill.lower()) != -1:
+							numskillsmatched = numskillsmatched + 1
+
+					if numskillsmatched < 1:
+						resultmentorslist = resultmentorslist.exclude(pk=mentor.pk)
+						
+			
+			
 			return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
 			
 	if request.method =='POST' and 'selectedmentor' in request.POST:
@@ -328,8 +418,9 @@ def searchmentor(request):
 	
 	searched = 0;
 	form = SearchMentorForm(initial={'project': project})
-	resultmentorslist = Mentor.objects.all()
-	# resultmentorslist = getVouchedMembersofDivision(1)
+
+	resultmentorslist = divisionmentorlist
+		
 	return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))
 	
 @login_required	

@@ -51,7 +51,18 @@
 				<div class="table-row">
 					<div class="table-cell"><b>Mentor:</b></div>
 					<div class="table-cell">
-						<a href="mailto:{{ theproject.mentor_id.user_id.email }}">{{ theproject.mentor_id.user_id.email }}</a>
+						{% if theproject.mentor_id == NULL %}
+							{% if role == "coordinator" %}
+								<form id="invitementor{{ theproject.pk }}" action="/matchmaker/mentorfinder/" method="POST" onsubmit="target_popup(this, '/matchmaker/mentorfinder/')">{% csrf_token %}
+									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
+									<input type="submit" value="add mentor" />
+								</form>
+							{% else %}
+								None assigned yet
+							{% endif %}
+						{% else %}	
+							<a href="mailto:{{ theproject.mentor_id.user_id.email }}">{{ theproject.mentor_id.user_id.email }}</a>
+						{% endif %}
 					</div>
 				</div>
 				<div class="table-row">
@@ -70,20 +81,21 @@
 				<div class="table-row">
 					<div class="table-cell"><b>Approved?</b></div>
 					<div class="table-cell">
-						{% if theproject.approved%}
+						{% if theproject.approved %}
 							approved_by <a href="mailto:{{ theproject.approved_by.user_id.email }}">{{ theproject.approved_by.user_id.email }}</a>
 						{% else %}
 							Not yet
-							
-							<form id="approveproject{{ theproject.pk }}" action="/matchmaker/project/{{ theproject.pk }}/" method="POST" style="display: inline">{% csrf_token %}
-								<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
-								<input type="submit" name="approveproject" value="approve now" />
-							</form>
+							{% if role == "coordinator" %}
+								<form id="approveproject{{ theproject.pk }}" action="/matchmaker/project/{{ theproject.pk }}/" method="POST" style="display: inline">{% csrf_token %}
+									<input type="hidden" id="project" name="project" value="{{ theproject.pk }}" />
+									<input type="submit" name="approveproject" value="approve now" />
+								</form>
+							{% endif %}
 						{% endif %}
 					</div>
 				</div>
 			{% endif %}
-			<!-- end mentor and mentee logic -->
+			<!-- end show mentor and mentee logic -->
 			
 			<div class="table-row">
 				<div class="table-cell"><b>Project Description:</b></div>
@@ -103,7 +115,7 @@
 			{% if role == "mentor" or role == "coordinator" %}
 				{% if expressedinterestlist %}
 					<br>&nbsp;<br>
-					<b>Mentees who have expressed interest</b> <a href="#" onClick="ToggleList('expressinterest')" style="text-decoration:none; font-size: 20pt; font-weight: bold">+</a>
+					<b>Mentees who have expressed interest</b> <span class="toggle">+</span>
 					<div id="expressinterest" class="divInfo">
 						<div class="table"> <!-- table to hold search results -->
 							<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>

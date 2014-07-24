@@ -29,10 +29,10 @@
    		<div class="table-cell">Skills</div>
    		<div class="table-cell">
    			{% if skills == 'user not in mozillian' %}
-   				You have not registered as a Mozillian yet. Go to <a href="https://mozillians.org">Mozillian</a> now to register to network with others and for added functionality.
+   				You have not registered as a Mozillian yet. Go to <a href="https://mozillians.org">Mozillian</a> now to register to network with others and to increase your chances of being matched to a project.
    			{% else %}
    				{% if skills == '' %}
-   					You have not added any skills yet in your Mozillian profile. Go to <a href="https://mozillians.org">Mozillian</a> to add some skills.
+   					You have not added any skills yet in your Mozillian profile. Go to <a href="https://mozillians.org">Mozillian</a> to add some skills and increase your chances of being matched to a project.
    				{% else %}
    					{{ skills }}<br />Edit your list of skills at <a href="https://mozillians.org">Mozillian</a>
    				{% endif %}
@@ -77,7 +77,7 @@
 			{{ form.non_field_errors }}
 			<div class="fieldWrapper">
 				{{ form.subject_errors }}
-				<label for"searchterm">Looking for a project? </label>
+				<label for="searchterm">Looking for a project? </label>
 				{{ form.is_looking }}
 				<input type="submit" value="Save">
 			</div>

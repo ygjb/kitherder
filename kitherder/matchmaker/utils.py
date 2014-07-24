@@ -78,7 +78,7 @@ def getMozillianGroupsbyUser(email):
 	return groups
 
 
-def findDivisionsCorrespondingMentor(email):
+def findDivisionsCorrespondingMentorMentee(email):
 	mydivisionlist = Division.objects.none()
 	
 	objs = getMozillianDataByUser(email)
@@ -103,3 +103,13 @@ def getVouchedMembersofDivision(division_id):
 		mentorslist = Mentor.objects.filter(user_id__email__in = [items['email'] for items in objs['objects']])
 	
 	return mentorslist
+	
+def getMozillianSkillsByUser(email):
+	skills = ''
+	objs = getMozillianDataByUser(email)
+	
+	if objs['meta']['total_count'] > 0:
+		skills = objs['objects'][0]['skills']
+	
+	return skills;
+	

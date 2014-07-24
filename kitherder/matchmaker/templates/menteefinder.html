@@ -19,9 +19,15 @@
 		<div class="fieldWrapper">
 			{{ form.subject_errors }}
 			{{ form.project }}
-			<label for"searchterm">Search: </label>
+			<label for="searchterm" style="float:none">Search: </label>
 			{{ form.searchterm }}
 			<input type="submit" value="Search">
+			<span class="toggle"><input type="button" value="Advanced options"></span>
+			
+			<div style="width: 410px; text-align: left;" class="divInfo">
+				{{ form.matchskills }}
+				<label for="matchskills" style="float: none">Projects that match any of my skills only</label>
+			</div>
 		</div>
 	</form>
     </div> <!-- end of search bar-->

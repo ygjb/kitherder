@@ -19,9 +19,15 @@
 		<div class="fieldWrapper">
 			{{ form.subject_errors }}
 			{{ form.project }}
-			<label for"searchterm" style="float: none;">Search by email: </label>
+			<label for="searchterm" style="float: none;">Search by email: </label>
 			{{ form.searchterm }}
 			<input type="submit" value="Search">
+			<span class="toggle"><input type="button" value="Advanced options"></span>
+			
+			<div style="width: 410px; text-align: left;" class="divInfo">
+				{{ form.matchskills }}
+				<label for="matchskills" style="float: none">Mentors that match any of project's required skills only</label>
+			</div>
 		</div>
 	</form>
     </div> <!-- end of search bar-->
@@ -29,9 +35,9 @@
 	{% if resultmentorslist.count > 0 %}  
 		<div id="Results"> <!-- div to hold the search results -->
 			{% if searched %}
-				<h4> Mentors Matching Your Search </h4> <!-- title -->
+				<h4> Mentors in Division Matching Your Search </h4> <!-- title -->
 			{% else %}
-				<h4> Mentors</h4> <!-- title -->
+				<h4> Mentors in Division</h4> <!-- title -->
 			{% endif %}
 		  
 			<div class="table"> <!-- table to hold search results -->

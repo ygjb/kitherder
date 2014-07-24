@@ -52,6 +52,7 @@ a:hover {color:#00539F;}
 
 
 .divInfo { display:none; }
+.toggle { color: #0095DD; text-decoration:none; font-size: 20pt; font-weight: bold; cursor: pointer}
 
 label {float: right;} /* for all django forms */
 th {vertical-align: top;} /* for all django forms */
