@@ -73,19 +73,30 @@ def getMozillianDataByUser(email):
 
 	
 def getMozillianGroupsbyUser(email):
-	groups = getMozillianDataByUser(email)['objects'][0]['groups']
-
-	return groups
+	groups = []
+	try:
+		groups = getMozillianDataByUser(email)['objects'][0]['groups']
+		return groups
+	except Exception as e:
+		print "Mozillian is not returning groups due to the following error: " 
+		print(e)
+		raise
+		return groups
 
 
 def findDivisionsCorrespondingMentorMentee(email):
 	mydivisionlist = Division.objects.none()
 	
-	objs = getMozillianDataByUser(email)
+	try:
+		objs = getMozillianDataByUser(email)
 	
-	if objs['meta']['total_count'] > 0:
-		mydivisionlist = Division.objects.filter(mozillian_group__in = objs['objects'][0]['groups'])
-	
+		if objs['meta']['total_count'] > 0:
+			mydivisionlist = Division.objects.filter(mozillian_group__in = objs['objects'][0]['groups'])
+	except Exception as e:
+		print "Mozillian not returning groups of a specific user due to the following error: "
+		print(e)
+		raise
+		
 	return mydivisionlist
 
 	
@@ -94,22 +105,37 @@ def getVouchedMembersofDivision(division_id):
 	
 	division = Division.objects.get(pk=division_id)
 	
-	url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&is_vouched=true&groups=' + division.mozillian_group
-	r = requests.get(url)
+	try:
+		url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&is_vouched=true&groups=' + division.mozillian_group
+		r = requests.get(url)
 	
-	objs = json.loads(r.text)
+		objs = json.loads(r.text)
 	
-	if objs['meta']['total_count'] > 0:
-		mentorslist = Mentor.objects.filter(user_id__email__in = [items['email'] for items in objs['objects']])
+		if objs['meta']['total_count'] > 0:
+			mentorslist = Mentor.objects.filter(user_id__email__in = [items['email'] for items in objs['objects']])
+		
+	except Exception as e:
+		print "Mozillian not returning mentors in group due to the following error: "
+		print(e)
+		raise
+
 	
 	return mentorslist
 	
 def getMozillianSkillsByUser(email):
 	skills = ''
-	objs = getMozillianDataByUser(email)
 	
-	if objs['meta']['total_count'] > 0:
-		skills = objs['objects'][0]['skills']
+	try:
+		objs = getMozillianDataByUser(email)
 	
-	return skills;
+		if objs['meta']['total_count'] > 0:
+			skills = objs['objects'][0]['skills']
+		
+		return skills;
+	except Exception as e:
+		print "Mozillian not returning skills of a specific user due to the following error: "
+		print(e)
+		raise
+	
+
 	

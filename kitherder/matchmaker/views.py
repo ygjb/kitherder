@@ -46,8 +46,7 @@ class DivisionGroupForm(forms.Form):
 		email = kwargs.pop("email")     # client is the parameter passed from views.py
 		super(DivisionGroupForm, self).__init__(*args,**kwargs)
 		self.fields['mozilliangroup'] = forms.ChoiceField(label="", choices=[(item, item) for item in getMozillianGroupsbyUser(email)])
-
-
+		
 
 # end of extra forms #	
 	
@@ -98,15 +97,19 @@ def searchproject(request):
 			else:
 				resultprojectslist = Project.objects.filter(Q(division_id__division_name__icontains=searchterm) | Q(project_name__icontains=searchterm) | Q(project_description__icontains=searchterm) | Q(skills_required__icontains=searchterm) | Q(parent_project_id__project_name__icontains=searchterm))
 			
-			
+			divisionerror = "";
+			skillserror = "";
 			# advanced option: refine by if only in user's group (warning: if user is not in group, will return no results)
 			if form.cleaned_data['mozilliangroups']:
 				if role == 'coordinator':
 					division = findDivisionsCorrespondingCoordinator(request.user.email)[0]
 					resultprojectslist = resultprojectslist.filter(division_id = division.pk)
 				else:
-					userdivision = findDivisionsCorrespondingMentorMentee(request.user.email)		
-					resultprojectslist = resultprojectslist.filter(division_id__in=[item.pk for item in userdivision])
+					try:
+						userdivision = findDivisionsCorrespondingMentorMentee(request.user.email)		
+						resultprojectslist = resultprojectslist.filter(division_id__in=[item.pk for item in userdivision])
+					except Exception as e:
+						divisionerror = "<li>Search result does not filter by divisions related to your Mozillian groups</li>"
 			
 			# advanced option: refine by showing non completed projects (default checked)
 			if form.cleaned_data['noncompleted']:
@@ -114,11 +117,27 @@ def searchproject(request):
 
 			# advanced option: only matching user's skills (warning, if user have not entered skills in mozillian, will return no results)
 			if form.cleaned_data['matchskills']:
-				filter = Q()
-				for skill in getMozillianSkillsByUser(request.user.email):
-					filter	= filter | Q(skills_required__icontains = skill)
+				try:
+					filter = Q()
+					for skill in getMozillianSkillsByUser(request.user.email):
+						filter	= filter | Q(skills_required__icontains = skill)
 				
-				resultprojectslist = resultprojectslist.filter(filter)
+					resultprojectslist = resultprojectslist.filter(filter)
+				except Exception as e:
+					skillserror = "<li>Search result does not filter by your skills.</li>"
+			
+			print skillserror
+			
+			if divisionerror != "" or skillserror != "":
+				error = "Mozillian is currently not available:<ul>"
+				if divisionerror:
+					error = error + divisionerror
+				if skillserror:
+					error = error + skillserror
+				error = error + "</ul>"
+				print "yup errors"
+				return render_to_response('matchmaker/templates/searchproject.html', {'resultprojectslist': resultprojectslist, 'role':role, 'form': form, 'error': error, 'searched': searched}, context_instance=RequestContext(request))
+			
 			
 			return render_to_response('matchmaker/templates/searchproject.html', {'resultprojectslist': resultprojectslist, 'role':role, 'form': form, 'searched': searched}, context_instance=RequestContext(request))
 			
@@ -336,14 +355,18 @@ def searchmentee(request):
 				for mentee in resultmenteeslist:
 					numskillsmatched = 0
 
-					for skill in getMozillianSkillsByUser(mentee.user_id.email):
-						print skill
-						if projectskills.lower().find(skill.lower()) != -1:
-							numskillsmatched = numskillsmatched + 1
+					try:
+						for skill in getMozillianSkillsByUser(mentee.user_id.email):
+							print skill
+							if projectskills.lower().find(skill.lower()) != -1:
+								numskillsmatched = numskillsmatched + 1
 
-					if numskillsmatched < 1:
-						resultmenteeslist = resultmenteeslist.exclude(pk=mentee.pk)
-						
+						if numskillsmatched < 1:
+							resultmenteeslist = resultmenteeslist.exclude(pk=mentee.pk)
+					except Exception as e:
+						error = "Skills from Mozillian currently not available. Showing search results not filtered by skills."
+						return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'error': error, 'project': project}, context_instance=RequestContext(request))		
+			
 			
 			return render_to_response('matchmaker/templates/menteefinder.html', {'resultmenteeslist': resultmenteeslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
 			
@@ -370,9 +393,20 @@ def searchmentor(request):
 		return redirect('/matchmaker/myprojects', context_instance=RequestContext(request))
 
 	project = ""
+	searched = 0
+	form = SearchMentorForm()
+	resultmentorslist = Mentor.objects.none
+	divisionmentorlist = Mentor.objects.none
+	
 	divisionslist = findDivisionsCorrespondingCoordinator(request.user.email)
+	
 	for division in divisionslist:
-		divisionmentorlist = getVouchedMembersofDivision(division.pk)
+		try:
+			divisionmentorlist = getVouchedMembersofDivision(division.pk)
+		except Exception as e:
+			error = "Unable to return list of mentors in the group relating to your division. Check if Mozillian is up."
+			return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'error': error, 'searched': searched, 'project': project}, context_instance=RequestContext(request))
+			
 	
 	if request.method == 'POST':
 		project = request.POST['project']
@@ -385,6 +419,7 @@ def searchmentor(request):
 			project = form.cleaned_data['project']
 			searchterm = form.cleaned_data['searchterm']
 			searchedmentorslist = Mentor.objects.filter(user_id__email__icontains=searchterm)
+					
 			
 			# further filter based on only mentors that are in the coordinator's division
 			resultmentorslist = searchedmentorslist.filter(pk__in = [item.pk for item in divisionmentorlist])
@@ -396,15 +431,20 @@ def searchmentor(request):
 				#check each mentor to see if they have a single skill that matches one of the project's
 				for mentor in resultmentorslist:
 					numskillsmatched = 0
+					
+					mentorskills = getMozillianSkillsByUser(mentor.user_id.email)
+					print mentorskills;
 
-					for skill in getMozillianSkillsByUser(mentor.user_id.email):
-						print skill
-						if projectskills.lower().find(skill.lower()) != -1:
-							numskillsmatched = numskillsmatched + 1
+					try:
+						for skill in mentorskills:
+							if projectskills.lower().find(skill.lower()) != -1:
+								numskillsmatched = numskillsmatched + 1
 
-					if numskillsmatched < 1:
-						resultmentorslist = resultmentorslist.exclude(pk=mentor.pk)
-						
+						if numskillsmatched < 1:
+							resultmentorslist = resultmentorslist.exclude(pk=mentor.pk)
+					except Exception as e:
+						error = "Skills from Mozillian currently not available. Showing search results not filtered by skills."
+						return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'error': error, 'project': project}, context_instance=RequestContext(request))	
 			
 			
 			return render_to_response('matchmaker/templates/mentorfinder.html', {'resultmentorslist': resultmentorslist, 'form': form, 'searched': searched, 'project': project}, context_instance=RequestContext(request))		
@@ -492,7 +532,14 @@ def managedivision(request):
 			thedivision.mozillian_group = form.cleaned_data['mozilliangroup']
 			thedivision.save()			
 	
-	
+	try:
+		testgroups = getMozillianGroupsbyUser(request.user.email)
+		
+	except Exception as e:
+		error = "Cannot retrieve groups from Mozillian. Check to see if Mozillian is up."
+		form = ""
+		return render_to_response('matchmaker/templates/managedivision.html', {'form': form, 'division': division, 'error':error, 'role':role}, context_instance=RequestContext(request))
+
 	form = DivisionGroupForm(initial={'division':division.pk}, email=request.user.email)
 		
 	return render_to_response('matchmaker/templates/managedivision.html', {'form': form, 'division': division, 'role':role}, context_instance=RequestContext(request))

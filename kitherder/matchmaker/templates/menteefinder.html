@@ -32,6 +32,10 @@
 	</form>
     </div> <!-- end of search bar-->
   	<br />
+  	 {% if error %}
+  		<p class="error">{{ error }}</p>
+  		<br />
+	{% endif %}
 	{% if resultmenteeslist.count > 0 %}  
 		<div id="Results"> <!-- div to hold the search results -->
 			{% if searched %}

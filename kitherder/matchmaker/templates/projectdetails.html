@@ -115,7 +115,7 @@
 			{% if role == "mentor" or role == "coordinator" %}
 				{% if expressedinterestlist %}
 					<br>&nbsp;<br>
-					<b>Mentees who have expressed interest</b> <span class="toggle">+</span>
+					<h4>Mentees who have expressed interest <span class="toggle">+</span></h4>
 					<div id="expressinterest" class="divInfo">
 						<div class="table"> <!-- table to hold search results -->
 							<div class="table-row"><div class="table-header-cell">Mentee's Email</div><div class="table-header-cell">&nbsp;</div></div>
@@ -196,10 +196,10 @@
 											});
 										});
 									});
-								</script> |
+								</script> 
 								<form id="milestoneedit{{ project.pk}}" action="/matchmaker/milestoneedit/{{ milestone.pk }}/" method="POST" onsubmit="target_popup(this, '/matchmaker/milestoneedit/{{ milestone.pk }}/')" style="display: inline">{% csrf_token %}
 									<input type="submit" name="editMilestone" value="edit" class="button" />
-								</form> |
+								</form> 
 								<form id="milestonedelete{{ project.pk}}" method="POST" style="display: inline;">{% csrf_token %}
 									<input type="hidden" name="milestone" value="{{ milestone.pk }}" />
 									<input type="submit" name="deleteMilestone" value="delete" class="button" />

@@ -28,15 +28,23 @@
 				<label for="matchskills" style="float: none">Projects that match any of my skills only</label>
 				<br />
 				{{ form.mozilliangroups }}
-				<label for="mozilliangroups" style="float: none">Projects in divisions matching my Mozillian groups</label>
+				{% if role == 'coordinator' %}
+					<label for="mozilliangroups" style="float: none">Projects in my division</label>
+				{% else %}
+					<label for="mozilliangroups" style="float: none">Projects in divisions matching my Mozillian groups</label>
+				{% endif %}
 			</div>
 			
 			
 		</div>
 	</form>
     </div> <!-- end of search bar-->
-  
-	{%if searched %}
+  	<br />
+	{% if searched %}
+		{% if error %}
+			<div class="error">{{ error|safe }}</div>
+		{% endif %}
+		
 		{% if resultprojectslist.count > 0 %}  
 			<div id="Results"> <!-- div to hold the search results -->
 				<h4> Projects Matching Your Search </h4> <!-- title -->

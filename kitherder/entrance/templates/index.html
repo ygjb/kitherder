@@ -62,6 +62,9 @@
   				<div class="authentication" style="text-align: center">
 				{% if user.is_authenticated %}
 				  {% browserid_logout text='Logout' %}
+				  <script language="javascript">
+				  	window.location.replace("/matchmaker/");
+				  </script>
 				{% else %}
 				  {% browserid_login text='' link_class='browserid-Login' %}
 				{% endif %}

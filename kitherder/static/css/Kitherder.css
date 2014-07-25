@@ -4,8 +4,7 @@
 
 .body {
 	font-size: 14px;
-	line-height: 20px;
-	color: #333;
+	line-height: 20px;s
 }
 
 .large {
@@ -41,16 +40,17 @@ h4 {
 .Left {float: right;}
 .navRight {float:right;}
 
-html, body 
+html, body, #MainWrapper
 {
-	background-image: url("/images/grain.png");
-    background-color:#F6F4EC;
 	font-family: 'Open Sans', sans-serif;
+	background:#f7f3e8 url("../images/grain.png") repeat;
+	background:url("../images/grain.png") repeat, -webkit-gradient(linear, 0 0, 0 100%, from(#ece5d5), to(#f7f3e8)), #f7f3e8;
+	background:url("../images/grain.png") repeat, -moz-linear-gradient(#ece5d5, #f7f3e8), #f7f3e8;
 }
 
 #Footer 
 {
-	background-color: #666666;
+	background: #666666;
 	color: #ffffff;
 }
 	
@@ -74,4 +74,5 @@ td {padding: 5px;} /* for all django forms */
     font-size: 14px;
 }
 
+.error {color: #f33}
 

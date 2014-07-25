@@ -13,15 +13,22 @@
    		No group yet
    	{% endif %}
    	
-   	<br />&nbsp;<br />
+   	<br />&nbsp;<br />&nbsp;<br />
    	
    	<h4>Change the division's group</h4>
    	
-   	<form method="post" action="">{% csrf_token %}
-		<label for="mozilliangroup" style="float: none">New group: </label>
-		{{ form }}
-		<input type="submit" name="submit" id="submit" value="Submit" class="button" />
-	</form>
-	<p><i>Can't find the division you're looking for? Check to see if you are a member of that division. You can only see Mozillian groups that you are a member of here.</i></p>
+   	{% if error %}
+   		<p class="error">{{ error }}</p>
+   	{% else %}
+ 	  	<form method="post" action="">{% csrf_token %}
+			<label for="mozilliangroup" style="float: none">New group: </label>
+			{{ form }}
+			<input type="submit" name="submit" id="submit" value="Submit" class="button" />
+		</form>
+		<br />
+		<p class="small"><i>Can't find the division you're looking for? Check to see if you are a member of that division. You can only see Mozillian groups that you are a member of here.</i></p>
 	   
+   	{% endif %}
+   	
+   	
 {% endblock %}
