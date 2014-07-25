@@ -135,7 +135,6 @@ def searchproject(request):
 				if skillserror:
 					error = error + skillserror
 				error = error + "</ul>"
-				print "yup errors"
 				return render_to_response('matchmaker/templates/searchproject.html', {'resultprojectslist': resultprojectslist, 'role':role, 'form': form, 'error': error, 'searched': searched}, context_instance=RequestContext(request))
 			
 			

@@ -34,7 +34,11 @@
    				{% if skills == '' %}
    					You have not added any skills yet in your Mozillian profile. Go to <a href="https://mozillians.org">Mozillian</a> to add some skills and increase your chances of being matched to a project.
    				{% else %}
-   					{{ skills }}<br />Edit your list of skills at <a href="https://mozillians.org">Mozillian</a>
+   					{% if skills = "can't get" %}
+   						<span class="error">Skills from Mozillian not available at this time. Please check <a href="https://mozillians.org">Mozillian</a></span>
+   					{% else %}
+   						{{ skills }}<br />Edit your list of skills at <a href="https://mozillians.org">Mozillian</a>
+   					{% endif %}
    				{% endif %}
    			{% endif %}
    				
@@ -49,7 +53,11 @@
    				{% if groups == '' %}
    					You have not joined any Kitherder-specific groups in Mozillian yet. Go to <a href="https://mozillians.org">Mozillian</a> to join some groups.
    				{% else %}
-   					{{ groups }}<br />Edit your groups at <a href="https://mozillians.org">Mozillian</a>
+   					{% if groups = "can't get" %}
+   						<span class="error">Groups from Mozillian not available at this time. Please check <a href="https://mozillians.org">Mozillian</a></span>
+   					{% else %}
+   						{{ groups }}<br />Edit your groups at <a href="https://mozillians.org">Mozillian</a>
+   					{% endif %}
    				{% endif %}
    			{% endif %}
    				
