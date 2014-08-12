@@ -1,0 +1,26 @@
+Kitherder User Docs
+====
+
+Introduction <a id="introduction" />
+----
+Kitherder facilitates the running of a mentorship program by providing abilities to match together, mentor, mentee and project in a 1:1:1 relationship and to track the relationship from beginning to end. The system provides the following basic capabilities:
+
+* Mentees can register for projects they are interested in or submit new projects
+* Mentors can register for projects in which they are willing to mentor or to submit new projects
+* Matches can be made so that mentor-mentee relationships can start and project work can begin
+* Users can track progress on a project in order to show that mentees/mentors are giving the proper work time to a project and if not the project can be reassigned as needed.
+
+In addition to the above capabilities, coordinators that manage the mentorship program can also perform manual matches for the mentor-mentee-project relationship for those belonging to their area, as well as make association between their division in Kitherder and the group they manage in Mozillian.
+
+
+
+Registering for Kitherder <a id="register">
+----
+Note that in order to register as a mentor, you must be a vouched Mozillian.
+
+1. Go to Kitherder at <http://kitherder.com>
+2. Sign in using [Personal](https://login.persona.org/)
+3. As you have yet to register, Kitherder will prompt you to select your role. 
+4. Select your role and click "Submit". You are now registered with Kitherder.
+
+
