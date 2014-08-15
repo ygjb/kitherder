@@ -39,17 +39,22 @@ def register(request):
 				## Mentors must be vouched in Mozillian, or else they cannot be a mentor! 
 				## Check to see if mentor is a vouched Mozillian
 				
-				url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + request.user.email
-				r = requests.get(url)
+				try:
+					url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + request.user.email
+					r = requests.get(url)
 
-				objs = json.loads(r.text)
+					objs = json.loads(r.text)
 				
-				if objs['meta']['total_count'] > 0 and objs['objects'][0]['is_vouched']:
-					newMentor = Mentor(user_id=currentUser)
-					newMentor.save()
-				else:
-					not_vouched = 1
-					return render_to_response('entrance/templates/register.html', {'form': form, 'not_vouched':not_vouched}, context_instance=RequestContext(request))
+					if objs['meta']['total_count'] > 0 and objs['objects'][0]['is_vouched']:
+						newMentor = Mentor(user_id=currentUser)
+						newMentor.save()
+					else:
+						not_vouched = 1
+						return render_to_response('entrance/templates/register.html', {'form': form, 'not_vouched':not_vouched}, context_instance=RequestContext(request))
+				except Exception as e:
+					mozillian_down = 1
+					return render_to_response('entrance/templates/register.html', {'form': form, 'mozillian_down':mozillian_down}, context_instance=RequestContext(request))
+				
 			else:
 				newMentee = Mentee(user_id=currentUser,is_looking=True)
 				newMentee.save()

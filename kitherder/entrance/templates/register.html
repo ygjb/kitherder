@@ -54,6 +54,7 @@
 	<div class="fieldWrapper">
 		{{ form.subject_errors }}
 		{% if not_vouched %}<p style="color: #ff0000">You must be vouched in Mozillian to be a mentor. Go to <a href="https://mozillians.org">Mozillian</a> now.</p>{% endif %}
+		{% if mozillian_down %}<p style="color: #ff0000">Kitherder cannot reach Mozillian and cannot verify if you are vouched in Mozillian. Please try again later. (You must be vouched in Mozillian to be a mentor.){% endif %}
 		{{ form.role }}		
 		<input type="submit" class="button" />
 	</div>
