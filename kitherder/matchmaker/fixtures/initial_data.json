@@ -1,0 +1,40 @@
+[
+  
+  {
+  	"model": "matchmaker.projectstatus",
+  	"pk": 1,
+  	"fields":
+  	{
+  		"status": "submitted",
+  		"deprecated": false
+  	}
+  },
+  {
+  	"model": "matchmaker.projectstatus",
+  	"pk": 2,
+  	"fields":
+  	{
+  		"status": "in progress",
+  		"deprecated": false
+  	}
+  },  
+  {
+  	"model": "matchmaker.projectstatus",
+  	"pk": 3,
+  	"fields":
+  	{
+  		"status": "on hold",
+  		"deprecated": false
+  	}
+  },
+  {
+  	"model": "matchmaker.projectstatus",
+  	"pk": 4,
+  	"fields":
+  	{
+  		"status": "completed",
+  		"deprecated": false
+  	}
+  }
+
+]
