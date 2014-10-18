@@ -175,3 +175,6 @@ LOGGING = {
         },
     }
 }
+
+MOZILLIAN_URL = 'http://192.81.128.7:8000'
+MOZILLIAN_APP_KEY = '205dc27dfdb336ec376cb7d70d65f0bd6e10ae28'

@@ -7,7 +7,8 @@ from django.template import RequestContext
 from django.core.context_processors import csrf
 from django.shortcuts import redirect
 from django import forms
-	
+from django.conf import settings
+
 from django_browserid import get_audience, verify
 from django_browserid.forms import BrowserIDForm
 
@@ -38,9 +39,9 @@ def register(request):
 			
 				## Mentors must be vouched in Mozillian, or else they cannot be a mentor! 
 				## Check to see if mentor is a vouched Mozillian
-				
+
 				try:
-					url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + request.user.email
+					url = settings.MOZILLIAN_URL + '/api/v1/users/?app_name=kitherder&app_key=' + settings.MOZILLIAN_APP_KEY + '&email=' + request.user.email
 					r = requests.get(url)
 
 					objs = json.loads(r.text)

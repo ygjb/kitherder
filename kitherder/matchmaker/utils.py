@@ -1,5 +1,7 @@
 #helper functions
 
+from django.conf import settings
+
 from matchmaker.models import Project, Division, Coordinator, Mentor, Mentee, Projectstatus, MenteeInterestInProject, Milestone
 from matchmaker.forms import ProjectForm, MentorMenteeProjectForm, CoordinatorProjectForm, MenteeEditProjectForm, MentorEditProjectForm, CoordinatorEditProjectForm, MentorMenteeMilestoneForm
 
@@ -64,7 +66,7 @@ def findDivisionsCorrespondingCoordinator(email):
 
 	
 def getMozillianDataByUser(email):
-	url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&email=' + email
+	url = settings.MOZILLIAN_URL + '/api/v1/users/?app_name=kitherder&app_key=' + settings.MOZILLIAN_APP_KEY + '&email=' + request.user.email
 	r = requests.get(url)
 
 	objs = json.loads(r.text)
@@ -106,7 +108,7 @@ def getVouchedMembersofDivision(division_id):
 	division = Division.objects.get(pk=division_id)
 	
 	try:
-		url = 'http://192.81.128.7:8000/api/v1/users/?app_name=kitherder&app_key=205dc27dfdb336ec376cb7d70d65f0bd6e10ae28&is_vouched=true&groups=' + division.mozillian_group
+		url = settings.MOZILLIAN_URL + '/api/v1/users/?app_name=kitherder&app_key=' + settings.MOZILLIAN_APP_KEY + '&is_vouched=true&groups=' + division.mozillian_group
 		r = requests.get(url)
 	
 		objs = json.loads(r.text)
