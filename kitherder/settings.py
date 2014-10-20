@@ -178,3 +178,6 @@ LOGGING = {
         },
     }
 }
+
+MOZILLIAN_URL = 'enter mozillian instance url here'
+MOZILLIAN_APP_KEY = 'enter app key here'
