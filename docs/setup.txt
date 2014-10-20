@@ -3,7 +3,7 @@
 # Requirements
 Kitherder requires the following:
 * Python 2.7.5
-* Django 1.4.2
+* Django 1.4.3
 * argparse 1.2.1
 * distribute 0.6.24
 * django-browserid 0.9
