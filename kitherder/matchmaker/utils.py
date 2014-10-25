@@ -66,12 +66,18 @@ def findDivisionsCorrespondingCoordinator(email):
 
 	
 def getMozillianDataByUser(email):
-	url = settings.MOZILLIAN_URL + '/api/v1/users/?app_name=kitherder&app_key=' + settings.MOZILLIAN_APP_KEY + '&email=' + request.user.email
-	r = requests.get(url)
+	url = settings.MOZILLIAN_URL + '/api/v1/users/?app_name=kitherder&app_key=' + settings.MOZILLIAN_APP_KEY + '&email=' + email
+	objs = None
 
-	objs = json.loads(r.text)
+	try:
+		r = requests.get(url)
+		objs = json.loads(r.text)
+	except Exception as e:
+		print "Mozillian is not returning user due to the following error: " 
+		print(e)
+		raise
 
-	return objs	
+	return objs
 
 	
 def getMozillianGroupsbyUser(email):

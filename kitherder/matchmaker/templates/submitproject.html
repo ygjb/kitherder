@@ -12,7 +12,12 @@
 	<h2>Submit Project</h2>
 	<br />
     {% if cannotsubmit %}
-    	As a mentor, you must join one of the Kitherder groups in Mozillian before you can submit a project. <a href="https://mozillian.org">Go join now.</a>
+    	{% if cannotsubmit == 1 %}
+    		As a mentor, you must join one of the Kitherder groups in Mozillian before you can submit a project. <a href="https://mozillian.org">Go join now.</a>
+    	{% endif %}
+    	{% if cannotsubmit == 2 %}
+    		Divisions from Mozillian not available at this time. Please check <a href="https://mozillian.org">Mozillian</a>
+    	{% endif %}
     {% else %} 
    		<form method="post" action="">{% csrf_token %}
 			<table>

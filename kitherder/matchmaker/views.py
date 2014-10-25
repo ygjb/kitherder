@@ -308,8 +308,11 @@ def submitproject(request):
 			submitform = MentorMenteeProjectForm()
 			# ASSUMPTION: mentor can only submit projects to a division with mozillian group they belong to, if they do not belong to a group, they cannot submit a project yet
 			if role == "mentor":
-				divisionlist = findDivisionsCorrespondingMentorMentee(request.user.email)
-				
+				try:
+					divisionlist = findDivisionsCorrespondingMentorMentee(request.user.email)
+				except Exception as e:
+					return render_to_response('matchmaker/templates/submitproject.html', {'submitform': submitform, 'cannotsubmit': 2, 'role':role,}, context_instance=RequestContext(request))
+
 				if len(divisionlist) > 0: 	
 					submitform.fields["division_id"].queryset = divisionlist
 				else:
