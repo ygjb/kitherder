@@ -1,2 +1,4 @@
 kitherder
 =========
+Kitherder is a web application that is designed to facilitate participation in the Mentorships program. Note that while this program is currently limited to security projects, the goal of KitHerder is to provide the matchmaking and relationship management features required to open the program to the Mozilla community.
+The requirements here are driven by the documentation from the mentorship program and it is expected that the system will leverage Mozillians.org accounts to reduce the amount of personal data stored in Kitherder, and issue badges using the Mozilla Foundation badge system based on participation criteria.
